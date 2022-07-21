@@ -1,0 +1,28 @@
+.bgImage {
+    background: url("../../Assets/images/bg-login.jpg") no-repeat;
+    height: 100vh;
+    width: 100vw;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size:cover;
+    overflow: scroll;
+  }
+
+  .loginBanner {
+    width: 95%;
+    height: 425px;
+    border-radius: 10px;
+  }
+
+  a:hover {
+    color: #0e493a !important;
+    text-decoration: underline !important;
+  }
+
+
+
+
+
+  
+
+  
