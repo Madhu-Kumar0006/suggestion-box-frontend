@@ -22,7 +22,7 @@ import Settings from "../Settings/Settings";
 import SuggestionBox from "../SuggestionBox/SuggestionBox";
 import navList from "./navList";
 import classes from '../Login/Login.module.css'
-import { Grid } from "@mui/material";
+import { Grid, makeStyles } from "@mui/material";
 import { ExitToApp } from "@mui/icons-material";
 
 
@@ -49,13 +49,13 @@ function SideNavbar() {
             fontWeight: 600,
             color: '#ffffff',
             margin:'20px',
-            marginLeft:'5px'
+            marginLeft:'20px'
           }}
         >
           Suggestion Box
         </Typography>
       </Link>
-      <Divider sx={{margin:2, marginLeft:0, color:'#ffffff'}} />
+      <Divider sx={{margin:2, marginLeft:2, borderColor:'#ffffff'}} />
       <List>
         {navList.map((item, index) => (
           <ListItem key={index} disablePadding>
@@ -80,9 +80,9 @@ function SideNavbar() {
           </ListItem>
         ))}
       </List>
-      <Divider sx={{ margin:2, marginLeft:0, marginTop:19, color:'white' }}/>
+      <Divider sx={{ margin:2, marginLeft:2, marginTop:19, borderColor:'#ffffff' }} />
       <Box sx={{display:'flex', alignItems:'center'}}>
-        <Typography sx={{color:'#ffffff', fontWeight:'400', marginLeft:'10px', fontSize:'18px', marginRight:7}}>
+        <Typography sx={{color:'#ffffff', fontWeight:'400', marginLeft:'20px', fontSize:'18px', marginRight:7}}>
           Srinivas Akella
         </Typography>
         <ExitToApp sx={{color:'#ffffff'}} />
