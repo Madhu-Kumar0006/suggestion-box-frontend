@@ -6,7 +6,7 @@ import SideNavbarLayout from "../Components/SideNavbar/SideNavbarLayout";
 import SuggestionBox from "../Components/SuggestionBox/SuggestionBox";
 import Dashboard from "../Components/Dashboard/Dashboard";
 import Settings from "../Components/Settings/Settings";
-import TeamMembers from "../Components/TeamMembers/TeamMembers";
+import TeamMembers from '../Components/TeamMembers/TeamMembers';
 
 const BaseRoutes = () => {
   return (
@@ -14,10 +14,10 @@ const BaseRoutes = () => {
       <Routes mode="absolute">
         <Route path="/" element={<Login />} />
         <Route element={<SideNavbarLayout />}>
-          <Route path="/home" element={<SuggestionBox />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/team-members" element={<TeamMembers />} />
+          <Route path='/home' element={<SuggestionBox />} />
+          <Route path='/settings' element={<Settings />} />
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/team-members' element={<TeamMembers />} />
         </Route>
       </Routes>
     </>

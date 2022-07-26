@@ -1,7 +1,11 @@
-import React from "react";
+import React from 'react'
 
 function SuggestionBox() {
-  return <div>Home</div>;
+  return (
+    <div>
+      Home
+    </div>
+  )
 }
 
-export default SuggestionBox;
+export default SuggestionBox
