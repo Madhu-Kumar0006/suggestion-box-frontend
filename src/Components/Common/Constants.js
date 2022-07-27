@@ -1,5 +1,5 @@
 export const emailErrors = {
-    EMAIL : "Email is required",
+    EMAIL : "Please enter your Email address",
     INVALID_EMAIL : "Email is invalid",
  }
 
