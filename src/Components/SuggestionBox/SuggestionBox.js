@@ -1,18 +1,14 @@
 import React, {Fragment} from "react";
-import { makeStyles } from "@material-ui/core";
-
-
+// import { makeStyles } from "@material-ui/core";
 
 
 const SuggestionBox = () => {
-
-
-  
+ 
     return(
         <Fragment>
-            <main >
-
-            </main>
+            <div>
+                <p>Welcome to Suggestion Box</p>
+            </div>
         </Fragment>
     ) ;
 } 
