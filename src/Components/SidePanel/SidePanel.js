@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink , Outlet } from 'react-router-dom';
+import { NavLink , Outlet, Navigate } from 'react-router-dom';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -20,9 +20,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { makeStyles } from "@material-ui/core";
-
+import { useDispatch, useSelector } from "react-redux";
 import userImg from './../../Assets/images/admin.png';
-import colorLogo from './../../Assets/images/logo-color.png'
+import colorLogo from './../../Assets/images/logo-color.png';
+// import PropTypes from "prop-types";
+
+import { logout } from '../../Redux/Actions/loginAction';
 
 
 const drawerWidth = 240;
@@ -58,9 +61,25 @@ const SidePanel = (props) => {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  //Redux Dispatch
+  const dispatch = useDispatch();
+
+  //Redux State:
+  const loginDetails= useSelector((state) => state.auth);
+
+  if (loginDetails.isAuthenticated === false || loginDetails.role_id === null) {
+    return <Navigate to="/" />;
+  }
+
+  const logoutHandler = () => {
+    dispatch(logout);
+  }
+
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
 
   const drawer = (
     <Box container sx={{ backgroundColor: "#000", minHeight: "100vh" }}>
@@ -69,7 +88,7 @@ const SidePanel = (props) => {
           <img width={'48px'} height={'48px'} src={userImg} alt="logo" />
         </Box>
         <Box>
-          <Typography variant='body1' color="#fff">Admin User</Typography>
+          <Typography variant='body1' color="#fff" sx={{fontSize:"16px"}}>{loginDetails.user_name}</Typography>
         </Box>
       </Box>
       <List sx={{ my: 4}}>
@@ -98,21 +117,19 @@ const SidePanel = (props) => {
       <Box sx={{alignItems: "center"}}>
             <Divider sx={{borderColor:'#fff', marginX:2}}/>
             <List sx={{ my: 2}}>
-              {[{text: 'Logout', icon: <LogoutOutlinedIcon />}].map((item, index) => (
-                <ListItem key={item.text} 
+                <ListItem onClick={logoutHandler}
                 className={`${classes.menuItems}`}
                 disablePadding>
-                  <ListItemButton>
+                  <ListItemButton onClick={props.logout}>
                     <ListItemIcon sx={{color:'#fff'}}>
-                      {item.icon}
+                      <LogoutOutlinedIcon />
                     </ListItemIcon>
                     <ListItemText primary={
-                      <Typography variant='h6' sx={{letterSpacing: 0.2, fontSize: '18px'}}>{item.text}</Typography>
+                      <Typography variant='h6' sx={{letterSpacing: 0.2, fontSize: '18px'}}>Logout</Typography>
                     } 
                     />
                   </ListItemButton>
                 </ListItem>
-              ))}
             </List>
       </Box>
     </Box>
@@ -192,6 +209,5 @@ const SidePanel = (props) => {
     </Box>
   );
 }
-
 
 export default SidePanel;

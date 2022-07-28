@@ -1,4 +1,6 @@
-import React, { Fragment, useState} from "react";
+import React, { Fragment, useEffect, useState} from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core";
 import { Stack, Paper, InputAdornment, TextField, IconButton, Grid, Button, Typography, Link } from "@mui/material";
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -8,6 +10,8 @@ import backgroundImg from './../../Assets/images/login-bg.jpg';
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import { emailErrors, passwordErrors } from "../Common/Constants";
+import { login } from "../../Redux/Actions/loginAction";
+import AlertModal from "../AlertModal/AlertModal";
 
 
 //defining styles
@@ -43,10 +47,6 @@ const validationSchema = yup.object({
     password: yup
       .string()
       .required(passwordErrors.PASSWORD)
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/,
-        passwordErrors.PASSWORD_INVALID
-      )
   });
 
 
@@ -56,6 +56,16 @@ const Login = () => {
     const classes = useStyles();
     const [showPassword, setShowPassword] = useState(false);
 
+     // Redux State:
+     const LoginDetails = useSelector((state) => state.auth);
+     const alert = useSelector((state) => state.alert);
+
+     // Used to change the routes:
+     const Navigator = useNavigate();
+
+     //Redux Dispatch
+     const dispatch = useDispatch();
+
     //managing form state
     const formik = useFormik({
         initialValues: {
@@ -63,11 +73,20 @@ const Login = () => {
           password: '',
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => {
-          console.log(values);
+        onSubmit: (values, {resetForm}) => {
+          dispatch(login(values));
+          resetForm();
         },
       });
 
+
+    // UseEffects (start):
+      useEffect(() => {
+        if (LoginDetails.isAuthenticated && LoginDetails.role_id === 1) {
+          return Navigator("/dashboard");
+        } 
+      }, [LoginDetails.isAuthenticated, LoginDetails.role_id, Navigator]);
+      // UseEffects (end):
 
     //toggle showPassword
     const togglePassword = () => {
@@ -79,6 +98,7 @@ const Login = () => {
         <Fragment>
             <Grid container className={`${classes.bgImage}`} alignItems={"center"} justifyContent={"center"}>
               <Paper elevation={10} sx={{width:{xs:'90%', sm:'80%', md:'60%', xl:'40%'}}} height={'500px'} style={{ borderRadius: "10px"}} >
+                {alert.message && <AlertModal show={true} />}
                 <Stack p={2} direction={'row'} spacing={1} justifyContent={'space-between'}>
                   <Grid item md={6} xs={12} display={{xs: 'none', sm: 'block'}}>
                     <img className={`${classes.loginBanner}`} src={loginBanner} alt="logo" />
