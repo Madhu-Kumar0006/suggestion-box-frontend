@@ -15,12 +15,12 @@ const Card = (props) => {
         <Grid sx={{width:'90%', padding:2, backgroundColor:`${bgColor}`, borderRadius:'15px', marginX:2, marginY:1}}>
             <Grid display='flex' justifyContent={'center'}>
                 <Link underline="hover">
-                    <Typography variant="body1" color="#231F20">{props.questionTitle}</Typography> 
+                    <Typography variant="body1" color="#231F20" sx={{cursor:'pointer'}}>{props.questionTitle}</Typography> 
                 </Link>
             </Grid>
             <Box style={{ wordWrap: 'break-word'}}>
               <Typography variant="overline" style={{ wordWrap: 'break-word'}}>Response page link: </Typography>
-                <Link underline="hover" >
+                <Link underline="hover" target='_blank' href={responseUrl} >
                     <Typography variant="caption" style={{ wordWrap: 'break-word'}}>{responseUrl}</Typography> 
                 </Link>
             </Box>
