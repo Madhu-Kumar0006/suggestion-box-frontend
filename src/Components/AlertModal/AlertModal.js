@@ -50,7 +50,7 @@ const AlertModal = (props) => {
                                 </Typography>  
                             </Grid>   
                             <Grid item>
-                                <Typography id="modal-modal-description" sx={{ mt: 1, fontSize: '22px', fontWeight: '500' }} variant="subtitle1" >
+                                <Typography id="modal-modal-description" sx={{ mt: 1, fontSize: '18px', fontWeight: '500' }} variant="subtitle1" >
                                     {alert.message}
                                 </Typography> 
                             </Grid>   
