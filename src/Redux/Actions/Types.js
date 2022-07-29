@@ -9,5 +9,12 @@ export const LOGIN_START = "LOGIN_START";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT = "LOGOUT";
+//COMMOM
+export const START = "START";
+export const FAIL = "FAIL";
+// USER
+export const USER_GET_QUESTION = "USER_GET_QUESTION";
+export const USER_POST_RESPONSE = "USER_POST_RESPONSE";
+
 
 
