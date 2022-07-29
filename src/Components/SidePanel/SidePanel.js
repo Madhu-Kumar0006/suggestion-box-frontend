@@ -23,7 +23,7 @@ import { makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import userImg from './../../Assets/images/admin.png';
 import colorLogo from './../../Assets/images/logo-color.png';
-// import PropTypes from "prop-types";
+import jwtDecode from 'jwt-decode';
 
 import { logout } from '../../Redux/Actions/loginAction';
 
@@ -56,7 +56,7 @@ const useStyles = makeStyles(({ palette }) => ({
 const SidePanel = (props) => {
 
     //styles
-    const classes = useStyles();
+  const classes = useStyles();
 
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -70,6 +70,9 @@ const SidePanel = (props) => {
   if (loginDetails.isAuthenticated === false || loginDetails.role_id === null) {
     return <Navigate to="/" />;
   }
+
+  const decodedToken = jwtDecode(localStorage.getItem("token"));
+  const userName = decodedToken.user.first_name + " " + decodedToken.user.last_name;
 
   const logoutHandler = () => {
     dispatch(logout);
@@ -88,7 +91,7 @@ const SidePanel = (props) => {
           <img width={'48px'} height={'48px'} src={userImg} alt="logo" />
         </Box>
         <Box>
-          <Typography variant='body1' color="#fff" sx={{fontSize:"16px"}}>{loginDetails.user_name}</Typography>
+          <Typography variant='body1' color="#fff" sx={{fontSize:"16px"}}>{userName}</Typography>
         </Box>
       </Box>
       <List sx={{ my: 4}}>
@@ -198,7 +201,7 @@ const SidePanel = (props) => {
       </Box>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)`}, backgroundColor:'#e0f2f1'}}
       >
         <Toolbar />
 

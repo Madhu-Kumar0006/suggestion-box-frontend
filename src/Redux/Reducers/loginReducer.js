@@ -12,7 +12,6 @@ import {
     isAuthenticated: localStorage.getItem("token") ? true : false,
     role_id: localStorage.getItem("role_id"),
     loading: false,
-    user_name: null,
     loginFailMessage: "",
   };
   
@@ -26,10 +25,8 @@ import {
         };
       case LOGIN_SUCCESS:
         const decodedToken = jwtDecode(payload);
-        console.log(decodedToken);
         const role_id = decodedToken.user.role_id;
         const id = decodedToken.user.id;
-        const userName = decodedToken.user.first_name + " " + decodedToken.user.last_name;
         localStorage.setItem("role_id", role_id);
         localStorage.setItem("isActivated", true);
         localStorage.setItem("token", payload);
@@ -40,8 +37,7 @@ import {
           isAuthenticated: true,
           role_id: role_id,
           loading: false,
-          token: payload,
-          user_name: userName
+          token: payload
         };
       case LOGIN_FAIL:
         return {
@@ -60,8 +56,7 @@ import {
           token: null,
           isAuthenticated: false,
           role_id: null,
-          loading: false,
-          user_name: null
+          loading: false
         };
       default:
         return state;
