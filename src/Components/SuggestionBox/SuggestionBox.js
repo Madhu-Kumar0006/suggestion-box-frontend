@@ -51,11 +51,10 @@ const SuggestionBox = () => {
         setValue(newValue);
       };
 
-
       // UseEffects (start):
         useEffect(() => {
             dispatch(getQuestion())
-        },[])
+        },[dispatch])
         
      // UseEffects (end):
 
@@ -85,20 +84,20 @@ const SuggestionBox = () => {
                         {/* open */}
                         <TabPanel value="1">
                             {openedSuggestionBox.map((item, index) => (
-                                <Card key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status}/>
+                                <Card key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status} id={item.id}/>
                             ))}
                            
                         </TabPanel>
                         {/* close */}
                         <TabPanel value="2">
                             {closedSuggestionBox.map((item, index) => (
-                                <Card key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status}/>
+                                <Card key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status} id={item.id}/>
                             ))}
                         </TabPanel>
                             {/* All */}
                         <TabPanel value="3">
                             { allQuestions.response.data ? allQuestions.response.data.map((item, index) => (
-                                <Card key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status}/>
+                                <Card key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status} id={item.id}/>
                             )
                             ): ''}
                         </TabPanel>
