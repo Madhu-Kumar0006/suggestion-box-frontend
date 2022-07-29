@@ -7,7 +7,7 @@ import SuggestionBox from "../Components/SuggestionBox/SuggestionBox";
 import Dashboard from "../Components/Dashboard/Dashboard";
 import Settings from "../Components/Settings/Settings";
 import TeamMembers from '../Components/TeamMembers/TeamMembers';
-
+import User from "../Components/User/User";
 
 const BaseRoutes = () => {
   return (
@@ -20,6 +20,7 @@ const BaseRoutes = () => {
           <Route path='/settings' element={<Settings />} />
           <Route path='/team-members' element={<TeamMembers />} />
         </Route>
+        <Route path="/response/:token" element={< User/>} />
       </Routes>
     </>
   );
