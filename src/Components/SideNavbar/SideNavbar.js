@@ -15,9 +15,9 @@ import { Link } from "react-router-dom";
 import navList from "./navList";
 import classes from '../Login/Login.module.css'
 import { ExitToApp } from "@mui/icons-material";
+import PersonPinIcon from '@mui/icons-material/PersonPin';
+import { Button } from "@mui/material";
 
-
-const drawerWidth = 270;
 
 function SideNavbar() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -26,8 +26,10 @@ function SideNavbar() {
     setMobileOpen(!mobileOpen);
   };
 
+  const drawerWidth = 270;
+
   const drawer = (
-    <Box sx={{ backgroundColor: "#2AAA8A", height: "100vh", display:'flex', flexDirection:'column', justifyContent:'space-between' }}>
+    <Box sx={{ backgroundColor: "black", height: "100vh", display:'flex', flexDirection:'column', justifyContent:'space-between' }}>
       {/* <Toolbar  /> */}
       <Box>
         <Link to="/home" className={classes.link}>
@@ -53,22 +55,22 @@ function SideNavbar() {
               <Link to={item.link} className={classes.link}>
                 <ListItemButton
                   sx={{
-                    margin: "10px",
-                    width: "220px",
+                    width: "263px",
                     marginLeft: "5px",
                     padding: "10px",
-                    borderRadius: "8px",
+                    borderRadius: "4px",
                     color: "#ffffff",
                     fontSize: "25px",
                     "&:hover": {
-                      backgroundColor: "#355E3B",
+                      backgroundColor: "#899499",
+                      borderRight:'4px solid #98FB98',
                     },
                   }}
                 >
                   <ListItemIcon sx={{ color: "#ffffff" }}>
                     <item.icon />
                   </ListItemIcon>
-                  <ListItemText primary={item.text} sx={{ fontSize: "25px" }} />
+                  <ListItemText primary={item.text} sx={{ fontFamily: 'Verdana,Geneva,Tahoma,sans-serif', fontSize: "18px", fontWeight:500 }} disableTypography />
                 </ListItemButton>
               </Link>
             </ListItem>
@@ -85,18 +87,20 @@ function SideNavbar() {
           }}
         />
         <Box sx={{ display: "flex", alignItems: "center" }}>
+          <PersonPinIcon sx={{color:'#ffffff', marginLeft:3, marginRight:1}} />
           <Typography
             sx={{
               color: "#ffffff",
               fontWeight: "400",
-              marginLeft: "20px",
               fontSize: "18px",
               marginRight: 7,
             }}
           >
             Srinivas Akella
           </Typography>
-          <ExitToApp sx={{ color: "#ffffff" }} />
+          <Button sx={{border:'none', backgroundColor:'#ffffff', borderRadius:'8px', marginRight:'15px'}}>
+          <ExitToApp sx={{ color: "#080808" }} />
+          </Button>
         </Box>
       </Box>
     </Box>

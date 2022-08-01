@@ -6,7 +6,7 @@ function SideNavbarLayout() {
   return (
     <Fragment>
       <SideNavbar />
-      <Outlet styles={{width:'80vw'}} />
+      <Outlet />
     </Fragment>
   );
 }

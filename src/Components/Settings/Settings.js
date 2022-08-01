@@ -1,10 +1,14 @@
+import { Typography } from '@mui/material'
+import { Box } from '@mui/system'
 import React from 'react'
 
 function Settings() {
   return (
-    <div>
-      Settings
-    </div>
+    <Box sx={{marginLeft:'270px'}}>
+      <Typography>
+        Settings
+      </Typography>
+    </Box>
   )
 }
 

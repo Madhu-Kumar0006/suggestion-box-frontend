@@ -1,7 +1,14 @@
+import { Box, Typography } from "@mui/material";
 import React from "react";
 
 function TeamMembers() {
-  return <div>Team members</div>;
+  return (
+    <Box sx={{marginLeft:'270px'}}>
+      <Typography>
+        Team Members
+      </Typography>
+    </Box>
+  )
 }
 
 export default TeamMembers;
