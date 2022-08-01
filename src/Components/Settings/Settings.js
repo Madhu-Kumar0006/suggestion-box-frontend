@@ -1,14 +1,34 @@
-import { Typography } from '@mui/material'
-import { Box } from '@mui/system'
-import React from 'react'
+import React, { Fragment } from 'react';
+import { makeStyles } from "@material-ui/core";
+import { Typography, Grid } from '@material-ui/core';
 
-function Settings() {
+const useStyles = makeStyles({
+      page_bg: {
+        minHeight: "100vh",
+        width: "100%",
+        backgroundColor: "#fff",
+        borderRadius: "12px"
+        },
+        page_heading: {
+            padding: "10px 20px"
+        }
+})
+
+
+const Settings = () =>  {
+
+  const classes = useStyles();
+
   return (
-    <Box sx={{marginLeft:'270px'}}>
-      <Typography>
-        Settings
-      </Typography>
-    </Box>
+    <Fragment>
+      <Grid component="div" className={`${classes.page_bg}`}>
+            <Grid container display="flex" className={`${classes.page_heading}`} direction="row" justifyContent="space-between">
+                <Grid item>
+                    <Typography variant="h6" >Settings</Typography>
+                </Grid> 
+          </Grid>
+        </Grid>
+  </Fragment>
   )
 }
 

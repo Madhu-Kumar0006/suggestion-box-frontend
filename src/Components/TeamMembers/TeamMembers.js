@@ -3,12 +3,8 @@ import React from "react";
 
 function TeamMembers() {
   return (
-    <Box sx={{marginLeft:'270px'}}>
-      <Typography>
-        Team Members
-      </Typography>
-    </Box>
-  )
+          <div>Team members</div>
+        );
 }
 
 export default TeamMembers;
