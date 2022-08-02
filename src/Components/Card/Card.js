@@ -15,7 +15,7 @@ const Card = (props) => {
 
    // navigate to respective Response page
    const navigateToSuggestionsPage = (id) =>{
-        navigation("/suggestions/"+id);
+        navigation("suggestions/"+id);
     }
 
    const bgColor = props.status === 1  ? '#b2dfdb' : '#ffcdd2';
@@ -28,8 +28,8 @@ const Card = (props) => {
                     <Typography variant="body1" color="#231F20" sx={{cursor:'pointer'}}>{props.questionTitle}</Typography> 
                 </Link>
             </Grid>
-            <Box style={{ wordWrap: 'break-word'}}>
-              <Typography variant="overline" style={{ wordWrap: 'break-word'}}>Response page link: </Typography>
+            <Box>
+              <Typography variant="overline" >Response page link: </Typography>
                 <Link underline="hover" target='_blank' href={responseUrl} >
                     <Typography variant="caption" style={{ wordWrap: 'break-word'}}>{responseUrl}</Typography> 
                 </Link>

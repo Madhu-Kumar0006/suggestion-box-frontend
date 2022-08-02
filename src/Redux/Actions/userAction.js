@@ -31,7 +31,7 @@ export const submitResponse = (id, data) => async (dispatch) => {
     dispatch({
       type: START,
     });
-    const res = await api.post("/suggestions/addSuggestionResponse/" + id, response);
+    const res = await api.post("/response/addSuggestionResponse/" + id, response);
     if (res) {
       dispatch({
         type: USER_POST_RESPONSE,

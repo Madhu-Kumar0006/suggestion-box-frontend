@@ -5,10 +5,11 @@ import suggestionBoxReducer from './suggestionBoxReducer';
 import user from "./userReducer";
 import suggestionsReducers from "./suggestionsReducers";
 
+
 export default combineReducers({
   auth,
   alert,
   suggestionBoxReducer,
   user,
   suggestionsReducers
-  });
+})
