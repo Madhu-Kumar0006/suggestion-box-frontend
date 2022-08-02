@@ -1,14 +1,12 @@
 import { combineReducers } from "redux";
 import auth from "./loginReducer";
 import { alert } from "./alertReducer";
-import suggestionBoxReducer from './suggestionBoxReducer';
 import user from "./userReducer";
-import suggestionsReducers from "./suggestionsReducers";
+import suggestionBoxReducer from './suggestionBoxReducer';
 
 export default combineReducers({
   auth,
   alert,
-  suggestionBoxReducer,
   user,
-  suggestionsReducers
+  suggestionBoxReducer
   });

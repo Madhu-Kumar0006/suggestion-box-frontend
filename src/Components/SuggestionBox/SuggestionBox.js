@@ -8,6 +8,7 @@ import TabList from '@mui/lab/TabList';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import Card from "../Card/Card";
+import SuggestionModal from "../SuggestionModal/SuggestionModal";
 
 import { getQuestion } from "../../Redux/Actions/suggestionBoxAction";
 
@@ -58,8 +59,13 @@ const SuggestionBox = () => {
         
      // UseEffects (end):
 
+     const [open, setOpen] = useState(false);
+     const handleOpen = () => setOpen(true);
+     const handleClose = () => setOpen(false);
    
- 
+     const openModal = () =>{
+        handleOpen();
+     }
     return(
         <Fragment>
             <Grid component="div" className={`${classes.page_bg}`}>
@@ -68,10 +74,11 @@ const SuggestionBox = () => {
                         <Typography variant="h6" >Suggestion Box</Typography>
                     </Grid>
                     <Grid item>
-                        <Button type="button" variant="contained" color="primary">Create Suggestion Box</Button>
+                        <Button type="button" variant="contained" color="primary" onClick={openModal}>Create Suggestion Box</Button>
                     </Grid>
                 </Grid>
             <Grid>
+                {open === true ? <SuggestionModal show={open} close={handleClose} /> : " "}
                 <Box sx={{ width: '100%', typography: 'body1' }}>
                     <TabContext value={value}>
                         <Box>
