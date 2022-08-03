@@ -70,7 +70,7 @@ const SuggestionBoxCard = (props) => {
                     {props.status === 1 ? (
                         <Grid item my='auto' sx={{pointerEvents: "auto"}}>
                             <Tooltip title="Close">
-                                <IconButton>
+                                <IconButton onClick={() => props.closeSuggestionBox(props.id)}>
                                     <LockIcon  color="info"/>
                                 </IconButton>
                             </Tooltip> 
@@ -78,7 +78,7 @@ const SuggestionBoxCard = (props) => {
                     ) : (
                         <Grid item my='auto' sx={{pointerEvents: "auto"}}>
                             <Tooltip title="Open">
-                                <IconButton>
+                                <IconButton onClick={() => props.openSuggestionBox(props.id)}>
                                     <LockOpenIcon color="info"/>
                                 </IconButton>
                             </Tooltip>
