@@ -160,9 +160,9 @@ const SidePanel = (props) => {
             >
               <MenuIcon />
             </IconButton>
-            <Stack direction="row" spacing={2}>
-              <Stack>
-                <img width={'48px'} height={'48px'} src={userImg} alt="logo" />
+            <Stack direction="row" spacing={1}>
+              <Stack sx={{width:{sm:'45px', xs:'40px'}, height:{sm:'45px', xs:'40px'}}}>
+                <img  src={userImg} alt="logo" />
               </Stack>
               <Stack display="flex" justifyContent={'center'} alignItems={'center'}>
                 <Typography variant='body1' color="primary.dark" sx={{fontSize:"16px"}}>{userName}</Typography>
@@ -205,7 +205,7 @@ const SidePanel = (props) => {
       </Box>
       <Box
         component="main"
-        sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)`}}}
+        sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)`, xs:'100%'}}}
       >
         <Toolbar />
 

@@ -37,7 +37,6 @@ const Suggestions = () => {
 
     //Redux State:
     const allSuggestions = useSelector((state) => state.suggestionsReducers);
-    console.log(allSuggestions);
     
 
 
@@ -50,7 +49,7 @@ const Suggestions = () => {
     // UseEffects (start):
     useEffect(() => {
         dispatch(getAllResponse(id));
-    }, [dispatch]) 
+    }, [dispatch, id]) 
     // UseEffects (end):
 
 const classes = useStyles();

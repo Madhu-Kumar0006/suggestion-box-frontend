@@ -6,7 +6,7 @@ import Tab from '@mui/material/Tab';
 import TabList from '@mui/lab/TabList';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
-import Card from "../Card/Card";
+import SuggestionBoxCard from "../SuggestionBoxCard/SuggestionBoxCard";
 import SuggestionModal from "../SuggestionModal/SuggestionModal";
 
 import { getQuestion } from "../../Redux/Actions/suggestionBoxAction";
@@ -33,6 +33,7 @@ const SuggestionBox = () => {
 
     //Redux State:
     const allQuestions = useSelector((state) => state.suggestionBoxReducer);
+    console.log(allQuestions);
 
     if(allQuestions.response.data) {
         openedSuggestionBox = allQuestions.response.data.filter(item => item.status === 1);
@@ -90,28 +91,27 @@ const SuggestionBox = () => {
 
                         {/* open */}
                         <TabPanel value="1">
-                            {openedSuggestionBox.map((item, index) => (
-                                <Card key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status} id={item.id}/>
-                            ))}
-                            
+                                {openedSuggestionBox.map((item, index) => (
+                                    <SuggestionBoxCard key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status} id={item.id} reponsesCount={item.count}/>
+                                ))}     
                         </TabPanel>
 
                         {/* close */}
                         <TabPanel value="2">
                             {closedSuggestionBox.map((item, index) => (
-                                <Card key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status} id={item.id}/>
+                                <SuggestionBoxCard key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status} id={item.id} reponsesCount={item.count}/>
                             ))}
                         </TabPanel>
 
                         {/* All */}
                         <TabPanel value="3">
                             {allQuestions.response.data ? allQuestions.response.data.map((item, index) => (
-                                <Card key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status} id={item.id}/>
+                                <SuggestionBoxCard key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status} id={item.id} reponsesCount={item.count}/>
                             )
                             ): ''}
                         </TabPanel>
                     </TabContext>
-                </Box>
+                 </Box>
                 </Grid>
             </Grid>
           </Grid>     
