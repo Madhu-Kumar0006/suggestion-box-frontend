@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink , Outlet, Navigate } from 'react-router-dom';
 
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
+import { Box, Stack, Grid } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
@@ -22,7 +22,7 @@ import Typography from '@mui/material/Typography';
 import { makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import userImg from './../../Assets/images/admin.png';
-import colorLogo from './../../Assets/images/logo-color.png';
+import wBLogo from './../../Assets/images/logo-w&b.png';
 import jwtDecode from 'jwt-decode';
 
 import { logout } from '../../Redux/Actions/loginAction';
@@ -34,18 +34,18 @@ const drawerWidth = 240;
 //defining styles
 const useStyles = makeStyles(({ palette }) => ({
     menuItems: {
-            color: '#fff',
+            color: 'white',
         '&:hover' : {
             background: 'linear-gradient(to left, rgba(77,182,172,1) 0%,rgba(255,255,255,0) 98%)',
             borderLeft: '4px solid  #4DB6AC',
-            color: '#fff'
+            color: 'white'
         }
     },
 
     activeLink: {
       background: 'linear-gradient(to left, rgba(77,182,172,1) 0%,rgba(255,255,255,0) 98%)',
       borderLeft: '4px solid  #4DB6AC',
-      color: '#fff'
+      color: 'white'
       
     }
    
@@ -85,14 +85,11 @@ const SidePanel = (props) => {
 
 
   const drawer = (
-    <Box container sx={{ backgroundColor: "#000", minHeight: "100vh" }}>
-      <Box display="flex" alignItems="center" sx={{ width: '100%', minHeight: "60px", backgroundColor: '#009688'}} nowrap>
-        <Box mx={2}>
-          <img width={'48px'} height={'48px'} src={userImg} alt="logo" />
-        </Box>
+    <Box container sx={{ backgroundColor: "black", minHeight: "100vh" }}>
+      <Box display="flex" alignItems="center" justifyContent="center" sx={{ width: '100%', minHeight: "60px",  backgroundColor: 'primary.dark' }}>
         <Box>
-          <Typography variant='body1' color="#fff" sx={{fontSize:"16px"}}>{userName}</Typography>
-        </Box>
+          <img width={'200px'} src={wBLogo} alt="logo" />
+        </Box>   
       </Box>
       <List sx={{ my: 4}}>
         {[{text: 'Dashboard', icon: <DashboardIcon />, link:'/dashboard'}, 
@@ -105,7 +102,7 @@ const SidePanel = (props) => {
                       (isActive ? `${classes.activeLink}` : `${classes.menuItems}`)}
                       >
                       <ListItemButton sx={{ width:'232px'}}>
-                        <ListItemIcon sx={{color:'#fff'}}>
+                        <ListItemIcon sx={{color:'white'}}>
                           {item.icon}
                         </ListItemIcon>
                         <ListItemText primary={
@@ -118,13 +115,13 @@ const SidePanel = (props) => {
         ))}
       </List>
       <Box sx={{alignItems: "center"}}>
-            <Divider sx={{borderColor:'#fff', marginX:2}}/>
+            <Divider sx={{borderColor:'white', marginX:2}}/>
             <List sx={{ my: 2}}>
                 <ListItem onClick={logoutHandler}
                 className={`${classes.menuItems}`}
                 disablePadding>
                   <ListItemButton onClick={props.logout}>
-                    <ListItemIcon sx={{color:'#fff'}}>
+                    <ListItemIcon sx={{color:'white'}}>
                       <LogoutOutlinedIcon />
                     </ListItemIcon>
                     <ListItemText primary={
@@ -148,23 +145,30 @@ const SidePanel = (props) => {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          backgroundColor: '#fff',
+          backgroundColor: 'white',
           height: '60px'
         }}
       >
         <Toolbar>
-          <IconButton
-            color="primary"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' }}}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Box>
-            <img width={'200px'} src={colorLogo} alt="logo" />
-          </Box>
+          <Grid container display="flex" sx={{width: '100%', justifyContent:{xs:'space-between', sm:'flex-end'}}}>
+            <IconButton
+              color="primary"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: 'none' }}}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Stack direction="row" spacing={2}>
+              <Stack>
+                <img width={'48px'} height={'48px'} src={userImg} alt="logo" />
+              </Stack>
+              <Stack display="flex" justifyContent={'center'} alignItems={'center'}>
+                <Typography variant='body1' color="primary.dark" sx={{fontSize:"16px"}}>{userName}</Typography>
+              </Stack>
+            </Stack>
+          </Grid>
         </Toolbar>
       </AppBar>
       <Box
@@ -201,7 +205,7 @@ const SidePanel = (props) => {
       </Box>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)`}, backgroundColor:'#e0f2f1'}}
+        sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)`}}}
       >
         <Toolbar />
 

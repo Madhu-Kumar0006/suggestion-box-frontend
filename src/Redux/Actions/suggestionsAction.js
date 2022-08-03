@@ -1,12 +1,14 @@
 import api from "../Api/Api";
-import { GET_ALL_RESPONSES_SUCCESS, GET_ALL_RESPONSES_ERROR } from "./Types";
+import { GET_ALL_RESPONSES_START, GET_ALL_RESPONSES_SUCCESS, GET_ALL_RESPONSES_ERROR } from "./Types";
 import { alertActions } from "./alertAction";
 
 // admin login
 export const getAllResponse = (questionId) => async (dispatch) => {
-
+      dispatch({
+        type: GET_ALL_RESPONSES_START,
+      });
   try {
-    const res = await api.get("/suggestions/getAllResponse/"+questionId);
+    const res = await api.get("/response/getAllResponse/"+questionId);
     if (res) {
       dispatch({
         type: GET_ALL_RESPONSES_SUCCESS,

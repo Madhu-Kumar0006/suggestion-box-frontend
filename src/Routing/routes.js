@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import Login from "../Components/Login/Login";
 import SidePanel from "../Components/SidePanel/SidePanel";
 import SuggestionBox from "../Components/SuggestionBox/SuggestionBox";
+import SuggestionBoxLayout from "../Components/SuggestionBox/SuggestionBoxLayout";
 import Dashboard from "../Components/Dashboard/Dashboard";
 import Settings from "../Components/Settings/Settings";
 import TeamMembers from '../Components/TeamMembers/TeamMembers';
@@ -17,8 +18,10 @@ const BaseRoutes = () => {
         <Route path="/" element={<Login />} />
         <Route element={<SidePanel />}>
           <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/suggestion-box' element={<SuggestionBox />} />
-          <Route path='/suggestions/:id' element={<Suggestions />} />
+          <Route path='/suggestion-box' element={<SuggestionBoxLayout />}>
+            <Route path='suggestions/:id' element={<Suggestions />} />
+            <Route index element={<SuggestionBox />} />
+          </Route>
           <Route path='/settings' element={<Settings />} />
           <Route path='/team-members' element={<TeamMembers />} />
         </Route>

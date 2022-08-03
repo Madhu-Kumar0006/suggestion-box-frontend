@@ -1,6 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Box, Typography, Grid } from "@material-ui/core";
-import { Button } from "@mui/material";
+import { Button, Typography, Box, Grid, Breadcrumbs  } from "@mui/material";
 import { makeStyles } from "@material-ui/core";
 import {  useSelector, useDispatch } from "react-redux";
 import Tab from '@mui/material/Tab';
@@ -68,50 +67,54 @@ const SuggestionBox = () => {
      }
     return(
         <Fragment>
+          <Grid component='div' backgroundColor='primary.bg' p={2} width='100%'>
+            <Breadcrumbs mb={1} aria-label="breadcrumb">
+                <Typography color="text.primary" variant='h6'>Suggestion Box</Typography>
+            </Breadcrumbs>
             <Grid component="div" className={`${classes.page_bg}`}>
                 <Grid container display="flex" className={`${classes.page_heading}`} direction="row" justifyContent="space-between">
-                    <Grid item>
-                        <Typography variant="h6" >Suggestion Box</Typography>
-                    </Grid>
                     <Grid item>
                         <Button type="button" variant="contained" color="primary" onClick={openModal}>Create Suggestion Box</Button>
                     </Grid>
                 </Grid>
-            <Grid>
+                <Grid>
                 {open === true ? <SuggestionModal show={open} close={handleClose} /> : " "}
                 <Box sx={{ width: '100%', typography: 'body1' }}>
                     <TabContext value={value}>
-                        <Box>
-                            <TabList onChange={handleChange} sx={{ borderBottom: 2, borderColor: 'divider' }} aria-label="lab API tabs" centered>
-                                <Tab label="OPEN" value="1" />
-                                <Tab label="CLOSED" value="2" />
-                                <Tab label="ALL" value="3" />
-                            </TabList>
-                        </Box>
+                        <TabList onChange={handleChange} sx={{ borderBottom: 2, borderColor: 'divider'}} aria-label="lab API tabs" centered>
+                            <Tab label="OPEN" value="1" />
+                            <Tab label="CLOSED" value="2" />
+                            <Tab label="ALL" value="3" />
+                        </TabList>
+                
+
                         {/* open */}
                         <TabPanel value="1">
                             {openedSuggestionBox.map((item, index) => (
                                 <Card key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status} id={item.id}/>
                             ))}
-                           
+                            
                         </TabPanel>
+
                         {/* close */}
                         <TabPanel value="2">
                             {closedSuggestionBox.map((item, index) => (
                                 <Card key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status} id={item.id}/>
                             ))}
                         </TabPanel>
-                            {/* All */}
+
+                        {/* All */}
                         <TabPanel value="3">
-                            { allQuestions.response.data ? allQuestions.response.data.map((item, index) => (
+                            {allQuestions.response.data ? allQuestions.response.data.map((item, index) => (
                                 <Card key={index} questionTitle={item.question_title} link={item.suggestion_link} status={item.status} id={item.id}/>
                             )
                             ): ''}
                         </TabPanel>
                     </TabContext>
                 </Box>
+                </Grid>
             </Grid>
-         </Grid>        
+          </Grid>     
         </Fragment>
     ) ;
 } 

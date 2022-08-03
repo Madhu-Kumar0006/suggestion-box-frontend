@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { makeStyles } from "@material-ui/core";
-import { Typography, Grid } from '@material-ui/core';
+import { Grid, Typography, Breadcrumbs, Link  } from '@mui/material';
 
 
 const useStyles = makeStyles({
@@ -9,10 +9,8 @@ const useStyles = makeStyles({
         width: "100%",
         backgroundColor: "#fff",
         borderRadius: "12px"
-        },
-        page_heading: {
-            padding: "10px 20px"
         }
+
 })
 
 
@@ -22,14 +20,16 @@ const Dashboard = () => {
 
   return (
     <Fragment>
+        <Grid component='div' backgroundColor='primary.bg' p={2}>
+          <Breadcrumbs mb={1} aria-label="breadcrumb">
+              <Typography variant='h6' color="text.primary">Dashboard</Typography>
+          </Breadcrumbs>
           <Grid component="div" className={`${classes.page_bg}`}>
-                 <Grid container display="flex" className={`${classes.page_heading}`} direction="row" justifyContent="space-between">
-                    <Grid item>
-                        <Typography variant="h6" >Dashboard</Typography>
-                    </Grid>
-                    
+                <Grid container display="flex" pt={3} pl={3} direction="row" justifyContent="space-between">
+                  <Typography variant="body1"> Welcome to Dashboard</Typography>
                </Grid>
-            </Grid>
+          </Grid>
+        </Grid>
     </Fragment>
   )
 }
