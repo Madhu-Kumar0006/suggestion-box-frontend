@@ -33,7 +33,7 @@ const SuggestionBox = () => {
 
     //Redux State:
     const allQuestions = useSelector((state) => state.suggestionBoxReducer);
-    console.log(allQuestions);
+    // console.log(allQuestions);
 
     if(allQuestions.response.data) {
         openedSuggestionBox = allQuestions.response.data.filter(item => item.status === 1);

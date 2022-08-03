@@ -4,7 +4,7 @@ import { alert } from "./alertReducer";
 import suggestionBoxReducer from './suggestionBoxReducer';
 import user from "./userReducer";
 import suggestionsReducers from "./suggestionsReducers";
-
+import addQuestionReducer from './addQuestionReducer';
 
 export default combineReducers({
   auth,
@@ -12,4 +12,5 @@ export default combineReducers({
   user,
   suggestionBoxReducer,
   suggestionsReducers,
+  addQuestionReducer,
 })

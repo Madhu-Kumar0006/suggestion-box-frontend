@@ -13,7 +13,9 @@ import FormLabel from "@mui/material/FormLabel";
 import Divider from "@mui/material/Divider";
 import CloseIcon from "@mui/icons-material/Close";
 import { Formik, Form, FieldArray } from "formik";
-
+import { addQuestion } from "../../Redux/Actions/addQuestionAction";
+import { useDispatch, useSelector } from "react-redux";
+import AlertModal from "../AlertModal/AlertModal";
 
 const style = {
   position: "absolute",
@@ -26,6 +28,7 @@ const style = {
   boxShadow: 24,
   p: 4,
   borderRadius: "12px",
+  overflow:'scroll'
 };
 
 const useStyles = makeStyles({
@@ -43,33 +46,54 @@ const SuggestionModal = (props) => {
   const { show, close } = props;
   const classes = useStyles();
 
+  const dispatch = useDispatch();
+
+  const alert = useSelector((state) => state.alert);
+
   const [singleSelect, setSingleSelect] = useState(false);
   const [multiSelect, setMultiSelect] = useState(false);
+
+  const [initialValues, setInitialValues] = useState({
+    inputs: [''],
+    question: '',
+    anonymous: '',
+    specify: '',
+    textField: '',
+    singleSelect: '',
+    multiSelect: '',
+  });
+
+  const submitSuccess = (values) => {
+    const body = {
+      question_title: values.question,
+      suggestion_type: values.anonymous,
+      answer_type: values.textField ? 1 : values.singleSelect ? 2 : 3,
+      options: values.inputs,
+      user_id: localStorage.getItem('user_id')
+    }
+    dispatch(addQuestion(body));
+  }
 
   const showSingleSelect = () => {
     setSingleSelect(true);
     setMultiSelect(false);
+    setInitialValues({
+      inputs: [],
+    });
   };
 
   const showMultiSelect = () => {
     setMultiSelect(true);
     setSingleSelect(false);
     setInitialValues({
-      inputs:['']
+      inputs: []
     })
   };
 
   const hideSingleAndMulti = () => {
     setSingleSelect(false);
     setMultiSelect(false);
-    setInitialValues({
-      inputs: [""],
-    });
   };
-
-  const [initialValues, setInitialValues] = useState({
-    inputs:['']
-  })
 
   return (
     <Modal
@@ -77,7 +101,7 @@ const SuggestionModal = (props) => {
       onClose={close}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
-      // BackdropComponent="static"
+      // disableScrollLock={true}
     >
       <Box sx={style}>
         <Box
@@ -106,14 +130,18 @@ const SuggestionModal = (props) => {
         <Divider />
 
         {/* question */}
-        <Formik initialValues={initialValues}>
+        {alert.message && <AlertModal show={true} />}
+        <Formik
+          initialValues={initialValues}
+          onSubmit={(values) => submitSuccess(values)}
+        >
           <Form>
             <Box>
               <TextField
                 className={classes.root}
                 name="question"
                 type="text"
-                sx={{ mt: 3 }}
+                sx={{ mt: 10 }}
                 id="question"
                 placeholder="Enter Question here"
                 label="Enter Question"
@@ -162,21 +190,21 @@ const SuggestionModal = (props) => {
                   name="radio-buttons-group"
                 >
                   <FormControlLabel
-                    value="text-field"
+                    value="textField"
                     control={<Radio />}
                     label="Text field"
                     onClick={hideSingleAndMulti}
                     sx={{ mr: 6 }}
                   />
                   <FormControlLabel
-                    value="single-select"
+                    value="singleSelect"
                     control={<Radio />}
                     label="Single select"
                     onClick={showSingleSelect}
                     sx={{ mr: 6 }}
                   />
                   <FormControlLabel
-                    value="multi-select"
+                    value="multiSelect"
                     control={<Radio />}
                     label="Multi select"
                     onClick={showMultiSelect}
@@ -185,10 +213,59 @@ const SuggestionModal = (props) => {
               </FormControl>
             </Box>
 
-            {(singleSelect || multiSelect) && (
+            {(singleSelect) && (
               <FieldArray name="inputs">
                 {(fieldArrayProps) => {
-                  console.log(fieldArrayProps, "fap");
+                  // console.log(fieldArrayProps, "fap");
+                  const { push, remove, form } = fieldArrayProps;
+                  const { values } = form;
+                  const { inputs } = values;
+                  return (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: 'column',
+                        alignItems: "center",
+                        mt: 8
+                      }}
+                    >
+                      {inputs.map((input, idx) => (
+                        <Box
+                          key={idx}
+                          sx={{ display: "flex", alignItems: "center", mb: 2 }}
+                        >
+                          <Typography sx={{ fontWeight: '500', fontSize: '22px', marginRight: '10px', ml: 2, color: 'primary.main' }}>
+                            {idx + 1}.
+                          </Typography>
+                          <TextField
+                            label='Option'
+                            variant="outlined"
+                            name={`inputs[${idx}]`}
+                            sx={{ width: '400px', height: 0.2 }}
+                            size='small'
+                          />
+                          {idx === 0 ? (
+                            <Button
+                              variant='contained'
+                              sx={{ backgroundColor: 'primary.main', color: 'white', fontSize: '15px', fontWeight: '600', '&:hover': { backgroundColor: 'primary.main' }, ml: 2}}
+                              onClick={() => push("")}>+</Button>
+                          ) : (
+                            <Button sx={{ ml: 2 }} variant='outlined' onClick={() => remove(idx)}>
+                              <CloseIcon sx={{ color: 'primary.main' }} />
+                            </Button>
+                          )}
+                        </Box>
+                      ))}
+                    </Box>
+                  );
+                }}
+              </FieldArray>
+            )}
+
+            {(multiSelect) && (
+              <FieldArray name="inputs">
+                {(fieldArrayProps) => {
+                  // console.log(fieldArrayProps, "fap");
                   const { push, remove, form } = fieldArrayProps;
                   const { values } = form;
                   const { inputs } = values;
@@ -198,28 +275,32 @@ const SuggestionModal = (props) => {
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
-                        mt:8
+                        mt: 8
                       }}
                     >
                       {inputs.map((input, idx) => (
                         <Box
                           key={idx}
-                          sx={{ display: "flex", alignItems: "center", mb:6 }}
+                          sx={{ display: "flex", alignItems: "center", mb: 2 }}
                         >
-                            <TextField
-                              label="Option"
-                              variant="outlined"
-                              name={`inputs[${idx}]`}
-                              sx={{height: 0.5, width:'500px'}}
-                            />
+                          <Typography sx={{ fontWeight: '500', fontSize: '22px', marginRight: '10px', color: 'primary.main' }}>
+                            {idx + 1}.
+                          </Typography>
+                          <TextField
+                            label='Option'
+                            variant="outlined"
+                            name={`inputs[${idx}]`}
+                            sx={{ height: 0.5, width: '400px' }}
+                            size='small'
+                          />
                           {idx === 0 ? (
                             <Button
-                               variant='contained'
-                               sx={{backgroundColor:'primary.main', color:'white', '&:hover':{backgroundColor:'primary.main'}, ml:2}}
-                               onClick={() => push("")}>+</Button>
+                              variant='contained'
+                              sx={{ backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.main' }, ml: 2 }}
+                              onClick={() => push("")}>+</Button>
                           ) : (
-                            <Button sx={{ml:2}} variant='outlined' onClick={() => remove(idx)}>
-                              <CloseIcon sx={{color:'primary.main'}} />
+                            <Button sx={{ ml: 2 }} variant='outlined' onClick={() => remove(idx)}>
+                              <CloseIcon sx={{ color: 'primary.main' }} />
                             </Button>
                           )}
                         </Box>
