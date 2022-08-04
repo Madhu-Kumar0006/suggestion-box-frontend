@@ -5,6 +5,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Tooltip from '@mui/material/Tooltip';
 import { Link } from "@material-ui/core";
 import { useNavigate } from "react-router";
@@ -14,10 +15,24 @@ const SuggestionBoxCard = (props) => {
 
     // const [expanded, setExpanded] = useState(false);
     const [expand, setExpand] = useState('close');
-    
+    let dateTime;
    const baseLink = 'http://localhost:3000/response/';
+   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
 
    const responseUrl = baseLink + props.link;
+
+   const createdDate = new Date(props.createdAt);
+   const currentDate = new Date();
+
+    if(currentDate.getDate() === createdDate.getDate()) {
+        if(currentDate.getHours() === createdDate.getHours()) {
+            dateTime =  (currentDate.getMinutes()-createdDate.getMinutes())+" "+"minutes ago";
+        } else {
+            dateTime = (currentDate.getHours()-createdDate.getHours())+" "+"hours ago";
+        }
+    } else {
+        dateTime = createdDate.getDate() +"-"+ months[createdDate.getMonth()]+"-"+ createdDate.getFullYear();
+    }
 
     //React Router Navigate:
     const navigation = useNavigate();
@@ -41,7 +56,7 @@ const SuggestionBoxCard = (props) => {
 
    return (
 
-    <Box component="div" sx={{marginBottom:'7px', width:{md:"90%"}, marginX:'auto'}}>
+    <Box component="div" sx={{marginBottom:'7px', width:{md:"90%"}, marginX:'auto', '&:hover':{transform: 'scale(1.02)'}}}>
         <Accordion sx={{borderLeft:`8px solid ${bgColor}`}} expanded={expand === 'open'}>
             <AccordionSummary
                 sx={{
@@ -49,14 +64,15 @@ const SuggestionBoxCard = (props) => {
                     backgroundColor: "#f5f5f5"
                 }}
                 expandIcon={<ExpandMoreIcon onClick={() => {expandAccordion()}}
-                    sx={{pointerEvents: "auto", backgroundColor: 'primary.light'}}
+                    sx={{pointerEvents: "auto", backgroundColor: '#e0e0e0'}}
                     />}
                 aria-controls="panel1bh-content"
                 id="panel1bh-header"
                 >
-                <Box sx={{ width: '33%', flexShrink: 0, pointerEvents: "auto" }}>
+                <Box sx={{ width: '50%', flexShrink: 0, pointerEvents: "auto" }}>
                     <Typography variant="body1" onClick={() => {navigateToSuggestionsPage(props.id)}} color="#231F20" sx={{cursor:'pointer', "&:hover": {textDecoration: 'underline'}}}>{props.questionTitle}</Typography>
-                    <Typography variant="caption" sx={{ display:{sm:'none', xs:'block'},  color: 'text.secondary' }}>{props.reponsesCount} responses</Typography> 
+                    <Typography variant="caption" sx={{ display:{sm:'none', xs:'block'},  color: 'text.secondary' }}>{props.reponsesCount} responses</Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>{dateTime}</Typography>
                 </Box>
                 <Typography variant="caption" sx={{display:{sm:'block', xs:'none'}, width: '30%',flexShrink: 0,  color: 'text.secondary' }}>{props.reponsesCount} responses</Typography> 
                 <Grid container display="flex" mr={1} justifyContent={'flex-end'}>

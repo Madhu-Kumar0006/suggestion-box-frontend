@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Button, Typography, Box, Grid, Breadcrumbs, Stack } from "@mui/material";
+import { Button, Typography, Box, Grid, Breadcrumbs, Stack, Pagination } from "@mui/material";
 import { makeStyles } from "@material-ui/core";
 import {  useSelector, useDispatch } from "react-redux";
 import Tab from '@mui/material/Tab';
@@ -12,6 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import ConfirmationModal from "../../ConfirmationModal/ConfirmationModal";
 import { getQuestion, updateSuggestionBoxStatus } from "../../Redux/Actions/suggestionBoxAction";
 import AlertModal from "../AlertModal/AlertModal";
+import usePagination from "../Common/Pagination";
 
 const useStyles = makeStyles({
     page_bg: {
@@ -31,10 +32,13 @@ const SuggestionBox = () => {
     const classes = useStyles();
     let openedSuggestionBox;
     let closedSuggestionBox;
+    let allSuggestionBox;
     const [selectedSuggestionBox, setSelectedSugggestionBox] = useState(null);
     const [value, setValue] = useState('1');
     const [showCloseConfirmationModal, setShowCloseConfirmationModal] = useState(false);
     const [showOpenConfirmationModal, setShowOpenConfirmationModal] = useState(false);
+    const PER_PAGE = 10;
+
 
     //Redux Dispatch:
     const dispatch = useDispatch();
@@ -42,8 +46,7 @@ const SuggestionBox = () => {
      //Redux State:
      const allQuestions = useSelector((state) => state.suggestionBoxReducer);
      const alert = useSelector((state) => state.alert);
-     console.log(alert);
-     console.log(allQuestions)
+    //  console.log(allQuestions)
 
 
     const closeConfirmationModalContent = {
@@ -88,19 +91,41 @@ const SuggestionBox = () => {
         closeModal();   
     }
 
-
     if(allQuestions.response.data) {
-        openedSuggestionBox = allQuestions.response.data.filter(item => item.status === 1);
-        closedSuggestionBox = allQuestions.response.data.filter(item => item.status === 2);
+        let sortedData = [...allQuestions.response.data].reverse();
+        openedSuggestionBox = sortedData.filter(item => item.status === 1);
+        closedSuggestionBox = sortedData.filter(item => item.status === 2);
+        allSuggestionBox = sortedData;
     } else {
         openedSuggestionBox = [];
         closedSuggestionBox = [];
+        allSuggestionBox = [];
     }
 
 
-    const handleChange = (event, newValue) => {
+    //pagination code
+    const openData = usePagination(openedSuggestionBox, PER_PAGE);
+    const closeData = usePagination(closedSuggestionBox, PER_PAGE);
+    const allData = usePagination(allSuggestionBox, PER_PAGE);
+  
+
+    const openPaginationHandler = (event, value) => {
+        openData.jump(value);
+      };
+
+    const closePaginationHandler = (event, value) => {
+        closeData.jump(value);
+    };
+
+    const allPaginationHandler = (event, value) => {
+        allData.jump(value);
+    };
+
+    //Tab change handler
+    const changeTabHandler = (event, newValue) => {
         setValue(newValue);
       };
+
 
       // UseEffects (start):
       //api call to get all suggestion boxes
@@ -138,22 +163,26 @@ const SuggestionBox = () => {
                 </Grid>
                 <Grid>
                 {open === true ? <SuggestionModal show={open} close={handleClose} /> : " "}
+
                 {alert.message && <AlertModal show={true} />}
+
                 <ConfirmationModal 
                     show={showCloseConfirmationModal}
                     content={closeConfirmationModalContent}
                     close={closeModal}
                     confirm={closeConfirmationHandler}
                     />
+
                 <ConfirmationModal 
                     show={showOpenConfirmationModal}
                     content={openConfirmationModalContent}
                     close={closeModal}
                     confirm={openConfirmationHandler}
                     />
+
                 <Box sx={{ width: '100%', typography: 'body1' }}>
                     <TabContext value={value}>
-                        <TabList onChange={handleChange} sx={{ borderBottom: 2, borderColor: 'divider'}} aria-label="lab API tabs" centered>
+                        <TabList onChange={changeTabHandler} sx={{ borderBottom: 2, borderColor: 'divider'}} aria-label="lab API tabs" centered>
                             <Tab label="OPEN" value="1" />
                             <Tab label="CLOSED" value="2" />
                             <Tab label="ALL" value="3" />
@@ -167,7 +196,7 @@ const SuggestionBox = () => {
                                         <CircularProgress color="primary" />
                                     </Stack>
                                 ) : (
-                                    openedSuggestionBox.map((item, index) => (
+                                    openData.currentData().map((item, index) => (
                                         <SuggestionBoxCard key={index} 
                                         questionTitle={item.question_title} 
                                         link={item.suggestion_link} 
@@ -175,9 +204,14 @@ const SuggestionBox = () => {
                                         id={item.id} 
                                         reponsesCount={item.count} 
                                         closeSuggestionBox={suggestionBoxCloseHandler}
+                                        createdAt={item.created_at}
                                         />    
                                 ) 
-                                )) }     
+                                )) } 
+                            { !allQuestions.loading && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
+                                <Pagination count={openData.maxPage} page={openData.currentPage} color="primary" shape="rounded" variant="outlined" default={openData.currentPage} 
+                                onChange={openPaginationHandler} />
+                            </Stack>}
                         </TabPanel>
 
                         {/* close */}
@@ -187,7 +221,7 @@ const SuggestionBox = () => {
                                         <CircularProgress color="primary" />
                                     </Stack>
                                 ) : (
-                                    closedSuggestionBox.map((item, index) => (
+                                    closeData.currentData().map((item, index) => (
                                         <SuggestionBoxCard 
                                         key={index} 
                                         questionTitle={item.question_title} 
@@ -196,9 +230,14 @@ const SuggestionBox = () => {
                                         id={item.id} 
                                         reponsesCount={item.count}
                                         openSuggestionBox={suggestionBoxOpenHandler}
+                                        createdAt={item.created_at}
                                         />    
                                 ) 
                                 )) } 
+                                { !allQuestions.loading && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
+                                <Pagination count={closeData.maxPage} page={closeData.currentPage} color="primary" shape="rounded" variant="outlined" default={closeData.currentPage} 
+                                    onChange={closePaginationHandler} />
+                                </Stack>}
                         </TabPanel>
 
                         {/* All */}
@@ -207,7 +246,7 @@ const SuggestionBox = () => {
                                     <Stack display="flex" mt={10} alignItems={'center'} justifyContent={'center'}>
                                         <CircularProgress color="primary" />
                                     </Stack>
-                                ) : ( allQuestions.response.data && allQuestions.response.data.map((item, index) => (
+                                ) : ( allData.currentData().map((item, index) => (
                                 <SuggestionBoxCard 
                                 key={index} 
                                 questionTitle={item.question_title} 
@@ -217,9 +256,14 @@ const SuggestionBox = () => {
                                 reponsesCount={item.count}
                                 openSuggestionBox={suggestionBoxOpenHandler}
                                 closeSuggestionBox={suggestionBoxCloseHandler}
+                                createdAt={item.created_at}
                                 />
                             )
                             ))}
+                            { !allQuestions.loading && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
+                                <Pagination count={allData.maxPage} page={allData.currentPage} color="primary" shape="rounded" variant="outlined" default={allData.currentPage} 
+                                onChange={allPaginationHandler} />
+                            </Stack>}
                         </TabPanel>
                     </TabContext>
                  </Box>

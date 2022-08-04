@@ -6,7 +6,6 @@ import { baseAppURL } from "./RequestPath.js";
 //to set up base url
 const api = Axios.create({
  baseURL: baseAppURL,
-// baseURL: 'https://teknotrait.herokuapp.com/api',
   headers: {
     "Content-Type": "application/json",
   },
