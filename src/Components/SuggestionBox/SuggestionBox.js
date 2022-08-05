@@ -8,6 +8,8 @@ import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import SuggestionBoxCard from "../SuggestionBoxCard/SuggestionBoxCard";
 import SuggestionModal from "../SuggestionModal/SuggestionModal";
+import AlertModal from "../AlertModal/AlertModal";
+
 
 import { getQuestion } from "../../Redux/Actions/suggestionBoxAction";
 
@@ -34,6 +36,9 @@ const SuggestionBox = () => {
     //Redux State:
     const allQuestions = useSelector((state) => state.suggestionBoxReducer);
     // console.log(allQuestions);
+
+    const alert = useSelector((state) => state.alert);
+
 
     if(allQuestions.response.data) {
         openedSuggestionBox = allQuestions.response.data.filter(item => item.status === 1);
@@ -79,6 +84,7 @@ const SuggestionBox = () => {
                     </Grid>
                 </Grid>
                 <Grid>
+                {alert.message && <AlertModal show={true} />}
                 {open === true ? <SuggestionModal show={open} close={handleClose} /> : " "}
                 <Box sx={{ width: '100%', typography: 'body1' }}>
                     <TabContext value={value}>

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -12,10 +13,11 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Divider from "@mui/material/Divider";
 import CloseIcon from "@mui/icons-material/Close";
-import { Formik, Form, FieldArray } from "formik";
+import { Field, FieldArray, useFormik, FormikProvider } from "formik";
 import { addQuestion } from "../../Redux/Actions/addQuestionAction";
 import { useDispatch, useSelector } from "react-redux";
 import AlertModal from "../AlertModal/AlertModal";
+import * as yup from 'yup';
 
 const style = {
   position: "absolute",
@@ -28,7 +30,6 @@ const style = {
   boxShadow: 24,
   p: 4,
   borderRadius: "12px",
-  overflow:'scroll'
 };
 
 const useStyles = makeStyles({
@@ -42,52 +43,74 @@ const useStyles = makeStyles({
   },
 });
 
+const validationSchema = yup.object({
+  question: yup
+    .string()
+    .required('Quesion is required !'),
+  suggestionType: yup
+    .string()
+    .required('Suggestion Type is required !'),
+  answerType: yup
+    .string()
+    .required('Answer Type is required !')
+});
+
 const SuggestionModal = (props) => {
   const { show, close } = props;
   const classes = useStyles();
 
   const dispatch = useDispatch();
 
+  const navigation = useNavigate();
+
   const alert = useSelector((state) => state.alert);
 
   const [singleSelect, setSingleSelect] = useState(false);
   const [multiSelect, setMultiSelect] = useState(false);
 
-  const [initialValues, setInitialValues] = useState({
-    inputs: [''],
-    question: '',
-    anonymous: '',
-    specify: '',
-    textField: '',
-    singleSelect: '',
-    multiSelect: '',
+
+  const formik = useFormik({
+    initialValues: {
+      question: '',
+      suggestionType: '',
+      answerType: '',
+      inputs: [''],
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      // console.log(values);
+      submitSuccess(values)
+    }
   });
+
+
+  // useEffect(() => {
+  //   if (alert.type === 'success') {
+  //     navigation('suggestion-box');
+  //   }
+  // }, [alert, navigation]);
 
   const submitSuccess = (values) => {
     const body = {
       question_title: values.question,
-      suggestion_type: values.anonymous,
-      answer_type: values.textField ? 1 : values.singleSelect ? 2 : 3,
+      suggestion_type: values.suggestionType,
+      answer_type: Number(values.answerType),
       options: values.inputs,
-      user_id: localStorage.getItem('user_id')
+      user_id: Number(localStorage.getItem('user_id')),
     }
+    // console.log(body)
     dispatch(addQuestion(body));
+    close();
   }
 
   const showSingleSelect = () => {
     setSingleSelect(true);
     setMultiSelect(false);
-    setInitialValues({
-      inputs: [],
-    });
   };
 
   const showMultiSelect = () => {
     setMultiSelect(true);
     setSingleSelect(false);
-    setInitialValues({
-      inputs: []
-    })
   };
 
   const hideSingleAndMulti = () => {
@@ -101,7 +124,7 @@ const SuggestionModal = (props) => {
       onClose={close}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
-      // disableScrollLock={true}
+      disableScrollLock={false}
     >
       <Box sx={style}>
         <Box
@@ -130,212 +153,222 @@ const SuggestionModal = (props) => {
         <Divider />
 
         {/* question */}
-        {alert.message && <AlertModal show={true} />}
-        <Formik
-          initialValues={initialValues}
-          onSubmit={(values) => submitSuccess(values)}
-        >
-          <Form>
-            <Box>
-              <TextField
-                className={classes.root}
-                name="question"
-                type="text"
-                sx={{ mt: 10 }}
-                id="question"
-                placeholder="Enter Question here"
-                label="Enter Question"
-                variant="standard"
-                fullWidth
-                style={{ width: "100", marginTop: 20, marginBottom: 8 }}
-              />
-            </Box>
-            {/* suggestion type */}
-            <Box style={{ marginTop: "30px" }}>
-              <FormControl>
-                <FormLabel id="demo-radio-buttons-group-label">
-                  Suggestion Type
-                </FormLabel>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  //   defaultValue="anonymous"
-                  name="radio-buttons-group"
-                >
-                  <FormControlLabel
-                    value="anonymous"
-                    control={<Radio />}
-                    label="Anonymous"
-                    sx={{ mr: 6 }}
-                  />
-                  <FormControlLabel
-                    value="Specify name"
-                    control={<Radio />}
-                    label="Specify name"
-                  />
-                </RadioGroup>
-              </FormControl>
-            </Box>
+        <Box sx={{ overflowY: 'scroll', height: '60vh' }}>
+          <FormikProvider value={formik}>
+            <form onSubmit={formik.handleSubmit}>
+              <Box>
+                <TextField
+                  className={classes.root}
+                  value={formik.values.question}
+                  name='question'
+                  onChange={formik.handleChange}
+                  type="text"
+                  sx={{ mt: 10 }}
+                  id="question"
+                  placeholder="Enter Question here"
+                  label="Enter Question"
+                  variant="standard"
+                  fullWidth
+                  style={{ width: "100", marginTop: 20, marginBottom: 8 }}
+                  error={formik.touched.question && Boolean(formik.errors.question)}
+                />
+              </Box>
+              {/* suggestion type */}
+              <Box style={{ marginTop: "30px" }}>
+                <FormControl>
+                  <FormLabel id="demo-radio-buttons-group-label">
+                    Suggestion Type
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={formik.values.suggestionType}
+                    name='suggestionType'
+                    // error={formik.touched.suggestionType && Boolean(formik.errors.suggestionType)}
+                    onChange={formik.handleChange}
+                  >
+                    <FormControlLabel
+                      value='anonymous'
+                      control={<Radio />}
+                      label="Anonymous"
+                      sx={{ mr: 6 }}
+                    />
+                    <FormControlLabel
+                      value='specify name'
+                      control={<Radio />}
+                      label="Specify name"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Box>
 
-            {/* answer type */}
-            <Box style={{ marginTop: "30px" }}>
-              <FormControl>
-                <FormLabel id="demo-radio-buttons-group-label">
-                  Answer Type
-                </FormLabel>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  //   defaultValue="text-field"
-                  name="radio-buttons-group"
-                >
-                  <FormControlLabel
-                    value="textField"
-                    control={<Radio />}
-                    label="Text field"
-                    onClick={hideSingleAndMulti}
-                    sx={{ mr: 6 }}
-                  />
-                  <FormControlLabel
-                    value="singleSelect"
-                    control={<Radio />}
-                    label="Single select"
-                    onClick={showSingleSelect}
-                    sx={{ mr: 6 }}
-                  />
-                  <FormControlLabel
-                    value="multiSelect"
-                    control={<Radio />}
-                    label="Multi select"
-                    onClick={showMultiSelect}
-                  />
-                </RadioGroup>
-              </FormControl>
-            </Box>
+              {/* answer type */}
+              <Box style={{ marginTop: "30px" }}>
+                <FormControl>
+                  <FormLabel id="demo-radio-buttons-group-label">
+                    Answer Type
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={formik.values.answerType}
+                    name='answerType'
+                    onChange={formik.handleChange}
+                  // error={formik.touched.answerType && (formik.errors.answerType)}
+                  >
+                    <FormControlLabel
+                      value='1'
+                      control={<Radio />}
+                      label="Text field"
+                      onClick={hideSingleAndMulti}
+                      sx={{ mr: 6 }}
+                    />
+                    <FormControlLabel
+                      value='2'
+                      control={<Radio />}
+                      label="Single select"
+                      onClick={showSingleSelect}
+                      sx={{ mr: 6 }}
+                    />
+                    <FormControlLabel
+                      value='3'
+                      control={<Radio />}
+                      label="Multi select"
+                      onClick={showMultiSelect}
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Box>
 
-            {(singleSelect) && (
-              <FieldArray name="inputs">
-                {(fieldArrayProps) => {
-                  // console.log(fieldArrayProps, "fap");
-                  const { push, remove, form } = fieldArrayProps;
-                  const { values } = form;
-                  const { inputs } = values;
-                  return (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: 'column',
-                        alignItems: "center",
-                        mt: 8
-                      }}
-                    >
-                      {inputs.map((input, idx) => (
-                        <Box
-                          key={idx}
-                          sx={{ display: "flex", alignItems: "center", mb: 2 }}
-                        >
-                          <Typography sx={{ fontWeight: '500', fontSize: '22px', marginRight: '10px', ml: 2, color: 'primary.main' }}>
-                            {idx + 1}.
-                          </Typography>
-                          <TextField
-                            label='Option'
-                            variant="outlined"
-                            name={`inputs[${idx}]`}
-                            sx={{ width: '400px', height: 0.2 }}
-                            size='small'
-                          />
-                          {idx === 0 ? (
-                            <Button
-                              variant='contained'
-                              sx={{ backgroundColor: 'primary.main', color: 'white', fontSize: '15px', fontWeight: '600', '&:hover': { backgroundColor: 'primary.main' }, ml: 2}}
-                              onClick={() => push("")}>+</Button>
-                          ) : (
-                            <Button sx={{ ml: 2 }} variant='outlined' onClick={() => remove(idx)}>
-                              <CloseIcon sx={{ color: 'primary.main' }} />
-                            </Button>
-                          )}
-                        </Box>
-                      ))}
-                    </Box>
-                  );
-                }}
-              </FieldArray>
-            )}
+              {(singleSelect) && (
+                <FieldArray name='inputs'>
+                  {(fieldArrayProps) => {
+                    // console.log(fieldArrayProps, "fap");
+                    const { push, remove, form } = fieldArrayProps;
+                    const { values } = form;
+                    const { inputs } = values;
+                    return (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: 'column',
+                          alignItems: "center",
+                          mt: 8
+                        }}
+                      >
+                        {inputs.map((input, idx) => (
+                          <Box
+                            sx={{ display: "flex", alignItems: "center", mb: 2 }}
+                            key={`inputs-${idx}`}
+                          >
+                            <Typography sx={{ fontWeight: '500', fontSize: '22px', marginRight: '10px', ml: 2, color: 'primary.main' }}>
+                              {idx + 1}.
+                            </Typography>
+                            <TextField
+                              name={`inputs[${idx}]`}
+                              value={formik.values.inputs[idx]}
+                              onChange={formik.handleChange}
+                              label='Option'
+                              variant="outlined"
+                              sx={{ width: '400px', height: 0.2 }}
+                              size='small'
+                            />
+                            {idx === 0 ? (
+                              <Button
+                                variant='contained'
+                                sx={{ backgroundColor: 'primary.main', color: 'white', fontSize: '15px', fontWeight: '600', '&:hover': { backgroundColor: 'primary.main' }, ml: 2 }}
+                                onClick={() => push("")}>+</Button>
+                            ) : (
+                              <Button sx={{ ml: 2 }} variant='outlined' onClick={() => remove(idx)}>
+                                <CloseIcon sx={{ color: 'primary.main' }} />
+                              </Button>
+                            )}
+                          </Box>
+                        ))}
+                      </Box>
+                    );
+                  }}
+                </FieldArray>
+              )}
 
-            {(multiSelect) && (
-              <FieldArray name="inputs">
-                {(fieldArrayProps) => {
-                  // console.log(fieldArrayProps, "fap");
-                  const { push, remove, form } = fieldArrayProps;
-                  const { values } = form;
-                  const { inputs } = values;
-                  return (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        mt: 8
-                      }}
-                    >
-                      {inputs.map((input, idx) => (
-                        <Box
-                          key={idx}
-                          sx={{ display: "flex", alignItems: "center", mb: 2 }}
-                        >
-                          <Typography sx={{ fontWeight: '500', fontSize: '22px', marginRight: '10px', color: 'primary.main' }}>
-                            {idx + 1}.
-                          </Typography>
-                          <TextField
-                            label='Option'
-                            variant="outlined"
-                            name={`inputs[${idx}]`}
-                            sx={{ height: 0.5, width: '400px' }}
-                            size='small'
-                          />
-                          {idx === 0 ? (
-                            <Button
-                              variant='contained'
-                              sx={{ backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.main' }, ml: 2 }}
-                              onClick={() => push("")}>+</Button>
-                          ) : (
-                            <Button sx={{ ml: 2 }} variant='outlined' onClick={() => remove(idx)}>
-                              <CloseIcon sx={{ color: 'primary.main' }} />
-                            </Button>
-                          )}
-                        </Box>
-                      ))}
-                    </Box>
-                  );
-                }}
-              </FieldArray>
-            )}
+              {(multiSelect) && (
+                <FieldArray name='inputs'>
+                  {(fieldArrayProps) => {
+                    console.log(fieldArrayProps, "fap");
+                    const { push, remove, form } = fieldArrayProps;
+                    const { values } = form;
+                    const { inputs } = values;
+                    return (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          mt: 8
+                        }}
+                      >
+                        {inputs.map((input, idx) => (
+                          <Box
+                            key={`inputs-${idx}`}
+                            sx={{ display: "flex", alignItems: "center", mb: 2 }}
+                          >
+                            <Typography sx={{ fontWeight: '500', fontSize: '22px', marginRight: '10px', color: 'primary.main' }}>
+                              {idx + 1}.
+                            </Typography>
+                            <TextField
+                              type='text'
+                              name={`inputs[${idx}]`}
+                              value={formik.values.inputs[idx]}
+                              onChange={formik.handleChange}
+                              label='Option'
+                              variant="outlined"
+                              sx={{ height: 0.5, width: '400px' }}
+                              size='small'
+                            />
+                            {idx === 0 ? (
+                              <Button
+                                variant='contained'
+                                sx={{ backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.main' }, ml: 2 }}
+                                onClick={() => push("")}>+</Button>
+                            ) : (
+                              <Button sx={{ ml: 2 }} variant='outlined' onClick={() => remove(idx)}>
+                                <CloseIcon sx={{ color: 'primary.main' }} />
+                              </Button>
+                            )}
+                          </Box>
+                        ))}
+                      </Box>
+                    );
+                  }}
+                </FieldArray>
+              )}
 
-            {/* submit */}
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginTop: "40px",
-              }}
-            >
-              <Button onClick={close} variant="outlined">
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                style={{
-                  backgroundColor: "#399689",
-                  color: "#ffffff",
-                  marginLeft: "15px",
+              {/* submit */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginTop: "40px",
                 }}
               >
-                Submit
-              </Button>
-            </Box>
-          </Form>
-        </Formik>
+                <Button onClick={close} variant="outlined">
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  style={{
+                    backgroundColor: "#399689",
+                    color: "#ffffff",
+                    marginLeft: "15px",
+                  }}
+                >
+                  Submit
+                </Button>
+              </Box>
+            </form>
+          </FormikProvider>
+        </Box>
       </Box>
     </Modal>
   );
