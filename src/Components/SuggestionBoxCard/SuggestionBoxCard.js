@@ -5,7 +5,6 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Tooltip from '@mui/material/Tooltip';
 import { Link } from "@material-ui/core";
 import { useNavigate } from "react-router";
@@ -25,11 +24,21 @@ const SuggestionBoxCard = (props) => {
    const currentDate = new Date();
 
     if(currentDate.getDate() === createdDate.getDate()) {
-        if(currentDate.getHours() === createdDate.getHours()) {
-            dateTime =  (currentDate.getMinutes()-createdDate.getMinutes())+" "+"minutes ago";
-        } else {
-            dateTime = (currentDate.getHours()-createdDate.getHours())+" "+"hours ago";
-        }
+        const intervals = [
+            { label: 'hour', seconds: 3600 },
+            { label: 'minute', seconds: 60 },
+            { label: 'second', seconds: 1 }
+          ];
+
+          function timeSince(date) {
+            const seconds = Math.floor((currentDate - date.getTime()) / 1000);
+            const interval = intervals.find(i => i.seconds < seconds);
+            const count = Math.floor(seconds / interval.seconds);
+            return `${count} ${interval.label}${count !== 1 ? 's' : ''} ago`;
+          }
+
+          dateTime = timeSince(createdDate);
+          
     } else {
         dateTime = createdDate.getDate() +"-"+ months[createdDate.getMonth()]+"-"+ createdDate.getFullYear();
     }
@@ -61,7 +70,9 @@ const SuggestionBoxCard = (props) => {
             <AccordionSummary
                 sx={{
                     pointerEvents: "none",
-                    backgroundColor: "#f5f5f5"
+                    backgroundColor: "#f5f5f5",
+                    boxShadow: "0 2px 3px -1px rgba(0, 0, 0, 0.1)",
+                    borderBottom: '1px solid grey'
                 }}
                 expandIcon={<ExpandMoreIcon onClick={() => {expandAccordion()}}
                     sx={{pointerEvents: "auto", backgroundColor: '#e0e0e0'}}

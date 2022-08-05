@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { makeStyles } from "@material-ui/core";
-import { Grid, Typography, Breadcrumbs, Link  } from '@mui/material';
+import { Grid, Typography, Breadcrumbs } from '@mui/material';
 
 
 const useStyles = makeStyles({
@@ -20,7 +20,7 @@ const Dashboard = () => {
 
   return (
     <Fragment>
-        <Grid component='div' backgroundColor='primary.bg' p={2}>
+        <Grid component='div' backgroundColor='primary.bg'  sx={{p:{xs:'8px', sm:'16px'}}}>
           <Breadcrumbs mb={1} aria-label="breadcrumb">
               <Typography variant='h6' color="text.primary">Dashboard</Typography>
           </Breadcrumbs>

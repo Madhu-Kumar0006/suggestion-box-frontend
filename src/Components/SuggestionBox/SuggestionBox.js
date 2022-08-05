@@ -10,7 +10,8 @@ import SuggestionBoxCard from "../SuggestionBoxCard/SuggestionBoxCard";
 import SuggestionModal from "../SuggestionModal/SuggestionModal";
 import CircularProgress from '@mui/material/CircularProgress';
 import ConfirmationModal from "../../ConfirmationModal/ConfirmationModal";
-import { getQuestion, updateSuggestionBoxStatus } from "../../Redux/Actions/suggestionBoxAction";
+import { getAllQuestion } from "../../Redux/Actions/suggestionBoxAction";
+import { updateSuggestionBoxStatus } from "../../Redux/Actions/updateStatusAction";
 import AlertModal from "../AlertModal/AlertModal";
 import usePagination from "../Common/Pagination";
 
@@ -46,7 +47,7 @@ const SuggestionBox = () => {
      //Redux State:
      const allQuestions = useSelector((state) => state.suggestionBoxReducer);
      const alert = useSelector((state) => state.alert);
-    //  console.log(allQuestions)
+    //  const updateStatus = useSelector((state) => state.updateStatusReducer);
 
 
     const closeConfirmationModalContent = {
@@ -130,13 +131,13 @@ const SuggestionBox = () => {
       // UseEffects (start):
       //api call to get all suggestion boxes
         useEffect(() => {
-            dispatch(getQuestion())
+            dispatch(getAllQuestion())
         },[dispatch])
 
         //api call after updating suggestion box status
         useEffect(() => {
             if (alert.type === "success") {
-                dispatch(getQuestion())
+                dispatch(getAllQuestion())
             }
           }, [alert, dispatch]);
           // UseEffects (end):
@@ -151,7 +152,7 @@ const SuggestionBox = () => {
      }
     return(
         <Fragment>
-          <Grid component='div' backgroundColor='primary.bg' p={2} width='100%'>
+          <Grid component='div' backgroundColor='primary.bg'  sx={{p:{xs:'8px', sm:'16px'}}} width='100%'>
             <Breadcrumbs mb={1} aria-label="breadcrumb">
                 <Typography color="text.primary" variant='h6'>Suggestion Box</Typography>
             </Breadcrumbs>
