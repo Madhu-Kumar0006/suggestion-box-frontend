@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { TextField } from "@mui/material";
+import { FormHelperText, TextField } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -13,10 +12,9 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Divider from "@mui/material/Divider";
 import CloseIcon from "@mui/icons-material/Close";
-import { Field, FieldArray, useFormik, FormikProvider } from "formik";
+import { FieldArray, useFormik, FormikProvider } from "formik";
 import { addQuestion } from "../../Redux/Actions/addQuestionAction";
-import { useDispatch, useSelector } from "react-redux";
-import AlertModal from "../AlertModal/AlertModal";
+import { useDispatch } from "react-redux";
 import * as yup from 'yup';
 
 const style = {
@@ -61,13 +59,9 @@ const SuggestionModal = (props) => {
 
   const dispatch = useDispatch();
 
-  const navigation = useNavigate();
-
-  const alert = useSelector((state) => state.alert);
 
   const [singleSelect, setSingleSelect] = useState(false);
   const [multiSelect, setMultiSelect] = useState(false);
-
 
   const formik = useFormik({
     initialValues: {
@@ -83,12 +77,6 @@ const SuggestionModal = (props) => {
     }
   });
 
-
-  // useEffect(() => {
-  //   if (alert.type === 'success') {
-  //     navigation('suggestion-box');
-  //   }
-  // }, [alert, navigation]);
 
   const submitSuccess = (values) => {
     const body = {
@@ -124,7 +112,7 @@ const SuggestionModal = (props) => {
       onClose={close}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
-      disableScrollLock={false}
+      // disableScrollLock={false}
     >
       <Box sx={style}>
         <Box
@@ -175,7 +163,7 @@ const SuggestionModal = (props) => {
               </Box>
               {/* suggestion type */}
               <Box style={{ marginTop: "30px" }}>
-                <FormControl>
+                <FormControl error={formik.touched.suggestionType && formik.errors.suggestionType}>
                   <FormLabel id="demo-radio-buttons-group-label">
                     Suggestion Type
                   </FormLabel>
@@ -184,7 +172,6 @@ const SuggestionModal = (props) => {
                     aria-labelledby="demo-radio-buttons-group-label"
                     value={formik.values.suggestionType}
                     name='suggestionType'
-                    // error={formik.touched.suggestionType && Boolean(formik.errors.suggestionType)}
                     onChange={formik.handleChange}
                   >
                     <FormControlLabel
@@ -204,7 +191,7 @@ const SuggestionModal = (props) => {
 
               {/* answer type */}
               <Box style={{ marginTop: "30px" }}>
-                <FormControl>
+                <FormControl error={formik.touched.answerType && formik.errors.answerType}>
                   <FormLabel id="demo-radio-buttons-group-label">
                     Answer Type
                   </FormLabel>
@@ -214,7 +201,6 @@ const SuggestionModal = (props) => {
                     value={formik.values.answerType}
                     name='answerType'
                     onChange={formik.handleChange}
-                  // error={formik.touched.answerType && (formik.errors.answerType)}
                   >
                     <FormControlLabel
                       value='1'
@@ -240,7 +226,7 @@ const SuggestionModal = (props) => {
                 </FormControl>
               </Box>
 
-              {(singleSelect) && (
+              {(singleSelect || multiSelect) && (
                 <FieldArray name='inputs'>
                   {(fieldArrayProps) => {
                     // console.log(fieldArrayProps, "fap");
@@ -290,7 +276,7 @@ const SuggestionModal = (props) => {
                   }}
                 </FieldArray>
               )}
-
+{/* 
               {(multiSelect) && (
                 <FieldArray name='inputs'>
                   {(fieldArrayProps) => {
@@ -341,7 +327,7 @@ const SuggestionModal = (props) => {
                     );
                   }}
                 </FieldArray>
-              )}
+              )} */}
 
               {/* submit */}
               <Box
