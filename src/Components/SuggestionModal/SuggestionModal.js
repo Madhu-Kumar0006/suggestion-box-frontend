@@ -16,6 +16,7 @@ import { FieldArray, useFormik, FormikProvider } from "formik";
 import { addQuestion } from "../../Redux/Actions/addQuestionAction";
 import { useDispatch } from "react-redux";
 import * as yup from 'yup';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const style = {
   position: "absolute",
@@ -41,7 +42,7 @@ const useStyles = makeStyles({
   },
 });
 
-const validationSchema = yup.object({
+const validationSchema = yup.object().shape({
   question: yup
     .string()
     .required('Quesion is required !'),
@@ -50,7 +51,11 @@ const validationSchema = yup.object({
     .required('Suggestion Type is required !'),
   answerType: yup
     .string()
-    .required('Answer Type is required !')
+    .required('Answer Type is required !'),
+  // inputs: yup.array()
+  //   .of(yup.object().shape({
+  //     name: yup.string().min(1, "Min 1 character")
+  //   }))
 });
 
 const SuggestionModal = (props) => {
@@ -112,33 +117,30 @@ const SuggestionModal = (props) => {
       onClose={close}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
-      // disableScrollLock={false}
+    // disableScrollLock={false}
     >
       <Box sx={style}>
         <Box
           sx={{
-            position: "-moz-initial",
             display: "flex",
-            justifyContent: "space-between",
-            backgroundColor: "primary.main",
-            padding: 2,
-            width: "100%",
-            borderRadius: "12px",
+            justifyContent: "center",
+            alignItems: 'center',
+            marginBottom: '25px'
           }}
         >
           <Typography
             id="modal-modal-title"
-            variant="h6"
-            sx={{ color: "white" }}
+            variant="h5"
+            sx={{ color: "primary.main", fontWeight: '700' }}
             component="h2"
           >
             Create Suggestion Box
           </Typography>
-          <Button onClick={close}>
-            <CloseIcon sx={{ color: "white" }} />
-          </Button>
+          {/* <Button onClick={close}>
+            <CloseIcon sx={{ color: 'black', mr:'-400px' }} />
+          </Button> */}
         </Box>
-        <Divider />
+        {/* <Divider /> */}
 
         {/* question */}
         <Box sx={{ overflowY: 'scroll', height: '60vh' }}>
@@ -163,7 +165,7 @@ const SuggestionModal = (props) => {
               </Box>
               {/* suggestion type */}
               <Box style={{ marginTop: "30px" }}>
-                <FormControl error={formik.touched.suggestionType && formik.errors.suggestionType}>
+                <FormControl error={formik.touched.suggestionType && Boolean(formik.errors.suggestionType)}>
                   <FormLabel id="demo-radio-buttons-group-label">
                     Suggestion Type
                   </FormLabel>
@@ -191,7 +193,7 @@ const SuggestionModal = (props) => {
 
               {/* answer type */}
               <Box style={{ marginTop: "30px" }}>
-                <FormControl error={formik.touched.answerType && formik.errors.answerType}>
+                <FormControl error={formik.touched.answerType && Boolean(formik.errors.answerType)}>
                   <FormLabel id="demo-radio-buttons-group-label">
                     Answer Type
                   </FormLabel>
@@ -231,7 +233,7 @@ const SuggestionModal = (props) => {
                   {(fieldArrayProps) => {
                     // console.log(fieldArrayProps, "fap");
                     const { push, remove, form } = fieldArrayProps;
-                    const { values } = form;
+                    const { values, errors } = form;
                     const { inputs } = values;
                     return (
                       <Box
@@ -250,23 +252,26 @@ const SuggestionModal = (props) => {
                             <Typography sx={{ fontWeight: '500', fontSize: '22px', marginRight: '10px', ml: 2, color: 'primary.main' }}>
                               {idx + 1}.
                             </Typography>
-                            <TextField
-                              name={`inputs[${idx}]`}
-                              value={formik.values.inputs[idx]}
-                              onChange={formik.handleChange}
-                              label='Option'
-                              variant="outlined"
-                              sx={{ width: '400px', height: 0.2 }}
-                              size='small'
-                            />
+                            <Box>
+                              <TextField
+                                name={`inputs[${idx}]`}
+                                value={formik.values.inputs[idx]}
+                                onChange={formik.handleChange}
+                                label='Option'
+                                variant="outlined"
+                                sx={{ width: '400px', height: 0.2 }}
+                                size='small'
+                              />
+                            </Box>
                             {idx === 0 ? (
                               <Button
-                                variant='contained'
-                                sx={{ backgroundColor: 'primary.main', color: 'white', fontSize: '15px', fontWeight: '600', '&:hover': { backgroundColor: 'primary.main' }, ml: 2 }}
-                                onClick={() => push("")}>+</Button>
+                                sx={{ fontSize: '15px', fontWeight: '600', ml: 2 }}
+                                onClick={() => push("")}>
+                                <AddCircleOutlineIcon sx={{ color: 'primary.main' }} />
+                              </Button>
                             ) : (
-                              <Button sx={{ ml: 2 }} variant='outlined' onClick={() => remove(idx)}>
-                                <CloseIcon sx={{ color: 'primary.main' }} />
+                              <Button sx={{ ml: 2 }} onClick={() => remove(idx)}>
+                                <CloseIcon sx={{ color: 'red' }} />
                               </Button>
                             )}
                           </Box>
@@ -276,65 +281,13 @@ const SuggestionModal = (props) => {
                   }}
                 </FieldArray>
               )}
-{/* 
-              {(multiSelect) && (
-                <FieldArray name='inputs'>
-                  {(fieldArrayProps) => {
-                    console.log(fieldArrayProps, "fap");
-                    const { push, remove, form } = fieldArrayProps;
-                    const { values } = form;
-                    const { inputs } = values;
-                    return (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          mt: 8
-                        }}
-                      >
-                        {inputs.map((input, idx) => (
-                          <Box
-                            key={`inputs-${idx}`}
-                            sx={{ display: "flex", alignItems: "center", mb: 2 }}
-                          >
-                            <Typography sx={{ fontWeight: '500', fontSize: '22px', marginRight: '10px', color: 'primary.main' }}>
-                              {idx + 1}.
-                            </Typography>
-                            <TextField
-                              type='text'
-                              name={`inputs[${idx}]`}
-                              value={formik.values.inputs[idx]}
-                              onChange={formik.handleChange}
-                              label='Option'
-                              variant="outlined"
-                              sx={{ height: 0.5, width: '400px' }}
-                              size='small'
-                            />
-                            {idx === 0 ? (
-                              <Button
-                                variant='contained'
-                                sx={{ backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.main' }, ml: 2 }}
-                                onClick={() => push("")}>+</Button>
-                            ) : (
-                              <Button sx={{ ml: 2 }} variant='outlined' onClick={() => remove(idx)}>
-                                <CloseIcon sx={{ color: 'primary.main' }} />
-                              </Button>
-                            )}
-                          </Box>
-                        ))}
-                      </Box>
-                    );
-                  }}
-                </FieldArray>
-              )} */}
-
               {/* submit */}
               <Box
                 sx={{
                   display: "flex",
                   justifyContent: "flex-end",
                   marginTop: "40px",
+                  marginRight: '40px'
                 }}
               >
                 <Button onClick={close} variant="outlined">
@@ -344,7 +297,7 @@ const SuggestionModal = (props) => {
                   type="submit"
                   variant="contained"
                   style={{
-                    backgroundColor: "#399689",
+                    backgroundColor: "primary.main",
                     color: "#ffffff",
                     marginLeft: "15px",
                   }}

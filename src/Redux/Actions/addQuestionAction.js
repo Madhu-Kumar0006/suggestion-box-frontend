@@ -3,13 +3,12 @@ import { ADD_QUESTION_SUCCESS, ADD_QUESTION_ERROR, ADD_QUESTION_START } from "./
 import {alertActions} from './alertAction';
 
 export const addQuestion = (body) => async dispatch => {
-  console.log('body', body);
     dispatch({
       type:ADD_QUESTION_START
     })
     try {
       const res = await api.post('/suggestions/addQuestion', body);
-      console.log(res);
+      // console.log(res);
       if (res) {
         dispatch({
             type:ADD_QUESTION_SUCCESS,
@@ -23,7 +22,7 @@ export const addQuestion = (body) => async dispatch => {
         dispatch(alertActions.clear());
       }, 3000);
     }catch (err) {
-      console.log('catch', err);
+      // console.log('catch', err);
         dispatch({
           type: ADD_QUESTION_ERROR,
           payload: err.response && err.response,
