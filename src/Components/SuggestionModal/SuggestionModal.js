@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { FormHelperText, TextField } from "@mui/material";
+import { CircularProgress, FormHelperText, TextField } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -14,7 +14,7 @@ import Divider from "@mui/material/Divider";
 import CloseIcon from "@mui/icons-material/Close";
 import { FieldArray, useFormik, FormikProvider } from "formik";
 import { addQuestion } from "../../Redux/Actions/addQuestionAction";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as yup from 'yup';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
@@ -62,6 +62,10 @@ const SuggestionModal = (props) => {
   const { show, close } = props;
   const classes = useStyles();
 
+  const addQestion = useSelector((state) => state.addQuestionReducer);
+  const alert = useSelector((state) => state.alert);
+  // console.log(addQestion)
+
   const dispatch = useDispatch();
 
 
@@ -93,8 +97,15 @@ const SuggestionModal = (props) => {
     }
     // console.log(body)
     dispatch(addQuestion(body));
-    close();
+    // close();
   }
+
+  useEffect(() => {
+    if (alert.type === 'success') {
+      close();
+    }
+  }, [alert, close]);
+  // console.log(addQestion.loading)
 
   const showSingleSelect = () => {
     setSingleSelect(true);
@@ -125,7 +136,9 @@ const SuggestionModal = (props) => {
             display: "flex",
             justifyContent: "center",
             alignItems: 'center',
-            marginBottom: '25px'
+            paddingBottom: '25px',
+            borderBottom:'2px solid #00a693',
+            mb:5
           }}
         >
           <Typography
@@ -136,9 +149,6 @@ const SuggestionModal = (props) => {
           >
             Create Suggestion Box
           </Typography>
-          {/* <Button onClick={close}>
-            <CloseIcon sx={{ color: 'black', mr:'-400px' }} />
-          </Button> */}
         </Box>
         {/* <Divider /> */}
 
@@ -302,7 +312,7 @@ const SuggestionModal = (props) => {
                     marginLeft: "15px",
                   }}
                 >
-                  Submit
+                 {addQestion.loading ? <CircularProgress sx={{color:"#fff", marginLeft:"10px"}} size={20}/> : <Box>Submit</Box>}
                 </Button>
               </Box>
             </form>
