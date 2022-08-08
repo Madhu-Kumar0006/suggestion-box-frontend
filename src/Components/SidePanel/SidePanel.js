@@ -66,6 +66,7 @@ const SidePanel = (props) => {
 
   //Redux State:
   const loginDetails= useSelector((state) => state.auth);
+  // console.log(loginDetails);
 
   if (loginDetails.isAuthenticated === false || loginDetails.role_id === null) {
     return <Navigate to="/" />;

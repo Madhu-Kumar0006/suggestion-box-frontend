@@ -6,14 +6,15 @@ import user from "./userReducer";
 import suggestionsReducer from "./suggestionsReducer";
 import updateStatusReducer from "./updateStatusReducer";
 import getQuestionDetailsReducer from "./getQuestionDetailsReducer";
-
+import addQuestionReducer from './addQuestionReducer';
 
 export default combineReducers({
   auth,
   alert,
-  suggestionBoxReducer,
   user,
   suggestionsReducer,
   updateStatusReducer,
-  getQuestionDetailsReducer
+  getQuestionDetailsReducer,
+  suggestionBoxReducer,
+  addQuestionReducer,
 })

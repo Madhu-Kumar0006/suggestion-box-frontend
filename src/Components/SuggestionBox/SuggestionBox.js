@@ -14,6 +14,8 @@ import { getAllQuestion } from "../../Redux/Actions/suggestionBoxAction";
 import { updateSuggestionBoxStatus } from "../../Redux/Actions/updateStatusAction";
 import AlertModal from "../AlertModal/AlertModal";
 import usePagination from "../Common/Pagination";
+// import { getQuestion } from "../../Redux/Actions/suggestionBoxAction";
+
 
 const useStyles = makeStyles({
     page_bg: {
@@ -84,6 +86,7 @@ const SuggestionBox = () => {
         closeModal();
     }
 
+
     const openConfirmationHandler = () => {
         const openStatus = { status: 1 }
         if(selectedSuggestionBox !== null && selectedSuggestionBox !== undefined) {
@@ -91,6 +94,7 @@ const SuggestionBox = () => {
         }
         closeModal();   
     }
+
 
     if(allQuestions.response.data) {
         let sortedData = [...allQuestions.response.data].reverse();
@@ -163,6 +167,7 @@ const SuggestionBox = () => {
                     </Grid>
                 </Grid>
                 <Grid>
+                {alert.message && <AlertModal show={true} />}
                 {open === true ? <SuggestionModal show={open} close={handleClose} /> : " "}
 
                 {alert.message && <AlertModal show={true} />}

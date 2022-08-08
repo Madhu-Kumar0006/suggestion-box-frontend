@@ -335,7 +335,7 @@ const User = () => {
                 <CancelIcon color='error' sx={{fontSize:'90px'}}/> 
                 </Stack>
                 <Stack display="flex" justifyContent={'center'} alignItems={'center'}>
-                  <Typography variant="h4" color="#ff3d00" sx={{fontWeight:'700'}}> Closed for suggestions! </Typography>
+                  <Typography variant="h4" color="#ff3d00" sx={{fontWeight:'700'}}> Link is Expired! </Typography>
                 </Stack>
                 <Stack display="flex" justifyContent={'center'} alignItems={'center'}>
                   <Typography variant="body1">{userSuggestionErrors.SUGGESTION_BOX_CLOSED}</Typography>

@@ -15,5 +15,5 @@ export const emailErrors = {
    TEXT_SUGGESTION_REQUIRED: "Field cannot be empty, please provide the suggestion",
    RADIO_SUGGESTION_REQUIRED: "Please select anyone option",
    CHECKBOX_SUGGESTION_REQUIRED: "Please select the option/s",
-   SUGGESTION_BOX_CLOSED: "Suggestion box is closed and no more collecting suggestions"
+   SUGGESTION_BOX_CLOSED: "Suggestion link is expired, Please contact the admin for more information"
  }

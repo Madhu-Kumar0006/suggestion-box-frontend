@@ -29,7 +29,6 @@ export const submitResponse = (id, data) => async (dispatch) => {
     const response = {
         'response' : data
     }
-    
   try {
     dispatch({
       type: USER_POST_RESPONSE_START,

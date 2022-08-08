@@ -8,3 +8,10 @@
     text-decoration: none;
   }
 
+::-webkit-scrollbar {
+  width:4px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(142, 170, 172);
+  border-radius: 20px;
+}
