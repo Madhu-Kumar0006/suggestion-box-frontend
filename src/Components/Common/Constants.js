@@ -10,3 +10,10 @@ export const emailErrors = {
     PASSWORDS_UNMATCHED : "Password and Confirm Password doesn't match",
     OLD_NEW_SAME : "Old Password and New Password must not be same",
  }
+
+ export const userSuggestionErrors = {
+   TEXT_SUGGESTION_REQUIRED: "Field cannot be empty, please provide the suggestion",
+   RADIO_SUGGESTION_REQUIRED: "Please select anyone option",
+   CHECKBOX_SUGGESTION_REQUIRED: "Please select the option/s",
+   SUGGESTION_BOX_CLOSED: "Suggestion box is closed and no more collecting suggestions"
+ }

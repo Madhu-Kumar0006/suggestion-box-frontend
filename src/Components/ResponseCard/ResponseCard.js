@@ -45,7 +45,7 @@ const ResponseCard = (props) => {
                 <Typography variant="subtitle1"  sx={{ fontSize: '12px', fontWeight: '700'}} color="#231F20">Anonymous</Typography>   
                 <Typography variant="subtitle2" style={{ wordWrap: 'break-word',  backgroundColor:'#b2dfdb', padding:'10px 20px', borderRadius:'8px'}}>
                     {Array.isArray(props.response) ? props.response.map((item, index) => (
-                    <p key={item.id} >{item.responseData}</p>
+                    <p key={index} >{item.responseData}</p>
                 ) ): props.response}
                 </Typography> 
             </Grid>

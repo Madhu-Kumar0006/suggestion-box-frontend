@@ -27,10 +27,11 @@ const useStyles = makeStyles({
 const Suggestions = () => {
 
    const { id } = useParams();
+   const classes = useStyles();
    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
    let questionTitle;
    let createdOn;
-   let responsesCount;
+   let responsesCount = 0;
    let suggestionsData = [];
    const PER_PAGE = 20;
    
@@ -44,6 +45,7 @@ const Suggestions = () => {
     //Redux State:
     const allSuggestions = useSelector((state) => state.suggestionsReducer);
     const questionDetails = useSelector((state) => state.getQuestionDetailsReducer);
+
 
     //catching responses
     if(questionDetails.response) {
@@ -60,12 +62,12 @@ const Suggestions = () => {
         createdOn = '';
     }
 
-    if(allSuggestions.response.data) {
-        responsesCount =  allSuggestions.response.data.length +" Responses";
+    if(Array.isArray(allSuggestions.response.data)) {
+        responsesCount =  allSuggestions.response.data.length;
         suggestionsData = allSuggestions.response.data;
     } else {
         responsesCount = 0;
-        suggestionsData= [];
+        suggestionsData = [];
     }
 
     //pagination data sorting
@@ -89,8 +91,6 @@ const Suggestions = () => {
     }, [dispatch, id]) 
     // UseEffects (end):
 
-const classes = useStyles();
-
 return (
     <Fragment>
         <Grid component='div' backgroundColor='primary.bg' sx={{p:{xs:'8px', sm:'16px'}}} width='100%'>
@@ -111,11 +111,15 @@ return (
                        <Typography variant='h6'>{!questionDetails.loading && questionTitle}</Typography>
                        <Grid item sx={{ width: {sm:'70%', xs: "100%"}, display:'flex', marginTop:'20px', justifyContent:'space-between'}}>
                             <Typography variant='subtitle2'>{!questionDetails.loading && createdOn}</Typography> 
-                            <Typography variant='subtitle2'>{!questionDetails.loading && responsesCount}</Typography> 
+                            <Typography variant='subtitle2'>{!questionDetails.loading && (responsesCount + `${" Responses"}`)}</Typography> 
                         </Grid> 
                     </Grid>
                 </Grid>
                 <Grid sx={{width:{sm:'85%', xs: "100%"}, marginX:'auto', marginTop:'30px'}}>
+                    {
+                       !allSuggestions.loading && responsesCount === 0 && 
+                       <Typography variant="h5" display="flex" justifyContent={'center'}>No Suggestions</Typography>
+                    }
                     { allSuggestions.loading ? 
                     <Stack display="flex" mt={10} alignItems={'center'} justifyContent={'center'}>
                         <CircularProgress color="primary" />

@@ -4,8 +4,6 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import colorLogo from "./../../Assets/images/logo-color.png";
-import { Typography, Button } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { getQuestionWithToken, submitResponse } from "../../Redux/Actions/userAction";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,13 +12,11 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
+import { Typography, Button, Stack } from "@mui/material";
+import { userSuggestionErrors } from "../Common/Constants";
+import CheckCircleSharpIcon from '@mui/icons-material/CheckCircleSharp';
+import CancelIcon from '@mui/icons-material/Cancel';
 
-const TextTypography = withStyles({
-  root: {
-    color: "#000000",
-    fontSize: 20,
-  },
-})(Typography);
 
 const User = () => {
   let { token } = useParams();
@@ -28,13 +24,16 @@ const User = () => {
   const [data, setData] = useState({});
   const [textInput, setTextInput] = useState("");
   const [radio, setRadio] = useState("");
-  const [checkbox, setCheckbox] = useState("");
+  const [checkbox, setCheckbox] = useState([]);
+  const [errors, setErrors] = useState({textInput:false, radio:false, checkbox: false});
+  const [page, setPage] = useState({responsePage:true, thankYouPage:false, closedPage:false});
 
   //UseDispatch:
   const dispatch = useDispatch();
 
   //UseSelector:
-  const questionData = useSelector((state) => state.user);
+  const userQuestionData = useSelector((state) => state.user);
+  // console.log(userQuestionData.response)
 
   //UseEffect Start:
   useEffect(() => {
@@ -43,40 +42,91 @@ const User = () => {
   }, [dispatch, token]);
 
   useEffect(() => {
-    if (questionData) {
-      setData(questionData.data);
+    if (userQuestionData.response) {
+      setData(userQuestionData.response.data);
     }
-  }, [questionData]);
+  }, [userQuestionData]);
+
+  useEffect(() => {
+    if(userQuestionData.response) {
+      if (userQuestionData.response.msg === "Added response successfully") {
+        setPage({thankYouPage:true,responsePage:false, closedPage:false})
+      }
+      else if(userQuestionData.response.data) {
+        if(userQuestionData.response.data.status === 2)
+        setPage({thankYouPage:false,responsePage:false, closedPage:true})
+      } else {
+        setPage({thankYouPage:false,responsePage:true, closedPage:false})
+      }
+    }   
+  }, [userQuestionData]);
   //UseEffect End:
 
   // Handlers Start:
   const handleTextInputChange = (event) => {
+    setErrors((pre) => {
+      return {...pre, textInput:false}
+    })
     setTextInput(event.target.value);
   };
 
   const handleRadioChange = (event) => {
+    setErrors((pre) => {
+      return {...pre, radio:false}
+    })
     setRadio(event.target.value);
   };
 
-  const handleCheckBox = (item) => {
-    console.log(item)
+  const handleCheckBoxChange = (event) => {
+    setErrors((pre) => {
+      return {...pre, checkbox:false}
+    })
+    if(event.target.checked === true) {
+      setCheckbox((pre) => {
+        return [...pre, event.target.value]
+      }) 
+    } else if(event.target.checked === false) {
+      setCheckbox((pre) => {
+        return pre.filter(item => item !== event.target.value)
+      })
+    }
   }
+ 
 
   const handleSubmit = () => {
     const id  = data.id;
-    console.log(textInput);
-    console.log(radio);
     if(data.answer_type === 1){
-      dispatch(submitResponse(id,textInput))
+      if(textInput === '') {
+        setErrors((pre) => {
+          return {...pre, textInput:true}
+        })
+      } else {
+        dispatch(submitResponse(id,textInput))
+      }
     } else if(data.answer_type === 2){
-      dispatch(submitResponse(id,radio))
+      if(radio === '') {
+        setErrors((pre) => {
+          return {...pre, radio:true}
+        })
+      } else {
+        dispatch(submitResponse(id,radio))
+      } 
+    } else if(data.answer_type === 3){
+      console.log(checkbox);
+      if(checkbox.length === 0) {
+        console.log("check error")
+        setErrors((pre) => {
+          return {...pre, checkbox:true}
+        })
+      } else {
+        dispatch(submitResponse(id,checkbox))
+      }
     }
   };
   // Handlers End:
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
         <AppBar
           position="fixed"
           sx={{
@@ -89,141 +139,213 @@ const User = () => {
               <img width={"200px"} src={colorLogo} alt="logo" />
             </Box>
           </Toolbar>
+        </AppBar>
           <Box
             sx={{
-              backgroundColor: "#D8FAE9",
-              minHeight: "100vh",
+              backgroundColor: "primary.bg",
+              display: 'flex',
+              justifyContent: 'center',
+              // alignItems: 'center',
+              paddingY: '100px',
+              minHeight: "80vh",
+              flexGrow: 1
             }}
           >
-            <Box
+            { page.responsePage && <Box
               sx={{
-                backgroundColor: "#ffffff",
-                margin: "40px",
-                minHeight: "78vh",
-                paddingTop: "20px",
+                backgroundColor: '#fff',
+                width: {sm:'80%', xs:'98%'},
                 borderRadius:"12px"
               }}
             >
               {/* question */}
-              <Box sx={{ marginLeft: "40px" }}>
-                {data ? (
-                  <TextTypography>{data.question_title}</TextTypography>
-                ) : (
-                  ""
-                )}
-              </Box>
               <Box
                 sx={{
-                  backgroundColor: "#dedede",
-                  minHeight: "60vh",
-                  marginLeft: "40px",
-                  marginRight: "40px",
+                  marginX:"20px",
                   // marginBottom: "40px",
                   padding: "20px",
-                  borderRadius:"12px"
+                  borderRadius:"12px",
                 }}
               >
+                <Box>
+                  <Box  sx={{ display:'flex', flexDirection:'column', alignItems:'center'}}>
+                    <Typography variant='caption' color='#757575'>Please provide your suggestion below and Submit</Typography>
+                  </Box>
+                  <Box sx={{marginBottom:'30px', paddingX:"20px", paddingY:"30px", borderRadius:"10px", backgroundColor:'primary.light'}}>
+                    {data ? (
+                      <Typography color="#000" variant='body1'>{data.question_title}</Typography>
+                    ) : (
+                      ""
+                    )}
+                  </Box>
+                </Box>
                 {/* text field */}
                 {data && data.answer_type === 1 ? (
                   <Box>
-                    <TextareaAutosize
-                      aria-label="minimum height"
-                      minRows={10}
-                      placeholder="Enter your response here"
-                      style={{ width: "100%", border: "#cecece" }}
-                      value={textInput}
-                      onChange={handleTextInputChange}
-                    />
+                    <Box sx={{width: {sm:'90%', xs:'98%'}, display:'flex', justifyContent:'center', alignItems:'center', marginX:'auto'}}>
+                      <TextareaAutosize
+                        aria-label="minimum height"
+                        minRows={5}
+                        placeholder="Enter your suggestion here"
+                        style={{ width: "90%",borderRadius:'5px', borderColor: `${errors.textInput ? "red" : ""}`, border: '2px solid grey',fontSize:'16px'}}
+                        value={textInput}
+                        onChange={handleTextInputChange}
+                      />
+                    </Box>
+                    { errors.textInput &&
+                      <Box sx={{width: {sm:'90%', xs:'98%'}, display:'flex', justifyContent:'center', marginTop:'20px' ,marginX:'auto'}}>
+                        <Typography variant="body2" color="error">
+                          {userSuggestionErrors.TEXT_SUGGESTION_REQUIRED}
+                        </Typography>
+                      </Box>
+                      }
                   </Box>
                 ) : data && data.answer_type === 2 ? (
                   // radio button
                   <Box>
-                    <span style={{ color: "black" }}>
-                      Please select any one:
-                    </span>
-                    <RadioGroup
-                      aria-labelledby="demo-radio-buttons-group-label"
-                      name="radio-buttons-group"
-                    >
+                    <Box sx={{width: {sm:'90%', xs:'98%'}, marginX:'auto'}}>
+                      <Typography variant="body1">
+                        Please select any one option:
+                      </Typography>
+                      <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        name="radio-buttons-group"
+                      >
+                        {data &&
+                          data.options &&
+                          data.options.map((item, index) => {
+                            return (
+                                <FormGroup
+                                  style={{
+                                    marginTop: "10px",
+                                    marginLeft: "10px",
+                                    color: "black",
+                                  }}
+                                  key={index}
+                                >
+                                  <FormControlLabel
+                                    key={index}
+                                    value={item.option_name}
+                                    control={
+                                      <Radio
+                                        value={item.option_name}
+                                        onChange={handleRadioChange}
+                                      />
+                                    }
+                                    label={item.option_name}
+                                  />
+                                </FormGroup>
+                            );
+                          })}
+                      </RadioGroup>
+                    </Box>
+                    { errors.radio &&
+                      <Box sx={{width: {sm:'90%', xs:'98%'}, marginX:'auto',display:'flex', justifyContent:'center', marginTop:'20px'}}>
+                        <Typography variant="body2" color="error">
+                          {userSuggestionErrors.RADIO_SUGGESTION_REQUIRED}
+                        </Typography>
+                      </Box>
+                      }
+
+                  </Box>
+ 
+                ) : (
+
+                  //checkbox
+                  <Box>
+                    <Box sx={{width: {sm:'90%', xs:'98%'}, marginX:'auto'}}>
+                      <span style={{ color: "black" }}>
+                        Please select one or more options:
+                      </span>
+
                       {data &&
                         data.options &&
-                        data.options.map((item, i) => {
+                        data.options.map((item, index) => {
                           return (
-                            <>
                               <FormGroup
                                 style={{
                                   marginTop: "10px",
                                   marginLeft: "10px",
                                   color: "black",
                                 }}
-                                key={i}
+                                key={index}
                               >
                                 <FormControlLabel
-                                  key={i}
-                                  value={item.option_name}
-                                  control={
-                                    <Radio
-                                      value={item.option_name}
-                                      onChange={handleRadioChange}
-                                    />
-                                  }
+                                  key={index}
+                                  control={<Checkbox value={item.option_name} checked={checkbox[item.option_name]} onClick={handleCheckBoxChange} />}
                                   label={item.option_name}
                                 />
                               </FormGroup>
-                            </>
                           );
                         })}
-                    </RadioGroup>
-                  </Box>
-                ) : (
-                  //checkbox
-
-                  <Box>
-                    <span style={{ color: "black" }}>
-                      Please select more than one:
-                    </span>
-
-                    {data &&
-                      data.options &&
-                      data.options.map((item, i) => {
-                        return (
-                          <>
-                            <FormGroup
-                              style={{
-                                marginTop: "10px",
-                                marginLeft: "10px",
-                                color: "black",
-                              }}
-                              key={i}
-                            >
-                              <FormControlLabel
-                                key={i}
-                                control={<Checkbox checked={checkbox[item.option_name]} onClick={handleCheckBox(item.option_name)} />}
-                                label={item.option_name}
-                              />
-                            </FormGroup>
-                          </>
-                        );
-                      })}
+                    </Box>
+                    {errors.checkbox &&
+                      <Box sx={{width: {sm:'90%', xs:'98%'}, display:'flex', justifyContent:'center', marginX:'auto', marginTop:'20px'}}>
+                        <Typography variant="body2" color="error">
+                          {userSuggestionErrors.CHECKBOX_SUGGESTION_REQUIRED}
+                        </Typography>
+                      </Box>
+                      }
                   </Box>
                 )}
 
                 {/* submit */}
-                <Box sx={{ textAlign: "end", marginTop: "40px" }}>
+                <Box sx={{ textAlign: "center", marginTop: "40px" }}>
                   <Button
                     type="submit"
                     variant="contained"
-                    style={{ backgroundColor: "#399689", color: "#ffffff" }}
+                    style={{ backgroundColor: "primary"}}
                     onClick={handleSubmit}
                   >
                     Submit
                   </Button>
                 </Box>
               </Box>
+            </Box>}
+
+            {/* Thank you page */}
+
+            { !page.responsePage && <Box
+              sx={{
+                backgroundColor: '#fff',
+                width: {sm:'80%', xs:'98%'},
+                borderRadius:"12px"
+              }}
+              display="flex"
+              justifyContent={'center'}
+              alignItems={'center'}
+            > 
+            { page.thankYouPage &&
+               <Stack direction={'column'} spacing={2}>
+                <Stack display="flex" justifyContent={'center'} alignItems={'center'}>
+                  <CheckCircleSharpIcon color='primary' sx={{fontSize:'90px'}}/>  
+                </Stack>
+                <Stack display="flex" justifyContent={'center'} alignItems={'center'}>
+                  <Typography variant="h4" color="primary" sx={{fontWeight:'700'}}> Thank you! </Typography>
+                </Stack>
+                <Stack display="flex" justifyContent={'center'} alignItems={'center'}>
+                  <Typography variant="body1">{userQuestionData.response.msg}</Typography>
+                </Stack>
+              </Stack>
+            }
+
+            { page.closedPage &&
+               <Stack direction={'column'} spacing={2}>
+                <Stack display="flex" justifyContent={'center'} alignItems={'center'}>
+                <CancelIcon color='error' sx={{fontSize:'90px'}}/> 
+                </Stack>
+                <Stack display="flex" justifyContent={'center'} alignItems={'center'}>
+                  <Typography variant="h4" color="#ff3d00" sx={{fontWeight:'700'}}> Closed for suggestions! </Typography>
+                </Stack>
+                <Stack display="flex" justifyContent={'center'} alignItems={'center'}>
+                  <Typography variant="body1">{userSuggestionErrors.SUGGESTION_BOX_CLOSED}</Typography>
+                </Stack>
+              </Stack>
+            }
+           
             </Box>
+              }
           </Box>
-        </AppBar>
-      </Box>
     </>
   );
 };
