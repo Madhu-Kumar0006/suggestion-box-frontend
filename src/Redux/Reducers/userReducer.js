@@ -8,7 +8,7 @@ const initialState = {
   response: "",
   error: "",
   getQuestionLoading: false,
-  postResponseLoadion: false,
+  postResponseLoading: false,
 };
 
 export default function (state = initialState, action) {
@@ -34,19 +34,19 @@ export default function (state = initialState, action) {
     case USER_POST_RESPONSE_START:
       return {
         ...state,
-        postResponseLoadion: true, 
+        postResponseLoading: true, 
       };
     case USER_POST_RESPONSE_SUCCESS:
       return {
         ...state,
         response: payload,
-        postResponseLoadion: false,
+        postResponseLoading: false,
       };
     case USER_POST_RESPONSE_ERROR:
       return {
         ...state,
         error: payload,
-        postResponseLoadion: false,
+        postResponseLoading: false,
       };
     default:
       return state;
