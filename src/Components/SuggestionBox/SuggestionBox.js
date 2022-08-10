@@ -202,18 +202,24 @@ const SuggestionBox = () => {
                                         <CircularProgress color="primary" />
                                     </Stack>
                                 ) : (
-                                    openData.currentData().map((item, index) => (
-                                        <SuggestionBoxCard key={index} 
-                                        questionTitle={item.question_title} 
-                                        link={item.suggestion_link} 
-                                        status={item.status} 
-                                        id={item.id} 
-                                        reponsesCount={item.count} 
-                                        closeSuggestionBox={suggestionBoxCloseHandler}
-                                        createdAt={item.created_at}
-                                        />    
-                                ) 
-                                )) } 
+                                    openedSuggestionBox.length === 0 ? 
+                                    (
+                                        <Typography variant="body1" textAlign={'center'} my={5}>No SuggestionBox available, Create one!</Typography>
+                                    ) : (
+                                        openData.currentData().map((item, index) => (
+                                            <SuggestionBoxCard key={index} 
+                                            questionTitle={item.question_title} 
+                                            link={item.suggestion_link} 
+                                            status={item.status} 
+                                            id={item.id} 
+                                            reponsesCount={item.count} 
+                                            closeSuggestionBox={suggestionBoxCloseHandler}
+                                            createdAt={item.created_at}
+                                            />    
+                                    ))
+                                    )
+                                    ) 
+                                    } 
                             { !allQuestions.loading && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
                                 <Pagination count={openData.maxPage} page={openData.currentPage} color="primary" shape="rounded" variant="outlined" default={openData.currentPage} 
                                 onChange={openPaginationHandler} />
@@ -226,20 +232,23 @@ const SuggestionBox = () => {
                                     <Stack display="flex" mt={10} alignItems={'center'} justifyContent={'center'}>
                                         <CircularProgress color="primary" />
                                     </Stack>
-                                ) : (
-                                    closeData.currentData().map((item, index) => (
-                                        <SuggestionBoxCard 
-                                        key={index} 
-                                        questionTitle={item.question_title} 
-                                        link={item.suggestion_link} 
-                                        status={item.status} 
-                                        id={item.id} 
-                                        reponsesCount={item.count}
-                                        openSuggestionBox={suggestionBoxOpenHandler}
-                                        createdAt={item.created_at}
-                                        />    
-                                ) 
-                                )) } 
+                                ) : (  closedSuggestionBox.length === 0 ? (
+                                        <Typography variant="body1" textAlign={'center'} my={5}>No SuggestionBox available!</Typography>
+                                    ) : (
+                                        closeData.currentData().map((item, index) => (
+                                            <SuggestionBoxCard 
+                                                key={index} 
+                                                questionTitle={item.question_title} 
+                                                link={item.suggestion_link} 
+                                                status={item.status} 
+                                                id={item.id} 
+                                                reponsesCount={item.count}
+                                                openSuggestionBox={suggestionBoxOpenHandler}
+                                                createdAt={item.created_at}
+                                                />    
+                                    ))
+                                    )
+                                    ) } 
                                 { !allQuestions.loading && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
                                 <Pagination count={closeData.maxPage} page={closeData.currentPage} color="primary" shape="rounded" variant="outlined" default={closeData.currentPage} 
                                     onChange={closePaginationHandler} />
@@ -252,20 +261,24 @@ const SuggestionBox = () => {
                                     <Stack display="flex" mt={10} alignItems={'center'} justifyContent={'center'}>
                                         <CircularProgress color="primary" />
                                     </Stack>
-                                ) : ( allData.currentData().map((item, index) => (
-                                <SuggestionBoxCard 
-                                key={index} 
-                                questionTitle={item.question_title} 
-                                link={item.suggestion_link} 
-                                status={item.status} 
-                                id={item.id} 
-                                reponsesCount={item.count}
-                                openSuggestionBox={suggestionBoxOpenHandler}
-                                closeSuggestionBox={suggestionBoxCloseHandler}
-                                createdAt={item.created_at}
-                                />
-                            )
-                            ))}
+                                ) : ( allSuggestionBox.length === 0 ? (
+                                    <Typography variant="body1" textAlign={'center'} my={5}>No SuggestionBox available, Create one!</Typography>
+                                ) : (
+                                    allData.currentData().map((item, index) => (
+                                        <SuggestionBoxCard 
+                                        key={index} 
+                                        questionTitle={item.question_title} 
+                                        link={item.suggestion_link} 
+                                        status={item.status} 
+                                        id={item.id} 
+                                        reponsesCount={item.count}
+                                        openSuggestionBox={suggestionBoxOpenHandler}
+                                        closeSuggestionBox={suggestionBoxCloseHandler}
+                                        createdAt={item.created_at}
+                                        />
+                                    ))
+                                )
+                            )}
                             { !allQuestions.loading && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
                                 <Pagination count={allData.maxPage} page={allData.currentPage} color="primary" shape="rounded" variant="outlined" default={allData.currentPage} 
                                 onChange={allPaginationHandler} />

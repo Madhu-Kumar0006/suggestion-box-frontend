@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core";
 import CircularProgress from '@mui/material/CircularProgress';
-import { Stack, Paper, InputAdornment, TextField, IconButton, Grid, Button, Typography, Link } from "@mui/material";
+import { Stack, Paper, InputAdornment, TextField, IconButton, Grid, Button, Typography, Box, Link } from "@mui/material";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import loginBanner from './../../Assets/images/banner.jpg';
@@ -13,6 +13,7 @@ import * as yup from 'yup';
 import { emailErrors, passwordErrors } from "../Common/Constants";
 import { login } from "../../Redux/Actions/loginAction";
 import AlertModal from "../AlertModal/AlertModal";
+import colorLogo from './../../Assets/images/logo-color.png';
 
 
 //defining styles
@@ -97,7 +98,10 @@ const Login = () => {
   
     return(
         <Fragment>
-            <Grid container className={`${classes.bgImage}`} alignItems={"center"} justifyContent={"center"}>
+            <Grid container className={`${classes.bgImage}`} alignItems={"center"} justifyContent={"center"} display={'flex'} direction={'column'}>
+              <Box marginY={2} sx={{display:{xs:'block', sm:'none'}}}>
+                <img width={'200px'} src={colorLogo} alt="logo" />
+              </Box>
               <Paper elevation={10} sx={{width:{xs:'90%', sm:'80%', md:'60%', xl:'40%'}}} height={'500px'} style={{ borderRadius: "10px"}} >
                 {alert.message && <AlertModal show={true} />}
                 <Stack p={2} direction={'row'} spacing={1} justifyContent={'space-between'}>
@@ -134,8 +138,8 @@ const Login = () => {
                             helperText={formik.touched.password && Boolean(formik.errors.password) && formik.errors.password}
                           />
                         <Stack style={{ marginTop: '60px'}} direction='column'>
-                          <Button type="submit" variant="contained" color="primary">Sign In 
-                            {LoginDetails.loading && <CircularProgress sx={{color:"#fff", marginLeft:"10px"}} size={20}/>}
+                          <Button type="submit" variant="contained" color="primary" disabled={LoginDetails.loading}>Sign In 
+                            {LoginDetails.loading && <CircularProgress sx={{color:"primary.dark", marginLeft:"10px"}} size={20}/>}
                           </Button>
                           <Link mt={1} color={'primary.main'} variant="subtitle2" align={"right"} component='a' underline="hover" href="#">forgot password?</Link>
                         </Stack>
