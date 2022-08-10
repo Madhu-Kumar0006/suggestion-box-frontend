@@ -35,7 +35,7 @@ const ResponseCard = (props) => {
         <Grid display='flex' justifyContent={'flex-start'} flexDirection={'row'} sx={{padding: 1, width: '100%', marginY:1}}>
             <Grid container display="flex" direction ="column" sx={{ width: 'auto', marginRight:'8px'}} >
                 <Grid item>
-                    <Typography variant="caption" color="#231F20">{dateTime}</Typography>  
+                    <Typography variant="caption" color="#231F20" noWrap sx={{fontSize:{xs:"12px", sm:"14px"}}}>{dateTime}</Typography>  
                 </Grid>
                 <Grid item container display="flex" justifyContent={'center'}>
                     <AccountCircleTwoToneIcon fontSize="large"/>
@@ -43,7 +43,7 @@ const ResponseCard = (props) => {
             </Grid>
             <Grid item sx={{marginY:'auto'}}>
                 <Typography variant="subtitle1"  sx={{ fontSize: '12px', fontWeight: '700'}} color="#231F20">Anonymous</Typography>   
-                <Typography variant="subtitle2" style={{ wordWrap: 'break-word',  backgroundColor:'#b2dfdb', padding:'10px 20px', borderRadius:'8px'}}>
+                <Typography variant="subtitle2" paragraph style={{ wordWrap: 'break-word',  backgroundColor:'#b2dfdb', padding:'10px 20px', borderRadius:'8px'}}>
                     {Array.isArray(props.response) ? props.response.map((item, index) => (
                     <p key={index} >{item.responseData}</p>
                 ) ): props.response}
