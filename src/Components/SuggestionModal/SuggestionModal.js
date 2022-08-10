@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { FormHelperText, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import Divider from "@mui/material/Divider";
 import CloseIcon from "@mui/icons-material/Close";
 import { FieldArray, useFormik, FormikProvider } from "formik";
 import { addQuestion } from "../../Redux/Actions/addQuestionAction";
@@ -233,7 +232,7 @@ const SuggestionModal = (props) => {
                   {(fieldArrayProps) => {
                     // console.log(fieldArrayProps, "fap");
                     const { push, remove, form } = fieldArrayProps;
-                    const { values, errors } = form;
+                    const { values } = form;
                     const { inputs } = values;
                     return (
                       <Box
