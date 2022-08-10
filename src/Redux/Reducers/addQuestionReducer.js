@@ -18,11 +18,13 @@ export default function(state = initialState, action) {
         case ADD_QUESTION_SUCCESS:
             return {
                 ...state,
+                loading:false,
                 response:payload
             }
         case ADD_QUESTION_ERROR:
             return {
                 ...state,
+                loading:false,
                 error:payload
             }
         default:
