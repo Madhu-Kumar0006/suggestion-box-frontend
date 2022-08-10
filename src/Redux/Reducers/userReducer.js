@@ -7,7 +7,8 @@ import {
 const initialState = {
   response: "",
   error: "",
-  loading: false,
+  getQuestionLoading: false,
+  postResponseLoading: false,
 };
 
 export default function (state = initialState, action) {
@@ -16,36 +17,36 @@ export default function (state = initialState, action) {
     case USER_GET_QUESTION_START:
       return {
         ...state,
-        loading: true,
+        getQuestionLoading: true,
       };
     case USER_GET_QUESTION_SUCCESS:
       return {
         ...state,
         response: payload,
-        loading: false,
+        getQuestionLoading: false,
       };
       case USER_GET_QUESTION_ERROR:
       return {
         ...state,
         error: payload,
-        loading: false,
+        getQuestionLoading: false,
       };
     case USER_POST_RESPONSE_START:
       return {
         ...state,
-        loading: true, 
+        postResponseLoading: true, 
       };
     case USER_POST_RESPONSE_SUCCESS:
       return {
         ...state,
         response: payload,
-        loading: false,
+        postResponseLoading: false,
       };
     case USER_POST_RESPONSE_ERROR:
       return {
         ...state,
         error: payload,
-        loading: false,
+        postResponseLoading: false,
       };
     default:
       return state;

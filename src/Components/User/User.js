@@ -16,6 +16,7 @@ import { Typography, Button, Stack } from "@mui/material";
 import { userSuggestionErrors } from "../Common/Constants";
 import CheckCircleSharpIcon from '@mui/icons-material/CheckCircleSharp';
 import CancelIcon from '@mui/icons-material/Cancel';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 const User = () => {
@@ -33,7 +34,7 @@ const User = () => {
 
   //UseSelector:
   const userQuestionData = useSelector((state) => state.user);
-  // console.log(userQuestionData.response)
+  // console.log(userQuestionData)
 
   //UseEffect Start:
   useEffect(() => {
@@ -172,122 +173,135 @@ const User = () => {
                     <Typography variant='caption' color='#757575'>Please provide your suggestion below and Submit</Typography>
                   </Box>
                   <Box sx={{marginBottom:'30px', paddingX:"20px", paddingY:"30px", borderRadius:"10px", backgroundColor:'primary.light'}}>
-                    {data ? (
-                      <Typography color="#000" variant='body1'>{data.question_title}</Typography>
+                    {userQuestionData.getQuestionLoading ?
+                    (
+                      <Typography color="#000" variant='body2'>Loading...</Typography>
                     ) : (
-                      ""
+                      data ? (
+                        <Typography color="#000" variant='body1'>{data.question_title}</Typography>
+                      ) : (
+                        ""
+                      )
                     )}
+                    
                   </Box>
                 </Box>
                 {/* text field */}
-                {data && data.answer_type === 1 ? (
-                  <Box>
-                    <Box sx={{width: {sm:'90%', xs:'98%'}, display:'flex', justifyContent:'center', alignItems:'center', marginX:'auto'}}>
-                      <TextareaAutosize
-                        aria-label="minimum height"
-                        minRows={5}
-                        placeholder="Enter your suggestion here"
-                        style={{ width: "90%",borderRadius:'5px', borderColor: `${errors.textInput ? "red" : ""}`, border: '2px solid grey',fontSize:'16px'}}
-                        value={textInput}
-                        onChange={handleTextInputChange}
-                      />
-                    </Box>
-                    { errors.textInput &&
-                      <Box sx={{width: {sm:'90%', xs:'98%'}, display:'flex', justifyContent:'center', marginTop:'20px' ,marginX:'auto'}}>
-                        <Typography variant="body2" color="error">
-                          {userSuggestionErrors.TEXT_SUGGESTION_REQUIRED}
-                        </Typography>
-                      </Box>
-                      }
-                  </Box>
-                ) : data && data.answer_type === 2 ? (
-                  // radio button
-                  <Box>
-                    <Box sx={{width: {sm:'90%', xs:'98%'}, marginX:'auto'}}>
-                      <Typography variant="body1">
-                        Please select any one option:
-                      </Typography>
-                      <RadioGroup
-                        aria-labelledby="demo-radio-buttons-group-label"
-                        name="radio-buttons-group"
-                      >
-                        {data &&
-                          data.options &&
-                          data.options.map((item, index) => {
-                            return (
-                                <FormGroup
-                                  style={{
-                                    marginTop: "10px",
-                                    marginLeft: "10px",
-                                    color: "black",
-                                  }}
-                                  key={index}
-                                >
-                                  <FormControlLabel
-                                    key={index}
-                                    value={item.option_name}
-                                    control={
-                                      <Radio
-                                        value={item.option_name}
-                                        onChange={handleRadioChange}
-                                      />
-                                    }
-                                    label={item.option_name}
-                                  />
-                                </FormGroup>
-                            );
-                          })}
-                      </RadioGroup>
-                    </Box>
-                    { errors.radio &&
-                      <Box sx={{width: {sm:'90%', xs:'98%'}, marginX:'auto',display:'flex', justifyContent:'center', marginTop:'20px'}}>
-                        <Typography variant="body2" color="error">
-                          {userSuggestionErrors.RADIO_SUGGESTION_REQUIRED}
-                        </Typography>
-                      </Box>
-                      }
-
-                  </Box>
- 
+                { userQuestionData.getQuestionLoading ? (
+                  <Stack display="flex" mt={10} alignItems={'center'} justifyContent={'center'}>
+                    <CircularProgress color="primary" />
+                </Stack>
                 ) : (
-
-                  //checkbox
-                  <Box>
-                    <Box sx={{width: {sm:'90%', xs:'98%'}, marginX:'auto'}}>
-                      <span style={{ color: "black" }}>
-                        Please select one or more options:
-                      </span>
-
-                      {data &&
-                        data.options &&
-                        data.options.map((item, index) => {
-                          return (
-                              <FormGroup
-                                style={{
-                                  marginTop: "10px",
-                                  marginLeft: "10px",
-                                  color: "black",
-                                }}
-                                key={index}
-                              >
-                                <FormControlLabel
-                                  key={index}
-                                  control={<Checkbox value={item.option_name} checked={checkbox[item.option_name]} onClick={handleCheckBoxChange} />}
-                                  label={item.option_name}
-                                />
-                              </FormGroup>
-                          );
-                        })}
-                    </Box>
-                    {errors.checkbox &&
-                      <Box sx={{width: {sm:'90%', xs:'98%'}, display:'flex', justifyContent:'center', marginX:'auto', marginTop:'20px'}}>
-                        <Typography variant="body2" color="error">
-                          {userSuggestionErrors.CHECKBOX_SUGGESTION_REQUIRED}
-                        </Typography>
+                    data && data.answer_type === 1 ? (
+                      <Box>
+                        <Box sx={{width: {sm:'90%', xs:'98%'}, display:'flex', justifyContent:'center', alignItems:'center', marginX:'auto'}}>
+                          <TextareaAutosize
+                            aria-label="minimum height"
+                            minRows={5}
+                            placeholder="Enter your suggestion here"
+                            style={{ width: "90%",borderRadius:'5px', borderColor: `${errors.textInput ? "red" : ""}`, border: '2px solid grey',fontSize:'16px'}}
+                            value={textInput}
+                            onChange={handleTextInputChange}
+                          />
+                        </Box>
+                        { errors.textInput &&
+                          <Box sx={{width: {sm:'90%', xs:'98%'}, display:'flex', justifyContent:'center', marginTop:'20px' ,marginX:'auto'}}>
+                            <Typography variant="body2" color="error">
+                              {userSuggestionErrors.TEXT_SUGGESTION_REQUIRED}
+                            </Typography>
+                          </Box>
+                          }
                       </Box>
-                      }
-                  </Box>
-                )}
+                    ) : data && data.answer_type === 2 ? (
+                      // radio button
+                      <Box>
+                        <Box sx={{width: {sm:'90%', xs:'98%'}, marginX:'auto'}}>
+                          <Typography variant="body1">
+                            Please select any one option:
+                          </Typography>
+                          <RadioGroup
+                            aria-labelledby="demo-radio-buttons-group-label"
+                            name="radio-buttons-group"
+                          >
+                            {data &&
+                              data.options &&
+                              data.options.map((item, index) => {
+                                return (
+                                    <FormGroup
+                                      style={{
+                                        marginTop: "10px",
+                                        marginLeft: "10px",
+                                        color: "black",
+                                      }}
+                                      key={index}
+                                    >
+                                      <FormControlLabel
+                                        key={index}
+                                        value={item.option_name}
+                                        control={
+                                          <Radio
+                                            value={item.option_name}
+                                            onChange={handleRadioChange}
+                                          />
+                                        }
+                                        label={item.option_name}
+                                      />
+                                    </FormGroup>
+                                );
+                              })}
+                          </RadioGroup>
+                        </Box>
+                        { errors.radio &&
+                          <Box sx={{width: {sm:'90%', xs:'98%'}, marginX:'auto',display:'flex', justifyContent:'center', marginTop:'20px'}}>
+                            <Typography variant="body2" color="error">
+                              {userSuggestionErrors.RADIO_SUGGESTION_REQUIRED}
+                            </Typography>
+                          </Box>
+                          }
+
+                      </Box>
+    
+                    ) : (
+
+                      //checkbox
+
+                      <Box>
+                        <Box sx={{width: {sm:'90%', xs:'98%'}, marginX:'auto'}}>
+                          <span style={{ color: "black" }}>
+                            Please select one or more options:
+                          </span>
+
+                          {data &&
+                            data.options &&
+                            data.options.map((item, index) => {
+                              return (
+                                  <FormGroup
+                                    style={{
+                                      marginTop: "10px",
+                                      marginLeft: "10px",
+                                      color: "black",
+                                    }}
+                                    key={index}
+                                  >
+                                    <FormControlLabel
+                                      key={index}
+                                      control={<Checkbox value={item.option_name} checked={checkbox[item.option_name]} onClick={handleCheckBoxChange} />}
+                                      label={item.option_name}
+                                    />
+                                  </FormGroup>
+                              );
+                            })}
+                        </Box>
+                        {errors.checkbox &&
+                          <Box sx={{width: {sm:'90%', xs:'98%'}, display:'flex', justifyContent:'center', marginX:'auto', marginTop:'20px'}}>
+                            <Typography variant="body2" color="error">
+                              {userSuggestionErrors.CHECKBOX_SUGGESTION_REQUIRED}
+                            </Typography>
+                          </Box>
+                          }
+                      </Box>
+                    ))
+                }
 
                 {/* submit */}
                 <Box sx={{ textAlign: "center", marginTop: "40px" }}>

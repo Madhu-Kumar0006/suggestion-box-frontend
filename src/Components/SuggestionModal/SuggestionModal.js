@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { TextField } from "@mui/material";
+import { CircularProgress, TextField } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -13,7 +13,7 @@ import FormLabel from "@mui/material/FormLabel";
 import CloseIcon from "@mui/icons-material/Close";
 import { FieldArray, useFormik, FormikProvider } from "formik";
 import { addQuestion } from "../../Redux/Actions/addQuestionAction";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as yup from 'yup';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
@@ -22,9 +22,8 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 800,
+  width: {xs:300, md:800},
   bgcolor: "background.paper",
-  // border: "2px solid #000",
   boxShadow: 24,
   p: 4,
   borderRadius: "12px",
@@ -61,6 +60,10 @@ const SuggestionModal = (props) => {
   const { show, close } = props;
   const classes = useStyles();
 
+  const addQestion = useSelector((state) => state.addQuestionReducer);
+  const alert = useSelector((state) => state.alert);
+  // console.log(addQestion)
+
   const dispatch = useDispatch();
 
 
@@ -92,8 +95,15 @@ const SuggestionModal = (props) => {
     }
     // console.log(body)
     dispatch(addQuestion(body));
-    close();
+    // close();
   }
+
+  useEffect(() => {
+    if (alert.type === 'success') {
+      close();
+    }
+  }, [alert, close]);
+  // console.log(addQestion.loading)
 
   const showSingleSelect = () => {
     setSingleSelect(true);
@@ -111,12 +121,12 @@ const SuggestionModal = (props) => {
   };
 
   return (
-    <Modal
+      <Modal
       open={show}
       onClose={close}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
-    // disableScrollLock={false}
+      sx={{display:'flex', justifyContent:'center', alignItems:'center'}}
     >
       <Box sx={style}>
         <Box
@@ -124,20 +134,18 @@ const SuggestionModal = (props) => {
             display: "flex",
             justifyContent: "center",
             alignItems: 'center',
-            marginBottom: '25px'
+            paddingBottom: '25px',
+            borderBottom:'2px solid #00a693',
+            mb:5
           }}
         >
           <Typography
             id="modal-modal-title"
-            variant="h5"
-            sx={{ color: "primary.main", fontWeight: '700' }}
-            component="h2"
+            sx={{ color: "primary.main", fontWeight: '700', fontSize:{xs:'15px', md:'25px'} }}
+            
           >
             Create Suggestion Box
           </Typography>
-          {/* <Button onClick={close}>
-            <CloseIcon sx={{ color: 'black', mr:'-400px' }} />
-          </Button> */}
         </Box>
         {/* <Divider /> */}
 
@@ -152,7 +160,7 @@ const SuggestionModal = (props) => {
                   name='question'
                   onChange={formik.handleChange}
                   type="text"
-                  sx={{ mt: 10 }}
+                  sx={{ mt: 10, width: {xs:'200px', md:'450px'} }}
                   id="question"
                   placeholder="Enter Question here"
                   label="Enter Question"
@@ -169,7 +177,7 @@ const SuggestionModal = (props) => {
                     Suggestion Type
                   </FormLabel>
                   <RadioGroup
-                    row
+                    sx={{display:'flex', flexDirection:{xs:'column', md:'row'}}}
                     aria-labelledby="demo-radio-buttons-group-label"
                     value={formik.values.suggestionType}
                     name='suggestionType'
@@ -179,12 +187,13 @@ const SuggestionModal = (props) => {
                       value='anonymous'
                       control={<Radio />}
                       label="Anonymous"
-                      sx={{ mr: 6 }}
+                      sx={{ mr: {xs:3, md:6} }}
                     />
                     <FormControlLabel
                       value='specify name'
                       control={<Radio />}
                       label="Specify name"
+                      sx={{ mr: {xs:3, md:6} }}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -197,7 +206,7 @@ const SuggestionModal = (props) => {
                     Answer Type
                   </FormLabel>
                   <RadioGroup
-                    row
+                    sx={{display:'flex', flexDirection:{xs:'column', md:'row'}}}
                     aria-labelledby="demo-radio-buttons-group-label"
                     value={formik.values.answerType}
                     name='answerType'
@@ -208,20 +217,21 @@ const SuggestionModal = (props) => {
                       control={<Radio />}
                       label="Text field"
                       onClick={hideSingleAndMulti}
-                      sx={{ mr: 6 }}
+                      sx={{ mr: {xs:3, md:6} }}
                     />
                     <FormControlLabel
                       value='2'
                       control={<Radio />}
                       label="Single select"
                       onClick={showSingleSelect}
-                      sx={{ mr: 6 }}
+                      sx={{ mr: {xs:3, md:6} }}
                     />
                     <FormControlLabel
                       value='3'
                       control={<Radio />}
                       label="Multi select"
                       onClick={showMultiSelect}
+                      sx={{ mr: {xs:3, md:6} }}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -258,18 +268,19 @@ const SuggestionModal = (props) => {
                                 onChange={formik.handleChange}
                                 label='Option'
                                 variant="outlined"
-                                sx={{ width: '400px', height: 0.2 }}
+                                sx={{ width:{xs:'120px', md:'350px', lg:'400px'}, height: 0.2 }}
                                 size='small'
                               />
+                              {/* {errors.inputs[idx].name} */}
                             </Box>
                             {idx === 0 ? (
                               <Button
-                                sx={{ fontSize: '15px', fontWeight: '600', ml: 2 }}
+                                sx={{ fontSize: '15px', fontWeight: '600', ml: {xs:0.5, md:2} }}
                                 onClick={() => push("")}>
                                 <AddCircleOutlineIcon sx={{ color: 'primary.main' }} />
                               </Button>
                             ) : (
-                              <Button sx={{ ml: 2 }} onClick={() => remove(idx)}>
+                              <Button sx={{ ml: {xs:0.5, md:2} }} onClick={() => remove(idx)}>
                                 <CloseIcon sx={{ color: 'red' }} />
                               </Button>
                             )}
@@ -286,7 +297,7 @@ const SuggestionModal = (props) => {
                   display: "flex",
                   justifyContent: "flex-end",
                   marginTop: "40px",
-                  marginRight: '40px'
+                  marginRight: {xs:'25px', md:'40px'}
                 }}
               >
                 <Button onClick={close} variant="outlined">
@@ -301,7 +312,7 @@ const SuggestionModal = (props) => {
                     marginLeft: "15px",
                   }}
                 >
-                  Submit
+                 {addQestion.loading ? <CircularProgress sx={{color:"#fff", marginLeft:"10px"}} size={20}/> : <Box>Submit</Box>}
                 </Button>
               </Box>
             </form>

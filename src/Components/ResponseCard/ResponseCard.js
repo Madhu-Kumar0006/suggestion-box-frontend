@@ -35,7 +35,7 @@ const ResponseCard = (props) => {
         <Grid display='flex' justifyContent={'flex-start'} flexDirection={'row'} sx={{padding: 1, width: '100%', marginY:1}}>
             <Grid container display="flex" direction ="column" sx={{ width: 'auto', marginRight:'8px'}} >
                 <Grid item>
-                    <Typography variant="caption" color="#231F20">{dateTime}</Typography>  
+                    <Typography variant="caption" color="#231F20" noWrap sx={{fontSize:{xs:"12px", sm:"14px"}}}>{dateTime}</Typography>  
                 </Grid>
                 <Grid item container display="flex" justifyContent={'center'}>
                     <AccountCircleTwoToneIcon fontSize="large"/>

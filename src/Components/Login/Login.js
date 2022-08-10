@@ -21,7 +21,7 @@ const useStyles = makeStyles({
 
     bgImage: {
         background: `url(${backgroundImg})`,
-        height: '100vh',
+        minHeight: '100vh',
         width: '100vw',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -98,8 +98,8 @@ const Login = () => {
   
     return(
         <Fragment>
-            <Grid container className={`${classes.bgImage}`} alignItems={"center"} justifyContent={"center"} display={'flex'} direction={'column'}>
-              <Box marginY={2} sx={{display:{xs:'block', sm:'none'}}}>
+            <Grid container className={`${classes.bgImage}`} alignItems={"center"} justifyContent={"center"} display={'flex'} flexDirection="column">
+              <Box my={2} sx={{display:{xs:'block', sm:'none'}}}>
                 <img width={'200px'} src={colorLogo} alt="logo" />
               </Box>
               <Paper elevation={10} sx={{width:{xs:'90%', sm:'80%', md:'60%', xl:'40%'}}} height={'500px'} style={{ borderRadius: "10px"}} >
