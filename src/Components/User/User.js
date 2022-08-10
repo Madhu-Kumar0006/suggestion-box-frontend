@@ -34,7 +34,7 @@ const User = () => {
 
   //UseSelector:
   const userQuestionData = useSelector((state) => state.user);
-  console.log(userQuestionData)
+  // console.log(userQuestionData)
 
   //UseEffect Start:
   useEffect(() => {
@@ -264,7 +264,7 @@ const User = () => {
                     ) : (
 
                       //checkbox
-                      
+
                       <Box>
                         <Box sx={{width: {sm:'90%', xs:'98%'}, marginX:'auto'}}>
                           <span style={{ color: "black" }}>
