@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { CircularProgress, TextField } from "@mui/material";
+import { CircularProgress, TextareaAutosize, TextField } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -14,15 +14,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import { FieldArray, useFormik, FormikProvider } from "formik";
 import { addQuestion } from "../../Redux/Actions/addQuestionAction";
 import { useDispatch, useSelector } from "react-redux";
-import * as yup from 'yup';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import * as yup from "yup";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: {xs:300, md:800},
+  width: { xs: 300, md: 800 },
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
@@ -41,15 +41,10 @@ const useStyles = makeStyles({
 });
 
 const validationSchema = yup.object().shape({
-  question: yup
-    .string()
-    .required('Quesion is required !'),
-  suggestionType: yup
-    .string()
-    .required('Suggestion Type is required !'),
-  answerType: yup
-    .string()
-    .required('Answer Type is required !'),
+  question: yup.string().required("Title is required !"),
+  suggestionType: yup.string().required("Suggestion Type is required !"),
+  answerType: yup.string().required("Answer Type is required !"),
+  // description:yup.string().required('')
   // inputs: yup.array()
   //   .of(yup.object().shape({
   //     name: yup.string().min(1, "Min 1 character")
@@ -66,24 +61,23 @@ const SuggestionModal = (props) => {
 
   const dispatch = useDispatch();
 
-
   const [singleSelect, setSingleSelect] = useState(false);
   const [multiSelect, setMultiSelect] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      question: '',
-      suggestionType: '',
-      answerType: '',
-      inputs: [''],
+      question: "",
+      suggestionType: "",
+      answerType: "",
+      inputs: [""],
+      description:'',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // console.log(values);
-      submitSuccess(values)
-    }
+      submitSuccess(values);
+    },
   });
-
 
   const submitSuccess = (values) => {
     const body = {
@@ -91,15 +85,16 @@ const SuggestionModal = (props) => {
       suggestion_type: values.suggestionType,
       answer_type: Number(values.answerType),
       options: values.inputs,
-      user_id: Number(localStorage.getItem('user_id')),
-    }
-    // console.log(body)
-    dispatch(addQuestion(body));
+      description:values.description,
+      user_id: Number(localStorage.getItem("user_id")),
+    };
+    console.log(body)
+    // dispatch(addQuestion(body));
     // close();
-  }
+  };
 
   useEffect(() => {
-    if (alert.type === 'success') {
+    if (alert.type === "success") {
       close();
     }
   }, [alert, close]);
@@ -127,7 +122,7 @@ const SuggestionModal = (props) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-      BackdropComponent='static'
+      BackdropComponent="static"
     >
       <Box sx={style}>
         <Box
@@ -169,24 +164,41 @@ const SuggestionModal = (props) => {
         {/* question */}
         <FormikProvider value={formik}>
           <form onSubmit={formik.handleSubmit}>
-            <Box sx={{ overflowY: "scroll", height: "60vh", mt: 6 }}>
-              <Box>
+            <Box sx={{ overflowY: "scroll", height: "60vh", mt: 3 }}>
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
                 <TextField
                   className={classes.root}
                   value={formik.values.question}
                   name="question"
                   onChange={formik.handleChange}
                   type="text"
-                  sx={{ width: { xs: "200px", md: "480px" } }}
+                  sx={{ width: { xs: '90%' } }}
                   id="question"
-                  placeholder="Enter Question here"
-                  label="Enter Question"
+                  placeholder="Enter Title"
+                  label="Title"
                   variant="standard"
                   fullWidth
-                  style={{ width: "100", marginTop: "50px", marginBottom: 8 }}
+                  style={{ marginTop: "50px", marginBottom: 30 }}
                   error={
                     formik.touched.question && Boolean(formik.errors.question)
                   }
+                />
+                <TextareaAutosize
+                  minRows={5}
+                  name='description'
+                  placeholder='Description'
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                  type='text'
+                  variant="outlined"
+                  label="Description about the title"
+                  style={{
+                    borderRadius:'5px',
+                    border: '2px solid grey',
+                    fontSize:'16px',
+                    width: { xs: '80%' },
+                  }}
+                  // error={formik.touched.description && Boolean(formik.errors.description)}
                 />
               </Box>
               {/* suggestion type */}
@@ -366,9 +378,9 @@ const SuggestionModal = (props) => {
                 marginRight: 3,
               }}
             >
-              <Button onClick={close} variant="outlined">
+              {/* <Button onClick={close} variant="outlined">
                 Cancel
-              </Button>
+              </Button> */}
               <Button
                 type="submit"
                 variant="contained"
