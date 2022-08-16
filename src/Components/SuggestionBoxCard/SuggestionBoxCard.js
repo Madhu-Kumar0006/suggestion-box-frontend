@@ -15,8 +15,12 @@ const SuggestionBoxCard = (props) => {
     // const [expanded, setExpanded] = useState(false);
     const [expand, setExpand] = useState('close');
     let dateTime;
+    //local
     // const baseLink = 'http://localhost:3000/response/';
-    const baseLink = 'https://teknotrait-suggestions.herokuapp.com/response/';
+    //dev
+    const baseLink = 'https://dev-teknotrait.herokuapp.com/response/';
+    //QA
+    // const baseLink = 'https://qa-suggestion-box.herokuapp.com/response/';
    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
 
    const responseUrl = baseLink + props.link;

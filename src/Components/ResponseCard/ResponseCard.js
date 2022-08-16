@@ -42,12 +42,18 @@ const ResponseCard = (props) => {
                 </Grid>
             </Grid>
             <Grid item sx={{marginY:'auto'}}>
-                <Typography variant="subtitle1"  sx={{ fontSize: '12px', fontWeight: '700'}} color="#231F20">Anonymous</Typography>   
-                <Typography variant="subtitle2" style={{ wordWrap: 'break-word',  backgroundColor:'#b2dfdb', padding:'10px 20px', borderRadius:'8px'}}>
-                    {Array.isArray(props.response) ? props.response.map((item, index) => (
-                    <p key={index} >{item.responseData}</p>
-                ) ): props.response}
-                </Typography> 
+                <Typography variant="subtitle1"  sx={{ fontSize: '12px', fontWeight: '700'}} color="#231F20">Anonymous</Typography>
+                {
+                    Array.isArray(props.response) ? 
+                    (<Typography variant="subtitle2" sx={{backgroundColor:'primary.light',  wordWrap: 'break-word', padding:'8px 8px 8px 23px', borderRadius:'8px'}}>
+                        {props.response.map((item, index) => (
+                        <p key={index} >{item.responseData}</p>
+                        ))}
+                    </Typography>
+                ) : (
+                    <Typography sx={{backgroundColor:'primary.light',  wordWrap: 'break-word', padding:'8px 8px 8px 23px', borderRadius:'8px'}} variant="subtitle2" conponent="div" dangerouslySetInnerHTML={{__html: props.response}}></Typography> 
+                )
+                }    
             </Grid>
         </Grid>
     )
