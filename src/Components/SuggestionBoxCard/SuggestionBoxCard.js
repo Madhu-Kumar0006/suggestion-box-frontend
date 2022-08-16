@@ -18,7 +18,7 @@ const SuggestionBoxCard = (props) => {
     //local
     // const baseLink = 'http://localhost:3000/response/';
     //dev
-    const baseLink = 'https://dev-teknotrait.herokuapp.com/response/';
+    const baseLink = 'https://dev-suggestion-box.herokuapp.com/response/';
     //QA
     // const baseLink = 'https://qa-suggestion-box.herokuapp.com/response/';
    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
