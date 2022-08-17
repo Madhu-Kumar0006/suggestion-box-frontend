@@ -11,7 +11,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import CloseIcon from "@mui/icons-material/Close";
-import { FieldArray, useFormik, FormikProvider } from "formik";
+import { FieldArray, useFormik, FormikProvider, getIn } from "formik";
 import { addQuestion } from "../../Redux/Actions/addQuestionAction";
 import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
@@ -22,7 +22,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: { xs: 300, md: 800 },
+  width: { xs: 300, sm:450, md: 800 },
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
@@ -47,7 +47,7 @@ const validationSchema = yup.object().shape({
   // description:yup.string().required('')
   // inputs: yup.array()
   //   .of(yup.object().shape({
-  //     name: yup.string().min(1, "Min 1 character")
+  //     input: yup.string().min(1, "Min 1 character")
   //   }))
 });
 
@@ -69,7 +69,7 @@ const SuggestionModal = (props) => {
       question: "",
       suggestionType: "",
       answerType: "",
-      inputs: [""],
+      inputs: [''],
       description:'',
     },
     validationSchema: validationSchema,
@@ -132,7 +132,9 @@ const SuggestionModal = (props) => {
             alignItems: "center",
             paddingBottom: "25px",
             backgroundColor: "#00a693",
-            m: -4,
+            mt: -4,
+            ml:-4,
+            mr:-4,
             p: 3,
             borderTopLeftRadius: "10px",
             borderTopRightRadius: "10px",
@@ -142,7 +144,7 @@ const SuggestionModal = (props) => {
             id="modal-modal-title"
             sx={{
               color: "white",
-              fontWeight: "700",
+              fontWeight: "800",
               fontSize: { xs: "15px", md: "25px" },
             }}
           >
@@ -164,7 +166,7 @@ const SuggestionModal = (props) => {
         {/* question */}
         <FormikProvider value={formik}>
           <form onSubmit={formik.handleSubmit}>
-            <Box sx={{ overflowY: "scroll", height: "60vh", mt: 3 }}>
+            <Box sx={{ overflowY: "scroll", height: "60vh", mt: 2 }}>
               <Box sx={{ display: "flex", flexDirection: "column" }}>
                 <TextField
                   className={classes.root}
@@ -172,7 +174,7 @@ const SuggestionModal = (props) => {
                   name="question"
                   onChange={formik.handleChange}
                   type="text"
-                  sx={{ width: { xs: '90%' } }}
+                  sx={{ width: '80%' }}
                   id="question"
                   placeholder="Enter Title"
                   label="Title"
@@ -185,19 +187,20 @@ const SuggestionModal = (props) => {
                 />
                 <TextareaAutosize
                   minRows={5}
-                  name='description'
-                  placeholder='Description'
+                  name="description"
+                  placeholder="Description"
                   value={formik.values.description}
                   onChange={formik.handleChange}
-                  type='text'
+                  type="text"
                   variant="outlined"
                   label="Description about the title"
                   style={{
-                    borderRadius:'5px',
-                    border: '2px solid grey',
-                    fontSize:'16px',
-                    width: { xs: '80%' },
+                    borderRadius: "8px",
+                    border: "1px solid #356859",
+                    fontSize: "16px",
+                    width: "80%" ,
                   }}
+                  className='desc'
                   // error={formik.touched.description && Boolean(formik.errors.description)}
                 />
               </Box>
@@ -287,10 +290,9 @@ const SuggestionModal = (props) => {
               {(singleSelect || multiSelect) && (
                 <FieldArray name="inputs">
                   {(fieldArrayProps) => {
-                    // console.log(fieldArrayProps, "fap");
+                    {/* {console.log(fieldArrayProps, "fap")} */}
                     const { push, remove, form } = fieldArrayProps;
-                    const { values } = form;
-                    const { inputs } = values;
+                    const { values, errors } = form;
                     return (
                       <Box
                         sx={{
@@ -300,68 +302,78 @@ const SuggestionModal = (props) => {
                           mt: 8,
                         }}
                       >
-                        {inputs.map((input, idx) => (
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              mb: 2,
-                            }}
-                            key={`inputs-${idx}`}
-                          >
-                            <Typography
+                        {values.inputs.map((input, idx) => {
+                          const name = `inputs[${idx}]`;
+                          {/* const errorMessage = getIn(errors, name);
+                          console.log('error', errorMessage); */}
+                          return (
+                            <Box
                               sx={{
-                                fontWeight: "500",
-                                fontSize: "22px",
-                                marginRight: "10px",
-                                ml: { xs: 1, md: 2 },
-                                color: "primary.main",
+                                display: "flex",
+                                alignItems: "center",
+                                mb: 2,
                               }}
+                              key={`inputs-${idx}`}
                             >
-                              {idx + 1}.
-                            </Typography>
-                            <Box>
-                              <TextField
-                                name={`inputs[${idx}]`}
-                                value={formik.values.inputs[idx]}
-                                onChange={formik.handleChange}
-                                label="Option"
-                                variant="outlined"
+                              <Typography
                                 sx={{
-                                  width: {
-                                    xs: "110px",
-                                    md: "320px",
-                                    lg: "400px",
-                                  },
-                                  height: 0.2,
+                                  fontWeight: "500",
+                                  fontSize: "22px",
+                                  marginRight: "10px",
+                                  ml: { xs: 1, md: 2 },
+                                  color: "primary.main",
                                 }}
-                                size="small"
-                              />
-                              {/* {errors.inputs[idx].name} */}
-                            </Box>
-                            {idx === 0 ? (
-                              <Button
-                                sx={{
-                                  fontSize: "15px",
-                                  fontWeight: "600",
-                                  ml: { xs: 0.3, md: 1.6 },
-                                }}
-                                onClick={() => push("")}
                               >
-                                <AddCircleOutlineIcon
-                                  sx={{ color: "primary.main" }}
+                                {idx + 1}.
+                              </Typography>
+                              <Box>
+                                <TextField
+                                  name={name}
+                                  value={formik.values.inputs[idx]}
+                                  onChange={formik.handleChange}
+                                  label="Option"
+                                  variant="outlined"
+                                  sx={{
+                                    width: {
+                                      xs: "110px",
+                                      md: "320px",
+                                      lg: "400px",
+                                    },
+                                    height: 0.2,
+                                  }}
+                                  size="small"
+                                  // error={
+                                  //   (singleSelect || multiSelect) &&
+                                  //   formik.touched.inputs[idx] &&
+                                  //   Boolean(formik.errors.inputs[idx])
+                                  // }
                                 />
-                              </Button>
-                            ) : (
-                              <Button
-                                sx={{ ml: { xs: 0.3, md: 1.6 } }}
-                                onClick={() => remove(idx)}
-                              >
-                                <CloseIcon sx={{ color: "red" }} />
-                              </Button>
-                            )}
-                          </Box>
-                        ))}
+                                {/* {name === '' && <div>option is required</div>} */}
+                              </Box>
+                              {idx === 0 ? (
+                                <Button
+                                  sx={{
+                                    fontSize: "15px",
+                                    fontWeight: "600",
+                                    ml: { xs: 0.3, md: 1.6 },
+                                  }}
+                                  onClick={() => push("")}
+                                >
+                                  <AddCircleOutlineIcon
+                                    sx={{ color: "primary.main" }}
+                                  />
+                                </Button>
+                              ) : (
+                                <Button
+                                  sx={{ ml: { xs: 0.3, md: 1.6 } }}
+                                  onClick={() => remove(idx)}
+                                >
+                                  <CloseIcon sx={{ color: "red" }} />
+                                </Button>
+                              )}
+                            </Box>
+                          );
+                        })}
                       </Box>
                     );
                   }}
@@ -378,9 +390,13 @@ const SuggestionModal = (props) => {
                 marginRight: 3,
               }}
             >
-              {/* <Button onClick={close} variant="outlined">
+              <Button
+                onClick={close}
+                variant="outlined"
+                sx={{ display: { sm: "block", md: "none" } }}
+              >
                 Cancel
-              </Button> */}
+              </Button>
               <Button
                 type="submit"
                 variant="contained"
