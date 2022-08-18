@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { Link } from "@material-ui/core";
 import { useNavigate } from "react-router";
+import { user_baseLink } from "../../Redux/Api/RequestPath";
 
 
 const SuggestionBoxCard = (props) => {
@@ -15,11 +16,10 @@ const SuggestionBoxCard = (props) => {
     // const [expanded, setExpanded] = useState(false);
     const [expand, setExpand] = useState('close');
     let dateTime;
-    // const baseLink = 'http://localhost:3000/response/';
-    const baseLink = 'https://teknotrait-suggestions.herokuapp.com/response/';
+
    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
 
-   const responseUrl = baseLink + props.link;
+   const responseUrl = user_baseLink + props.link;
 
    const createdDate = new Date(props.createdAt);
    const currentDate = new Date();

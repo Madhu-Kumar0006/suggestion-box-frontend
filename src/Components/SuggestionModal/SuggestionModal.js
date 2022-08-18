@@ -55,9 +55,9 @@ const SuggestionModal = (props) => {
   const { show, close } = props;
   const classes = useStyles();
 
-  const addQestion = useSelector((state) => state.addQuestionReducer);
+  const addQuestionReducer = useSelector((state) => state.addQuestionReducer);
   const alert = useSelector((state) => state.alert);
-  // console.log(addQestion)
+  // console.log(addQuestionReducer)
 
   const dispatch = useDispatch();
 
@@ -69,8 +69,8 @@ const SuggestionModal = (props) => {
       question: "",
       suggestionType: "",
       answerType: "",
-      inputs: [''],
-      description:'',
+      inputs: [""],
+      description: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -85,12 +85,11 @@ const SuggestionModal = (props) => {
       suggestion_type: values.suggestionType,
       answer_type: Number(values.answerType),
       options: values.inputs,
-      description:values.description,
+      description: values.description,
       user_id: Number(localStorage.getItem("user_id")),
     };
-    console.log(body)
-    // dispatch(addQuestion(body));
-    // close();
+    // console.log(body)
+    dispatch(addQuestion(body));
   };
 
   useEffect(() => {
@@ -98,7 +97,7 @@ const SuggestionModal = (props) => {
       close();
     }
   }, [alert, close]);
-  // console.log(addQestion.loading)
+  // console.log(addQuestionReducer.loading)
 
   const showSingleSelect = () => {
     setSingleSelect(true);
@@ -122,7 +121,8 @@ const SuggestionModal = (props) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-      BackdropComponent="static"
+      // BackdropComponent="static"
+      hideBackdrop={true}
     >
       <Box sx={style}>
         <Box
@@ -133,8 +133,8 @@ const SuggestionModal = (props) => {
             paddingBottom: "25px",
             backgroundColor: "#00a693",
             mt: -4,
-            ml:-4,
-            mr:-4,
+            ml: -4,
+            mr: -4,
             p: 3,
             borderTopLeftRadius: "10px",
             borderTopRightRadius: "10px",
@@ -174,7 +174,7 @@ const SuggestionModal = (props) => {
                   name="question"
                   onChange={formik.handleChange}
                   type="text"
-                  sx={{ width: '80%' }}
+                  sx={{ width: "80%" }}
                   id="question"
                   placeholder="Enter Title"
                   label="Title"
@@ -198,9 +198,9 @@ const SuggestionModal = (props) => {
                     borderRadius: "8px",
                     border: "1px solid #356859",
                     fontSize: "16px",
-                    width: "80%" ,
+                    width: "80%",
                   }}
-                  className='desc'
+                  className="desc"
                   // error={formik.touched.description && Boolean(formik.errors.description)}
                 />
               </Box>
@@ -290,7 +290,6 @@ const SuggestionModal = (props) => {
               {(singleSelect || multiSelect) && (
                 <FieldArray name="inputs">
                   {(fieldArrayProps) => {
-                    {/* {console.log(fieldArrayProps, "fap")} */}
                     const { push, remove, form } = fieldArrayProps;
                     const { values, errors } = form;
                     return (
@@ -304,8 +303,6 @@ const SuggestionModal = (props) => {
                       >
                         {values.inputs.map((input, idx) => {
                           const name = `inputs[${idx}]`;
-                          {/* const errorMessage = getIn(errors, name);
-                          console.log('error', errorMessage); */}
                           return (
                             <Box
                               sx={{
@@ -342,13 +339,7 @@ const SuggestionModal = (props) => {
                                     height: 0.2,
                                   }}
                                   size="small"
-                                  // error={
-                                  //   (singleSelect || multiSelect) &&
-                                  //   formik.touched.inputs[idx] &&
-                                  //   Boolean(formik.errors.inputs[idx])
-                                  // }
                                 />
-                                {/* {name === '' && <div>option is required</div>} */}
                               </Box>
                               {idx === 0 ? (
                                 <Button
@@ -398,6 +389,7 @@ const SuggestionModal = (props) => {
                 Cancel
               </Button>
               <Button
+                disabled={addQuestionReducer.loading}
                 type="submit"
                 variant="contained"
                 sx={{
@@ -406,14 +398,13 @@ const SuggestionModal = (props) => {
                   marginLeft: 5,
                 }}
               >
-                {addQestion.loading ? (
+                {addQuestionReducer.loading && (
                   <CircularProgress
-                    sx={{ color: "#fff", marginLeft: "10px" }}
+                    sx={{ color: "primary", mr:2 }}
                     size={20}
                   />
-                ) : (
-                  <Box>Submit</Box>
                 )}
+                Submit
               </Button>
             </Box>
           </form>
