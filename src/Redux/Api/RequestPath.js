@@ -7,8 +7,8 @@
 
 //dev
 export const API_baseAppURL = 'https://dev-teknotrait.herokuapp.com/api/';
-// export const user_baseLink = 'https://dev-suggestion-box.herokuapp.com/response/';
+export const user_baseLink = 'https://dev-suggestion-box.herokuapp.com/response/';
 
 
 //local
-export const user_baseLink = 'http://localhost:3000/response/';
+// export const user_baseLink = 'http://localhost:3000/response/';

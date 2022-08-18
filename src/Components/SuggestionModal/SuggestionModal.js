@@ -121,7 +121,6 @@ const SuggestionModal = (props) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-      // BackdropComponent="static"
       hideBackdrop={true}
     >
       <Box sx={style}>
