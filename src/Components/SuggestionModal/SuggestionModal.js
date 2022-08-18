@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { CircularProgress, TextField } from "@mui/material";
+import { CircularProgress, TextareaAutosize, TextField } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -11,18 +11,18 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import CloseIcon from "@mui/icons-material/Close";
-import { FieldArray, useFormik, FormikProvider } from "formik";
+import { FieldArray, useFormik, FormikProvider, getIn } from "formik";
 import { addQuestion } from "../../Redux/Actions/addQuestionAction";
 import { useDispatch, useSelector } from "react-redux";
-import * as yup from 'yup';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import * as yup from "yup";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: {xs:300, md:800},
+  width: { xs: 300, sm:500, md: 850 },
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
@@ -41,18 +41,13 @@ const useStyles = makeStyles({
 });
 
 const validationSchema = yup.object().shape({
-  question: yup
-    .string()
-    .required('Quesion is required !'),
-  suggestionType: yup
-    .string()
-    .required('Suggestion Type is required !'),
-  answerType: yup
-    .string()
-    .required('Answer Type is required !'),
+  question: yup.string().required("Title is required !"),
+  suggestionType: yup.string().required("Suggestion Type is required !"),
+  answerType: yup.string().required("Answer Type is required !"),
+  // description:yup.string().required('')
   // inputs: yup.array()
   //   .of(yup.object().shape({
-  //     name: yup.string().min(1, "Min 1 character")
+  //     input: yup.string().min(1, "Min 1 character")
   //   }))
 });
 
@@ -60,30 +55,29 @@ const SuggestionModal = (props) => {
   const { show, close } = props;
   const classes = useStyles();
 
-  const addQestion = useSelector((state) => state.addQuestionReducer);
+  const addQuestionReducer = useSelector((state) => state.addQuestionReducer);
   const alert = useSelector((state) => state.alert);
-  // console.log(addQestion)
+  // console.log(addQuestionReducer)
 
   const dispatch = useDispatch();
-
 
   const [singleSelect, setSingleSelect] = useState(false);
   const [multiSelect, setMultiSelect] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      question: '',
-      suggestionType: '',
-      answerType: '',
-      inputs: [''],
+      question: "",
+      suggestionType: "",
+      answerType: "",
+      inputs: [""],
+      description: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       // console.log(values);
-      submitSuccess(values)
-    }
+      submitSuccess(values);
+    },
   });
-
 
   const submitSuccess = (values) => {
     const body = {
@@ -91,19 +85,19 @@ const SuggestionModal = (props) => {
       suggestion_type: values.suggestionType,
       answer_type: Number(values.answerType),
       options: values.inputs,
-      user_id: Number(localStorage.getItem('user_id')),
-    }
+      description: values.description,
+      user_id: Number(localStorage.getItem("user_id")),
+    };
     // console.log(body)
     dispatch(addQuestion(body));
-    // close();
-  }
+  };
 
   useEffect(() => {
-    if (alert.type === 'success') {
+    if (alert.type === "success") {
       close();
     }
   }, [alert, close]);
-  // console.log(addQestion.loading)
+  // console.log(addQuestionReducer.loading)
 
   const showSingleSelect = () => {
     setSingleSelect(true);
@@ -121,79 +115,126 @@ const SuggestionModal = (props) => {
   };
 
   return (
-      <Modal
+    <Modal
       open={show}
       onClose={close}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
-      sx={{display:'flex', justifyContent:'center', alignItems:'center'}}
+      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      hideBackdrop={true}
     >
       <Box sx={style}>
         <Box
           sx={{
             display: "flex",
             justifyContent: "center",
-            alignItems: 'center',
-            paddingBottom: '25px',
-            borderBottom:'2px solid #00a693',
-            mb:5
+            alignItems: "center",
+            paddingBottom: "25px",
+            backgroundColor: "#00a693",
+            mt: -4,
+            ml: -4,
+            mr: -4,
+            p: 3,
+            borderTopLeftRadius: "10px",
+            borderTopRightRadius: "10px",
           }}
         >
           <Typography
             id="modal-modal-title"
-            sx={{ color: "primary.main", fontWeight: '700', fontSize:{xs:'15px', md:'25px'} }}
-            
+            sx={{
+              color: "white",
+              fontWeight: "800",
+              fontSize: { xs: "15px", md: "25px" },
+            }}
           >
             Create Suggestion Box
           </Typography>
+          <CloseIcon
+            onClick={close}
+            sx={{
+              display: { xs: "none", md: "block" },
+              mr: "-200px",
+              ml: "200px",
+              color: "white",
+              cursor: "pointer",
+            }}
+          />
         </Box>
         {/* <Divider /> */}
 
         {/* question */}
-        <Box sx={{ overflowY: 'scroll', height: '60vh' }}>
-          <FormikProvider value={formik}>
-            <form onSubmit={formik.handleSubmit}>
-              <Box>
+        <FormikProvider value={formik}>
+          <form onSubmit={formik.handleSubmit}>
+            <Box sx={{ overflowY: "scroll", height: "60vh", mt: 2 }}>
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
                 <TextField
                   className={classes.root}
                   value={formik.values.question}
-                  name='question'
+                  name="question"
                   onChange={formik.handleChange}
                   type="text"
-                  sx={{ mt: 10, width: {xs:'200px', md:'450px'} }}
+                  sx={{ width: "80%" }}
                   id="question"
-                  placeholder="Enter Question here"
-                  label="Enter Question"
+                  placeholder="Enter Title"
+                  label="Title"
                   variant="standard"
                   fullWidth
-                  style={{ width: "100", marginTop: 20, marginBottom: 8 }}
-                  error={formik.touched.question && Boolean(formik.errors.question)}
+                  style={{ marginTop: "50px", marginBottom: 30 }}
+                  error={
+                    formik.touched.question && Boolean(formik.errors.question)
+                  }
+                />
+                <TextareaAutosize
+                  minRows={5}
+                  name="description"
+                  placeholder="Description"
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                  type="text"
+                  variant="outlined"
+                  label="Description about the title"
+                  style={{
+                    borderRadius: "8px",
+                    border: "1px solid #356859",
+                    fontSize: "16px",
+                    width: "80%",
+                  }}
+                  className="desc"
+                  // error={formik.touched.description && Boolean(formik.errors.description)}
                 />
               </Box>
               {/* suggestion type */}
               <Box style={{ marginTop: "30px" }}>
-                <FormControl error={formik.touched.suggestionType && Boolean(formik.errors.suggestionType)}>
+                <FormControl
+                  error={
+                    formik.touched.suggestionType &&
+                    Boolean(formik.errors.suggestionType)
+                  }
+                >
                   <FormLabel id="demo-radio-buttons-group-label">
                     Suggestion Type
                   </FormLabel>
                   <RadioGroup
-                    sx={{display:'flex', flexDirection:{xs:'column', md:'row'}}}
+                    sx={{
+                      display: "flex",
+                      flexDirection: { xs: "column", md: "row" },
+                    }}
                     aria-labelledby="demo-radio-buttons-group-label"
                     value={formik.values.suggestionType}
-                    name='suggestionType'
+                    name="suggestionType"
                     onChange={formik.handleChange}
                   >
                     <FormControlLabel
-                      value='anonymous'
+                      value="anonymous"
                       control={<Radio />}
                       label="Anonymous"
-                      sx={{ mr: {xs:3, md:6} }}
+                      sx={{ mr: { xs: 3, md: 6 } }}
                     />
                     <FormControlLabel
-                      value='specify name'
+                      value="specify name"
                       control={<Radio />}
                       label="Specify name"
-                      sx={{ mr: {xs:3, md:6} }}
+                      sx={{ mr: { xs: 3, md: 6 } }}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -201,123 +242,173 @@ const SuggestionModal = (props) => {
 
               {/* answer type */}
               <Box style={{ marginTop: "30px" }}>
-                <FormControl error={formik.touched.answerType && Boolean(formik.errors.answerType)}>
+                <FormControl
+                  error={
+                    formik.touched.answerType &&
+                    Boolean(formik.errors.answerType)
+                  }
+                >
                   <FormLabel id="demo-radio-buttons-group-label">
                     Answer Type
                   </FormLabel>
                   <RadioGroup
-                    sx={{display:'flex', flexDirection:{xs:'column', md:'row'}}}
+                    sx={{
+                      display: "flex",
+                      flexDirection: { xs: "column", md: "row" },
+                    }}
                     aria-labelledby="demo-radio-buttons-group-label"
                     value={formik.values.answerType}
-                    name='answerType'
+                    name="answerType"
                     onChange={formik.handleChange}
                   >
                     <FormControlLabel
-                      value='1'
+                      value="1"
                       control={<Radio />}
                       label="Text field"
                       onClick={hideSingleAndMulti}
-                      sx={{ mr: {xs:3, md:6} }}
+                      sx={{ mr: { xs: 3, md: 6 } }}
                     />
                     <FormControlLabel
-                      value='2'
+                      value="2"
                       control={<Radio />}
                       label="Single select"
                       onClick={showSingleSelect}
-                      sx={{ mr: {xs:3, md:6} }}
+                      sx={{ mr: { xs: 3, md: 6 } }}
                     />
                     <FormControlLabel
-                      value='3'
+                      value="3"
                       control={<Radio />}
                       label="Multi select"
                       onClick={showMultiSelect}
-                      sx={{ mr: {xs:3, md:6} }}
+                      sx={{ mr: { xs: 3, md: 6 } }}
                     />
                   </RadioGroup>
                 </FormControl>
               </Box>
 
               {(singleSelect || multiSelect) && (
-                <FieldArray name='inputs'>
+                <FieldArray name="inputs">
                   {(fieldArrayProps) => {
-                    // console.log(fieldArrayProps, "fap");
                     const { push, remove, form } = fieldArrayProps;
-                    const { values } = form;
-                    const { inputs } = values;
+                    const { values, errors } = form;
                     return (
                       <Box
                         sx={{
                           display: "flex",
-                          flexDirection: 'column',
+                          flexDirection: "column",
                           alignItems: "center",
-                          mt: 8
+                          mt: 8,
                         }}
                       >
-                        {inputs.map((input, idx) => (
-                          <Box
-                            sx={{ display: "flex", alignItems: "center", mb: 2 }}
-                            key={`inputs-${idx}`}
-                          >
-                            <Typography sx={{ fontWeight: '500', fontSize: '22px', marginRight: '10px', ml: 2, color: 'primary.main' }}>
-                              {idx + 1}.
-                            </Typography>
-                            <Box>
-                              <TextField
-                                name={`inputs[${idx}]`}
-                                value={formik.values.inputs[idx]}
-                                onChange={formik.handleChange}
-                                label='Option'
-                                variant="outlined"
-                                sx={{ width:{xs:'120px', md:'350px', lg:'400px'}, height: 0.2 }}
-                                size='small'
-                              />
-                              {/* {errors.inputs[idx].name} */}
+                        {values.inputs.map((input, idx) => {
+                          const name = `inputs[${idx}]`;
+                          return (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                mb: 2,
+                              }}
+                              key={`inputs-${idx}`}
+                            >
+                              <Typography
+                                sx={{
+                                  fontWeight: "500",
+                                  fontSize: "22px",
+                                  marginRight: "10px",
+                                  ml: { xs: 1, md: 2 },
+                                  color: "primary.main",
+                                }}
+                              >
+                                {idx + 1}.
+                              </Typography>
+                              <Box>
+                                <TextField
+                                  name={name}
+                                  value={formik.values.inputs[idx]}
+                                  onChange={formik.handleChange}
+                                  label="Option"
+                                  variant="outlined"
+                                  sx={{
+                                    width: {
+                                      xs: "110px",
+                                      md: "320px",
+                                      lg: "400px",
+                                    },
+                                    height: 0.2,
+                                  }}
+                                  size="small"
+                                />
+                              </Box>
+                              {idx === 0 ? (
+                                <Button
+                                  sx={{
+                                    fontSize: "15px",
+                                    fontWeight: "600",
+                                    ml: { xs: 0.3, md: 1.6 },
+                                  }}
+                                  onClick={() => push("")}
+                                >
+                                  <AddCircleOutlineIcon
+                                    sx={{ color: "primary.main" }}
+                                  />
+                                </Button>
+                              ) : (
+                                <Button
+                                  sx={{ ml: { xs: 0.3, md: 1.6 } }}
+                                  onClick={() => remove(idx)}
+                                >
+                                  <CloseIcon sx={{ color: "red" }} />
+                                </Button>
+                              )}
                             </Box>
-                            {idx === 0 ? (
-                              <Button
-                                sx={{ fontSize: '15px', fontWeight: '600', ml: {xs:0.5, md:2} }}
-                                onClick={() => push("")}>
-                                <AddCircleOutlineIcon sx={{ color: 'primary.main' }} />
-                              </Button>
-                            ) : (
-                              <Button sx={{ ml: {xs:0.5, md:2} }} onClick={() => remove(idx)}>
-                                <CloseIcon sx={{ color: 'red' }} />
-                              </Button>
-                            )}
-                          </Box>
-                        ))}
+                          );
+                        })}
                       </Box>
                     );
                   }}
                 </FieldArray>
               )}
-              {/* submit */}
-              <Box
+            </Box>
+            {/* submit */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                marginTop: 2,
+                marginRight: 3,
+              }}
+            >
+              <Button
+                onClick={close}
+                variant="outlined"
+                sx={{ display: { sm: "block", md: "none" } }}
+              >
+                Cancel
+              </Button>
+              <Button
+                disabled={addQuestionReducer.loading}
+                type="submit"
+                variant="contained"
                 sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginTop: "40px",
-                  marginRight: {xs:'25px', md:'40px'}
+                  backgroundColor: "primary.main",
+                  color: "#ffffff",
+                  marginLeft: 5,
                 }}
               >
-                <Button onClick={close} variant="outlined">
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  style={{
-                    backgroundColor: "primary.main",
-                    color: "#ffffff",
-                    marginLeft: "15px",
-                  }}
-                >
-                 {addQestion.loading ? <CircularProgress sx={{color:"#fff", marginLeft:"10px"}} size={20}/> : <Box>Submit</Box>}
-                </Button>
-              </Box>
-            </form>
-          </FormikProvider>
-        </Box>
+                {addQuestionReducer.loading && (
+                  <CircularProgress
+                    sx={{ color: "primary", mr:2 }}
+                    size={20}
+                  />
+                )}
+                Submit
+              </Button>
+            </Box>
+          </form>
+        </FormikProvider>
+        {/* </Box> */}
       </Box>
     </Modal>
   );
