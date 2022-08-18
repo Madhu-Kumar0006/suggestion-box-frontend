@@ -116,8 +116,8 @@ return (
                             <Typography variant='caption'>{!questionDetails.loading && (responsesCount + " Responses")}</Typography> 
                         </Grid> 
                         <Typography variant='body1'>{questionDetails.loading && "Loading..."}</Typography>
-                        <Typography variant='h5'>{!questionDetails.loading && questionTitle}</Typography>
-                        <Typography variant='body1' mt={1}>{!questionDetails.loading && questionDescription}</Typography>
+                        <Typography variant='h6'>{!questionDetails.loading && questionTitle}</Typography>
+                        <Typography variant='body2' mt={1}>{!questionDetails.loading && questionDescription}</Typography>
                     </Grid>
                 </Grid>
                 <Grid sx={{width:{sm:'85%', xs: "100%"}, marginX:'auto', marginTop:'30px'}}>

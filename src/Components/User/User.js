@@ -179,8 +179,8 @@ const User = () => {
                     ) : (
                       data ? (
                         <>
-                          <Typography color="#000" variant='h5'>{data.question_title}</Typography>
-                          <Typography color="#000" variant='body1'>{data.description}</Typography>
+                          <Typography color="#000" variant='h6'>{data.question_title}</Typography>
+                          <Typography color="#000" variant='body2'>{data.description}</Typography>
                         </>
                       ) : (
                         ""
