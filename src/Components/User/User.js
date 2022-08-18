@@ -162,9 +162,9 @@ const User = () => {
               {/* question */}
               <Box
                 sx={{
-                  marginX:"20px",
+                  marginX:{xs:"10px", sm:"20px"},
                   // marginBottom: "40px",
-                  padding: "20px",
+                  padding:{xs:"10px", sm:"20px"},
                   borderRadius:"12px",
                 }}
               >
@@ -175,10 +175,13 @@ const User = () => {
                   <Box sx={{marginBottom:'30px', paddingX:"20px", paddingY:"30px", borderRadius:"10px", backgroundColor:'primary.light'}}>
                     {userQuestionData.getQuestionLoading ?
                     (
-                      <Typography color="#000" variant='body2'>Loading...</Typography>
+                      <Typography color="#000" variant='body1'>Loading...</Typography>
                     ) : (
                       data ? (
-                        <Typography color="#000" variant='body1'>{data.question_title}</Typography>
+                        <>
+                          <Typography color="#000" variant='h5'>{data.question_title}</Typography>
+                          <Typography color="#000" variant='body1'>{data.description}</Typography>
+                        </>
                       ) : (
                         ""
                       )
@@ -207,7 +210,7 @@ const User = () => {
                             placeholder="Enter your suggestion here" 
                             value={textInput.formattedData} 
                             onChange={handleTextInputChange}
-                            style={{ width: "90%",borderRadius:'5px', border: `2px solid ${errors.textInput ? "red" : "grey"}`, fontSize:'16px'}} 
+                            style={{ width:'95%',borderRadius:'5px', border: `2px solid ${errors.textInput ? "red" : "grey"}`, fontSize:'16px'}} 
                           />
                         </Box>
                         { errors.textInput &&
