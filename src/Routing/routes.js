@@ -9,11 +9,13 @@ import Dashboard from "../Components/Dashboard/Dashboard";
 import Settings from "../Components/Settings/Settings";
 import User from "../Components/User/User";
 import Suggestions from "../Components/Suggestions/Suggestions";
+import Registration from '../Components/Registration/Registration';
 
 const BaseRoutes = () => {
   return (
     <>
       <Routes mode="absolute">
+        <Route path='/register' element={<Registration />} />
         <Route path="/" element={<Login />} />
         <Route element={<SidePanel />}>
           <Route path='/dashboard' element={<Dashboard />} />

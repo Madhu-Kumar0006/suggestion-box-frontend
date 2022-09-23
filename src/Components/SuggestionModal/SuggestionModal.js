@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { CircularProgress, TextareaAutosize, TextField } from "@mui/material";
+import { CircularProgress, TextareaAutosize, TextField, FormHelperText } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -16,6 +16,8 @@ import { addQuestion } from "../../Redux/Actions/addQuestionAction";
 import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import {suggestionModalErrors} from '../Common/Constants';
+
 
 const style = {
   position: "absolute",
@@ -41,13 +43,13 @@ const useStyles = makeStyles({
 });
 
 const validationSchema = yup.object().shape({
-  question: yup.string().required("Title is required !"),
-  suggestionType: yup.string().required("Suggestion Type is required !"),
-  answerType: yup.string().required("Answer Type is required !"),
+  question: yup.string().required(suggestionModalErrors.QUESTION_TITLE),
+  suggestionType: yup.string().required(suggestionModalErrors.SUGGESTION_TYPE),
+  answerType: yup.string().required(suggestionModalErrors.ANSWER_TYPE),
   // description:yup.string().required('')
   // inputs: yup.array()
   //   .of(yup.object().shape({
-  //     input: yup.string().min(1, "Min 1 character")
+  //     input: yup.string().min(1, suggestionModalErrors.OPTION)
   //   }))
 });
 
@@ -183,6 +185,11 @@ const SuggestionModal = (props) => {
                   error={
                     formik.touched.question && Boolean(formik.errors.question)
                   }
+                  helperText={
+                    formik.touched.question &&
+                    Boolean(formik.errors.question) &&
+                    formik.errors.question
+                  }
                 />
                 <TextareaAutosize
                   minRows={5}
@@ -238,6 +245,12 @@ const SuggestionModal = (props) => {
                     />
                   </RadioGroup>
                 </FormControl>
+                {formik.touched.suggestionType &&
+                  Boolean(formik.errors.suggestionType) && (
+                    <FormHelperText sx={{ color: "red" }}>
+                      Please select an option
+                    </FormHelperText>
+                  )}
               </Box>
 
               {/* answer type */}
@@ -284,6 +297,12 @@ const SuggestionModal = (props) => {
                     />
                   </RadioGroup>
                 </FormControl>
+                {formik.touched.answerType &&
+                  Boolean(formik.errors.answerType) && (
+                    <FormHelperText sx={{ color: "red" }}>
+                      Please select an option
+                    </FormHelperText>
+                  )}
               </Box>
 
               {(singleSelect || multiSelect) && (
@@ -399,7 +418,7 @@ const SuggestionModal = (props) => {
               >
                 {addQuestionReducer.loading && (
                   <CircularProgress
-                    sx={{ color: "primary", mr:2 }}
+                    sx={{ color: "primary", mr: 2 }}
                     size={20}
                   />
                 )}
