@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -13,7 +13,6 @@ import {
   Button,
   Typography,
   Box,
-  Link,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -115,13 +114,14 @@ const Registration = () => {
                 <Typography variant="subtitle2" component="div">
                   Already have an account?
                   <Link
-                    ml={1}
-                    fontWeight="fontWeightBold"
-                    variant="subtitle2"
-                    component="a"
-                    href="/"
-                    color={"primary.main"}
-                    underline="hover"
+                    to='/' 
+                    style={{
+                      marginLeft:'10px',
+                      fontWeight:'900',
+                      color:'black',
+                      textDecoration:'none',
+                    }}
+                    className='link'
                   >
                     Sign In
                   </Link>

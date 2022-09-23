@@ -15,3 +15,6 @@
   background: rgb(142, 170, 172);
   border-radius: 20px;
 }
+.link:hover {
+  text-decoration: underline !important;
+}
