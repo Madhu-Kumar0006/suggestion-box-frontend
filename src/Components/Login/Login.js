@@ -113,7 +113,7 @@ const Login = () => {
                       <Typography fontWeight='fontWeightBold' variant="h4" component="h2">Sign In</Typography>
                       <Typography variant="subtitle2" component="div">
                         Do not have an account?
-                        <Link ml={1} fontWeight='fontWeightBold' variant="subtitle2" component='a' href="#" color={'primary.main'} underline="hover">Sign Up</Link>
+                        <Link ml={1} fontWeight='fontWeightBold' variant="subtitle2" component='a' href="/register" color={'primary.main'} underline="hover">Sign Up</Link>
                       </Typography>
                     </Stack>
                     <form onSubmit={formik.handleSubmit}>

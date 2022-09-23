@@ -17,3 +17,15 @@ export const emailErrors = {
    CHECKBOX_SUGGESTION_REQUIRED: "Please select the option/s",
    SUGGESTION_BOX_CLOSED: "Suggestion link is expired, Please contact the admin for more information"
  }
+
+ export const suggestionModalErrors = {
+   QUESTION_TITLE:'Please Provide Question Title',
+   SUGGESTION_TYPE:'Please Select suggestion type',
+   ANSWER_TYPE:'Please select Answer type',
+   OPTION:'Please Provide option'
+ }
+
+ export const nameErrors = {
+  FIRST_NAME:'Please enter your firstname',
+  LAST_NAME:'Please enter your lastname'
+ }
