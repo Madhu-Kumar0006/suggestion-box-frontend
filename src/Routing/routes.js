@@ -10,6 +10,7 @@ import Settings from "../Components/Settings/Settings";
 import User from "../Components/User/User";
 import Suggestions from "../Components/Suggestions/Suggestions";
 import Registration from '../Components/Registration/Registration';
+import ResetPassword from "../Components/ResetPassword/ResetPassword";
 
 const BaseRoutes = () => {
   return (
@@ -17,6 +18,7 @@ const BaseRoutes = () => {
       <Routes mode="absolute">
         <Route path='/register' element={<Registration />} />
         <Route path="/" element={<Login />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route element={<SidePanel />}>
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/suggestion-box' element={<SuggestionBoxLayout />}>
