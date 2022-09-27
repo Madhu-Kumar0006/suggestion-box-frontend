@@ -1,8 +1,8 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+// import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core";
-import CircularProgress from "@mui/material/CircularProgress";
+// import CircularProgress from "@mui/material/CircularProgress";
 import {
   Stack,
   Paper,
@@ -37,14 +37,14 @@ const useStyles = makeStyles({
 
 //form validations
 const validationSchema = yup.object({
-  firstname:yup.string().required(nameErrors.FIRST_NAME),
-  lastname:yup.string().required(nameErrors.LAST_NAME),
+  firstname: yup.string().required(nameErrors.FIRST_NAME),
+  lastname: yup.string().required(nameErrors.LAST_NAME),
   email: yup
     .string()
     .email(emailErrors.INVALID_EMAIL)
     .required(emailErrors.EMAIL),
   password: yup.string().required(passwordErrors.PASSWORD),
-  confirmPassword:yup.string().required(passwordErrors.CONFIRM_PASSWORD),
+  confirmPassword: yup.string().required(passwordErrors.CONFIRM_PASSWORD),
 });
 
 const Registration = () => {
@@ -58,15 +58,15 @@ const Registration = () => {
   //managing form state
   const formik = useFormik({
     initialValues: {
-      firstname:'',
-      lastname:'',
+      firstname: "",
+      lastname: "",
       email: "",
       password: "",
-      confirmPassword:''
+      confirmPassword: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values, { resetForm }) => {
-      console.log(values, 'are the values');
+      console.log(values, "are the values");
     },
   });
 
@@ -75,9 +75,9 @@ const Registration = () => {
     setShowPassword(!showPassword);
   };
 
-   const togglePassword2 = () => {
-     setShowPassword2(!showPassword2);
-   };
+  const togglePassword2 = () => {
+    setShowPassword2(!showPassword2);
+  };
 
   return (
     <Fragment>
@@ -91,7 +91,7 @@ const Registration = () => {
       >
         <Paper
           elevation={10}
-          sx={{ width: { xs: "90%", sm: "80%", md: "60%", xl: "40%" }, mt:3 }}
+          sx={{ width: { xs: "90%", sm: "80%", md: "60%", xl: "40%" }, mt: 3 }}
           // height={"520px"}
           style={{ borderRadius: "10px" }}
         >
@@ -111,21 +111,25 @@ const Registration = () => {
                 >
                   Sign Up
                 </Typography>
-                <Typography variant="subtitle2" component="div">
-                  Already have an account?
-                  <Link
-                    to='/' 
-                    style={{
-                      marginLeft:'10px',
-                      fontWeight:'900',
-                      color:'black',
-                      textDecoration:'none',
-                    }}
-                    className='link'
-                  >
-                    Sign In
-                  </Link>
-                </Typography>
+                <Stack direction="row" alignItems="center">
+                  <Typography variant="subtitle2" component="div">
+                    Already have an account?
+                  </Typography>
+                  <Typography sx={{ color: "primary.dark", fontWeight: "900" }}>
+                    <Link
+                      to="/"
+                      style={{
+                        marginLeft: "10px",
+                        fontWeight: "900",
+                        color: "inherit",
+                        textDecoration: "none",
+                      }}
+                      className="link"
+                    >
+                      Sign In
+                    </Link>
+                  </Typography>
+                </Stack>
               </Stack>
               <form onSubmit={formik.handleSubmit}>
                 <Stack
@@ -134,7 +138,13 @@ const Registration = () => {
                   spacing={2}
                   direction={"column"}
                 >
-                  <Stack sx={{display:'flex', flexDirection:{xs:'column', md:'row'}, alignItems:'center'}}>
+                  <Stack
+                    sx={{
+                      display: "flex",
+                      flexDirection: { xs: "column", md: "row" },
+                      alignItems: "center",
+                    }}
+                  >
                     <TextField
                       name="firstname"
                       type="text"
@@ -175,7 +185,13 @@ const Registration = () => {
                       }
                     />
                   </Stack>
-                  <Stack sx={{display:'flex', flexDirection:{xs:'column', md:'row'}, alignItems:'center'}}>
+                  <Stack
+                    sx={{
+                      display: "flex",
+                      flexDirection: { xs: "column", md: "row" },
+                      alignItems: "center",
+                    }}
+                  >
                     <TextField
                       name="email"
                       type="email"
@@ -195,11 +211,17 @@ const Registration = () => {
                       }
                     />
                   </Stack>
-                  <Stack sx={{display:'flex', flexDirection:{xs:'column', md:'row'}, alignItems:'center'}}>
+                  <Stack
+                    sx={{
+                      display: "flex",
+                      flexDirection: { xs: "column", md: "row" },
+                      alignItems: "center",
+                    }}
+                  >
                     <TextField
                       name="password"
                       type={showPassword ? "text" : "password"}
-                      sx={{ mt: 1, mb:2, mr: { xs: 0, md: 7 }, width: "100%" }}
+                      sx={{ mt: 1, mb: 2, mr: { xs: 0, md: 7 }, width: "100%" }}
                       id="login-password"
                       placeholder="Enter password"
                       label="Password"
@@ -235,7 +257,7 @@ const Registration = () => {
                     <TextField
                       name="confirmPassword"
                       type={showPassword2 ? "text" : "password"}
-                      sx={{ mt: 1, mb:2, width: "100%" }}
+                      sx={{ mt: 1, mb: 2, width: "100%" }}
                       id="login-password"
                       placeholder="Confirm your password"
                       label="Confirm Password"
