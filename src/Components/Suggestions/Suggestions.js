@@ -96,7 +96,7 @@ const Suggestions = () => {
 
 return (
     <Fragment>
-        <Grid component='div' backgroundColor='primary.bg' sx={{p:{xs:'8px', sm:'16px'}}} width='100%'>
+        <Grid component='div' backgroundColor='primary.bg' sx={{p:{xs:'8px', sm:'12px'}}} width='100%'>
             <Breadcrumbs mb={1} aria-label="breadcrumb">
                 <Link underline="hover" color="inherit" onClick={navigateBack} style={{cursor:'pointer'}}>
                     Suggestion Box

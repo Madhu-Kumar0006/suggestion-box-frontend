@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
@@ -93,7 +94,8 @@ const SidePanel = (props) => {
         </Box>   
       </Box>
       <List sx={{ my: 4}}>
-        {[{text: 'Dashboard', icon: <DashboardIcon />, link:'/dashboard'}, 
+        {[{text: 'Dashboard', icon: <DashboardIcon />, link:'/dashboard'},
+          {text: 'Team Members', icon: <GroupsOutlinedIcon />, link:'/team-members'},
             {text: 'Suggestion Box', icon:  <QuestionAnswerOutlinedIcon />, link:'/suggestion-box'}, 
             {text: 'Settings', icon: <SettingsOutlinedIcon />, link:'/settings' }].map((item, index) => (
               <ListItem key={item.text} sx={{my:1}}
@@ -107,7 +109,7 @@ const SidePanel = (props) => {
                           {item.icon}
                         </ListItemIcon>
                         <ListItemText primary={
-                          <Typography sx={{letterSpacing: 0.2, fontSize: '18px'}}>{item.text}</Typography>
+                          <Typography sx={{letterSpacing: 0.2, fontSize: '16px'}}>{item.text}</Typography>
                         } 
                         />
                       </ListItemButton>
@@ -126,7 +128,7 @@ const SidePanel = (props) => {
                       <LogoutOutlinedIcon />
                     </ListItemIcon>
                     <ListItemText primary={
-                      <Typography variant='h6' sx={{letterSpacing: 0.2, fontSize: '18px'}}>Logout</Typography>
+                      <Typography variant='h6' sx={{letterSpacing: 0.2, fontSize: '16px'}}>Logout</Typography>
                     } 
                     />
                   </ListItemButton>

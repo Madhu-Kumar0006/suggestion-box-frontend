@@ -12,7 +12,6 @@ import {
   Grid,
   Button,
   Typography,
-  Box,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -53,7 +52,7 @@ const Registration = () => {
   const [showPassword2, setShowPassword2] = useState(false);
 
   // Used to change the routes:
-  const Navigator = useNavigate();
+  // const Navigator = useNavigate();
 
   //managing form state
   const formik = useFormik({
