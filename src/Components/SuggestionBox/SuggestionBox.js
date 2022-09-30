@@ -25,7 +25,8 @@ const useStyles = makeStyles({
         borderRadius: "12px"
     },
     page_heading: {
-        padding: "10px 20px"
+        height: "80px",
+        alignItems: "center"
     }
 })
 
@@ -156,19 +157,19 @@ const SuggestionBox = () => {
      }
     return(
         <Fragment>
-          <Grid component='div' backgroundColor='primary.bg'  sx={{p:{xs:'8px', sm:'16px'}}} width='100%'>
+          <Grid component='div' backgroundColor='primary.bg'  sx={{p:{xs:'8px', sm:'12px'}}} width='100%'>
             <Breadcrumbs mb={1} aria-label="breadcrumb">
                 <Typography color="text.primary" variant='h6'>Suggestion Box</Typography>
             </Breadcrumbs>
             <Grid component="div" className={`${classes.page_bg}`}>
                 <Grid container display="flex" className={`${classes.page_heading}`} direction="row" justifyContent="space-between">
-                    <Grid item>
+                    <Grid item sx={{marginLeft:'20px'}}>
                         <Button type="button" variant="contained" color="primary" onClick={openModal}>Create Suggestion Box</Button>
                     </Grid>
                 </Grid>
                 <Grid>
                 {alert.message && <AlertModal show={true} />}
-                {open === true ? <SuggestionModal show={open} close={handleClose} /> : " "}
+                {open === true ? <SuggestionModal show={open} close={handleClose} /> : null }
 
                 {alert.message && <AlertModal show={true} />}
 
