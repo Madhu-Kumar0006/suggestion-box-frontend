@@ -11,6 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import { teamMembersData } from './TMData';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import DeleteIcon from '@mui/icons-material/Delete';
+import TeamMemberModal from '../TeamMemberModal/TeamMemberModal';
 
 
 const useStyles = makeStyles({
@@ -29,12 +30,18 @@ const useStyles = makeStyles({
 
 
 const TeamMembers = () => {
+    const initialModalValues = {
+        name: "",
+        email: "",
+      }
   
   const classes = useStyles();
 
   const [tableData, setTableData] = useState(teamMembersData);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [showAddTeamMemberModal, setShowAddTeamMemberModal] = useState({show: false, data: {...initialModalValues}});
+  const [showEditTeamMemberModal, setShowEditTeamMemberModal] = useState({show: false, data: {...initialModalValues}});
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -44,6 +51,27 @@ const TeamMembers = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const showAddModal = () => {
+    setShowAddTeamMemberModal((pre) => {
+        return {...pre, show: true}
+    })
+  }
+
+  const showEditModal = (data) => {
+    setShowEditTeamMemberModal((pre) => {
+        return {data: {...data}, show: true}
+    })
+  }
+
+  const closeModal = () => {
+    setShowAddTeamMemberModal((pre) => {
+        return {...pre, show: false}
+    });
+    setShowEditTeamMemberModal((pre) => {
+        return {...pre, show: false}
+    });
+  }
 
   const columns = [
     {id:'id', label: 'SL No.'},
@@ -56,9 +84,6 @@ const TeamMembers = () => {
     console.log(data);
  }
  
- const onEditHandler = (data) => {
-    console.log(data);
- }
 
   return (
     <Fragment>
@@ -69,9 +94,10 @@ const TeamMembers = () => {
           <Grid component="div" className={`${classes.page_bg}`}>
                <Grid container display="flex" className={`${classes.page_heading}`} direction="row" justifyContent="space-between">
                     <Grid item sx={{marginLeft:'20px'}}>
-                        <Button type="button" variant="contained" color="primary" >Add Team Members</Button>
+                        <Button type="button" variant="contained" color="primary" onClick={showAddModal} >Add Team Members</Button>
                     </Grid>
                 </Grid>
+                <TeamMemberModal addModal={showAddTeamMemberModal} editModal={showEditTeamMemberModal} closeHandler={closeModal}/>
                 <Grid>
                     <Box sx={{ width: '100%', typography: 'body1', marginTop:'15px' }}>
                         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -107,10 +133,10 @@ const TeamMembers = () => {
                                             );
                                             })}
                                             <TableCell sx={{textAlign:'center'}}>
-                                                <IconButton color="primary" sx={{marginRight:'05px'}} onClick={()=> {onDeleteHandler(row)}} component="span">
+                                                <IconButton color="primary" sx={{marginRight:'05px'}} onClick={()=> {showEditModal(row)}} component="span">
                                                     <BorderColorIcon />
                                                 </IconButton>
-                                                <IconButton color="error" sx={{marginRight:'05px'}} onClick={()=> {onEditHandler(row)}} component="span">
+                                                <IconButton color="error" sx={{marginRight:'05px'}} onClick={()=> {onDeleteHandler(row)}} component="span">
                                                     <DeleteIcon />
                                                 </IconButton>
                                             </TableCell>

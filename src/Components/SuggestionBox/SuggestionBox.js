@@ -14,6 +14,7 @@ import { getAllQuestion } from "../../Redux/Actions/suggestionBoxAction";
 import { updateSuggestionBoxStatus } from "../../Redux/Actions/updateStatusAction";
 import AlertModal from "../AlertModal/AlertModal";
 import usePagination from "../Common/Pagination";
+import { openSuggestionBoxConfirmMessage, closeSuggestionBoxConfirmMessage } from "../Common/Constants";
 // import { getQuestion } from "../../Redux/Actions/suggestionBoxAction";
 
 
@@ -54,13 +55,13 @@ const SuggestionBox = () => {
 
 
     const closeConfirmationModalContent = {
-        heading: "Close",
-        description: "Are you sure? do you want to close suggestion box",
+        heading: closeSuggestionBoxConfirmMessage.HEADING,
+        description: closeSuggestionBoxConfirmMessage.DESCRIPTION,
       };
 
     const openConfirmationModalContent = {
-        heading: "Open",
-        description: "Are you sure? do you want to open suggestion box",
+        heading: openSuggestionBoxConfirmMessage.HEADING,
+        description: openSuggestionBoxConfirmMessage.DESCRIPTION,
       };
 
     const suggestionBoxCloseHandler = (id) => {
