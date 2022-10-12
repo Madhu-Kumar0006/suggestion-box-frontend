@@ -74,7 +74,7 @@ const Login = () => {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: (values) => {
       dispatch(login(values));
       // resetForm();
     },
@@ -82,7 +82,7 @@ const Login = () => {
 
   // UseEffects (start):
   useEffect(() => {
-    if (LoginDetails.isAuthenticated && LoginDetails.role_id === 1) {
+    if (LoginDetails.isAuthenticated && LoginDetails.role_id === 2) {
       return Navigator("/dashboard");
     }
   }, [LoginDetails.isAuthenticated, LoginDetails.role_id, Navigator]);
