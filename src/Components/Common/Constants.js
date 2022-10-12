@@ -1,3 +1,9 @@
+export const roleId = {
+  ADMIN_USER: 2,
+  TEAM_MEMBER: 3,
+  USER: 4
+}
+
 export const emailErrors = {
     EMAIL : "Please enter your Email address",
     INVALID_EMAIL : "Email is invalid",
@@ -28,4 +34,20 @@ export const emailErrors = {
  export const nameErrors = {
   FIRST_NAME:'Please enter your firstname',
   LAST_NAME:'Please enter your lastname'
+ }
+
+ export const addTeamMemberModalErrors = {
+  NAME: "Please enter Team Member's Name",
+  EMAIL: "Please enter Team Member's Email address",
+  INVALID_EMAIL : "Email is invalid",
+ }
+
+ export const openSuggestionBoxConfirmMessage = {
+  HEADING: "Open",
+  DESCRIPTION: "Are you sure? do you want to open suggestion box"
+ }
+
+ export const closeSuggestionBoxConfirmMessage = {
+  HEADING: "Close",
+  DESCRIPTION: "Are you sure? do you want to close suggestion box"
  }

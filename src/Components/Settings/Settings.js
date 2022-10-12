@@ -21,7 +21,7 @@ const Settings = () =>  {
 
   return (
       <Fragment>
-        <Grid component='div' backgroundColor='primary.bg'  sx={{p:{xs:'8px', sm:'16px'}}}>
+        <Grid component='div' backgroundColor='primary.bg'  sx={{p:{xs:'8px', sm:'12px'}}}>
           <Breadcrumbs mb={1} aria-label="breadcrumb">
               <Typography variant='h6' color="text.primary">Settings</Typography>
           </Breadcrumbs>

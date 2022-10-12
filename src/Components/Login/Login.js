@@ -21,9 +21,10 @@ import backgroundImg from "./../../Assets/images/login-bg.jpg";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { emailErrors, passwordErrors } from "../Common/Constants";
-import { login } from "../../Redux/Actions/loginAction";
+import { login, logout } from "../../Redux/Actions/loginAction";
 import AlertModal from "../AlertModal/AlertModal";
 import colorLogo from "./../../Assets/images/logo-color.png";
+import { roleId } from "../Common/Constants";
 
 //defining styles
 const useStyles = makeStyles({
@@ -82,10 +83,12 @@ const Login = () => {
 
   // UseEffects (start):
   useEffect(() => {
-    if (LoginDetails.isAuthenticated && LoginDetails.role_id === 1) {
+    if (LoginDetails.isAuthenticated && LoginDetails.role_id === roleId.ADMIN_USER) {
       return Navigator("/dashboard");
+    } else {
+      dispatch(logout);
     }
-  }, [LoginDetails.isAuthenticated, LoginDetails.role_id, Navigator]);
+  }, [LoginDetails.isAuthenticated,dispatch, LoginDetails.role_id, Navigator]);
   // UseEffects (end):
 
   //toggle showPassword
