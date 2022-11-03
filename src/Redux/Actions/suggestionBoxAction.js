@@ -7,11 +7,13 @@ import { alertActions } from "./alertAction";
 
 // get all suggestion boxes
 export const getAllQuestion = ( ) => async (dispatch) => {
+  let business_id = localStorage.getItem("business_id");
+  
   dispatch({
     type: GET_ALL_QUESTION_START,
   });
   try {
-    const res = await api.get("/suggestions/getAllQuestion");
+    const res = await api.get("/suggestions/getAllQuestion/"+business_id);
     if (res) {
       dispatch({
         type: GET_ALL_QUESTION_SUCCESS,

@@ -222,7 +222,7 @@ const SuggestionBox = () => {
                                     )
                                     ) 
                                     } 
-                            { !allQuestions.loading && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
+                            { !allQuestions.loading && openedSuggestionBox.length > 0 && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
                                 <Pagination count={openData.maxPage} page={openData.currentPage} color="primary" shape="rounded" variant="outlined" default={openData.currentPage} 
                                 onChange={openPaginationHandler} />
                             </Stack>}
@@ -251,7 +251,7 @@ const SuggestionBox = () => {
                                     ))
                                     )
                                     ) } 
-                                { !allQuestions.loading && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
+                                { !allQuestions.loading && closedSuggestionBox.length > 0 && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
                                 <Pagination count={closeData.maxPage} page={closeData.currentPage} color="primary" shape="rounded" variant="outlined" default={closeData.currentPage} 
                                     onChange={closePaginationHandler} />
                                 </Stack>}
@@ -281,7 +281,8 @@ const SuggestionBox = () => {
                                     ))
                                 )
                             )}
-                            { !allQuestions.loading && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
+                            { !allQuestions.loading && allSuggestionBox.length > 0 && 
+                            <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
                                 <Pagination count={allData.maxPage} page={allData.currentPage} color="primary" shape="rounded" variant="outlined" default={allData.currentPage} 
                                 onChange={allPaginationHandler} />
                             </Stack>}

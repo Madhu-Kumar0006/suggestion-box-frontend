@@ -11,6 +11,7 @@ const initialState = {
   token: localStorage.getItem("token"),
   isAuthenticated: localStorage.getItem("token") ? true : false,
   role_id: localStorage.getItem("role_id"),
+  business_id: localStorage.getItem("business_id"),
   loading: false,
   loginFailMessage: "",
 };
@@ -27,15 +28,18 @@ export default function (state = initialState, action) {
       const decodedToken = jwtDecode(payload);
       const role_id = decodedToken.user.role_id;
       const id = decodedToken.user.id;
+      const business_id = decodedToken.user.business_id;
       localStorage.setItem("role_id", role_id);
       localStorage.setItem("isActivated", true);
       localStorage.setItem("token", payload);
       localStorage.setItem("user_id", id);
+      localStorage.setItem("business_id", business_id);
       return {
         ...state,
         ...payload,
         isAuthenticated: true,
         role_id: role_id,
+        business_id: business_id,
         loading: false,
         token: payload,
       };
@@ -43,6 +47,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         ...payload,
+        loading: false,
         loginFailMessage: payload,
       };
     case LOGOUT:
@@ -50,11 +55,13 @@ export default function (state = initialState, action) {
       localStorage.removeItem("role_id");
       localStorage.removeItem("isActivated");
       localStorage.removeItem("user_id");
+      localStorage.removeItem("business_id");
       return {
         ...state,
         ...payload,
         token: null,
         isAuthenticated: false,
+        business_id: null,
         role_id: null,
         loading: false,
       };

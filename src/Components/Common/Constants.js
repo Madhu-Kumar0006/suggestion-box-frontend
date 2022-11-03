@@ -1,7 +1,12 @@
 export const roleId = {
+  SUPER_ADMIN_USER: 1,
   ADMIN_USER: 2,
   TEAM_MEMBER: 3,
   USER: 4
+}
+
+export const loginError = {
+  INVALID_ROLE: "Invalid user role",
 }
 
 export const emailErrors = {
