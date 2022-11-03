@@ -89,6 +89,7 @@ const SuggestionModal = (props) => {
       options: values.inputs,
       description: values.description,
       user_id: Number(localStorage.getItem("user_id")),
+      business_id: Number(localStorage.getItem("business_id"))
     };
     // console.log(body)
     dispatch(addQuestion(body));
@@ -309,6 +310,7 @@ const SuggestionModal = (props) => {
                 <FieldArray name="inputs">
                   {(fieldArrayProps) => {
                     const { push, remove, form } = fieldArrayProps;
+                    // eslint-disable-next-line
                     const { values, errors } = form;
                     return (
                       <Box

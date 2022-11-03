@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect  } from "react";
-import {  useSelector, useDispatch } from "react-redux";
+import {  useSelector, useDispatch,  } from "react-redux";
 import { Button, Stack, Breadcrumbs, Typography, Grid, Link, Pagination } from "@mui/material";
 import { makeStyles } from "@material-ui/styles";
 import ResponseCard from "../ResponseCard/ResponseCard";
@@ -133,7 +133,7 @@ return (
                         <ResponseCard key={item.uuid} response={item.response} createdAt={item.created_at} questionId={item.question_id} />
                     ))
                     }
-                    { !allSuggestions.loading && 
+                    { !allSuggestions.loading && responsesCount > 0 &&
                             <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
                                 <Pagination count={suggestionsPaginatedData.maxPage} page={suggestionsPaginatedData.currentPage} color="primary" shape="circular" variant="outlined" default={suggestionsPaginatedData.currentPage} 
                                 onChange={paginationHandler} />
