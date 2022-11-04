@@ -146,7 +146,6 @@ const SuggestionBox = () => {
                 dispatch(getAllQuestion())
             }
           }, [alert, dispatch]);
-          // UseEffects (end):
      // UseEffects (end):
 
      const [open, setOpen] = useState(false);
@@ -169,7 +168,7 @@ const SuggestionBox = () => {
                     </Grid>
                 </Grid>
                 <Grid>
-                {alert.message && <AlertModal show={true} />}
+
                 {open === true ? <SuggestionModal show={open} close={handleClose} /> : null }
 
                 {alert.message && <AlertModal show={true} />}

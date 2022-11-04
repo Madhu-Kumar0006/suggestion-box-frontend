@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -9,6 +9,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useFormik, FormikProvider } from "formik";
 import * as yup from "yup";
 import { addTeamMemberModalErrors } from '../Common/Constants';
+import { useDispatch, useSelector } from "react-redux";
+import { addTeamMember } from "../../Redux/Actions/teamMemberAction";
+import CircularProgress from "@mui/material/CircularProgress";
 
 
 const style = {
@@ -34,8 +37,9 @@ const useStyles = makeStyles({
 });
 
 const validationSchema = yup.object({
-  name: yup.string().required(addTeamMemberModalErrors.NAME),
-  email: yup.string()
+  first_name: yup.string().required(addTeamMemberModalErrors.FIRST_NAME),
+  last_name: yup.string().required(addTeamMemberModalErrors.LAST_NAME),
+  email_id: yup.string()
   .email(addTeamMemberModalErrors.INVALID_EMAIL)
   .required(addTeamMemberModalErrors.EMAIL),
 });
@@ -45,21 +49,39 @@ const TeamMemberModal = (props) => {
   const { addModal, editModal, closeHandler } = props;
   const classes = useStyles();
 
+  //redux dispatch
+  const dispatch = useDispatch();
+
+  //redux selector
+  const teamMemberResponse = useSelector((state) => state.teamMemberReducer)
+  const alert = useSelector((state) => state.alert);
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: editModal.show ? {
-      name: editModal.data.name, 
-      email: editModal.data.email
+      first_name: editModal.data.first_name, 
+      last_name: editModal.data.last_name,
+      email_id: editModal.data.email_id
     } : {
-      name:"", 
-      email:""
+      first_name:"", 
+      last_name:"",
+      email_id:""
     },
     validationSchema: validationSchema,
-    onSubmit: (values, {resetForm}) => {
-      console.log(values);
-      resetForm();
+    onSubmit: (values) => {
+      addModal.show && dispatch(addTeamMember(values));
+      editModal.show && console.log(values);
     }
   });
+
+  //useEffect starts
+  useEffect(() => {
+    if (alert.type === "success") {
+      formik.resetForm();
+      closeHandler();
+    }
+  }, [alert]);
+  //useEffect end
 
   return (
     <Modal
@@ -111,48 +133,72 @@ const TeamMemberModal = (props) => {
         <FormikProvider value={formik}>
           <form onSubmit={formik.handleSubmit}>
             <Box sx={{ overflowY: "scroll", paddingX:{ xs: 2, md:5 }, paddingY:3 }}>
-              <Box sx={{ display: "flex", flexDirection: "column" , marginBottom:2}}>
-                <TextField
-                  className={classes.root}
-                  value={formik.values.name}
-                  name="name"
-                  onChange={formik.handleChange}
-                  type="text"
-                  id="name"
-                  placeholder="Enter Team Member's Name"
-                  label="Name"
-                  variant="standard"
-                  fullWidth
-                  error={
-                    formik.touched.name && Boolean(formik.errors.name)
-                  }
-                  helperText={
-                    formik.touched.name &&
-                    Boolean(formik.errors.name) &&
-                    formik.errors.name
-                  }
-                />
+              <Box sx={{ display: "flex", flexDirection:{xs:"column", md:"row"}, justifyContent:"space-between" , marginBottom:2}}>
+                <Box>
+                  <TextField
+                    className={classes.root}
+                    value={formik.values.first_name}
+                    name="first_name"
+                    onChange={formik.handleChange}
+                    type="text"
+                    id="last_name"
+                    placeholder="Enter Team Member's First Name"
+                    label="First Name"
+                    variant="standard"
+                    fullWidth
+                    error={
+                      formik.touched.first_name && Boolean(formik.errors.first_name)
+                    }
+                    helperText={
+                      formik.touched.first_name &&
+                      Boolean(formik.errors.first_name) &&
+                      formik.errors.first_name
+                    }
+                  />
+                </Box>
+                <Box>
+                  <TextField
+                    className={classes.root}
+                    value={formik.values.last_name}
+                    name="last_name"
+                    onChange={formik.handleChange}
+                    type="text"
+                    id="last_name"
+                    placeholder="Enter Team Member's Last Name"
+                    label="Last Name"
+                    variant="standard"
+                    fullWidth
+                    error={
+                      formik.touched.last_name && Boolean(formik.errors.last_name)
+                    }
+                    helperText={
+                      formik.touched.last_name &&
+                      Boolean(formik.errors.last_name) &&
+                      formik.errors.last_name
+                    }
+                  />
+                </Box>
               </Box>
               <Box sx={{ display: "flex", flexDirection: "column", marginBottom:2 }}>
                 <TextField
                   className={classes.root}
-                  value={formik.values.email}
-                  name="email"
+                  value={formik.values.email_id}
+                  name="email_id"
                   onChange={formik.handleChange}
                   type="text"
-                  id="email"
+                  id="email_id"
                   placeholder="Enter Team Member's Email"
                   label="Email"
                   variant="standard"
                   fullWidth
                   style={{ marginTop: "10px"}}
                   error={
-                    formik.touched.email && Boolean(formik.errors.email)
+                    formik.touched.email_id && Boolean(formik.errors.email_id)
                   }
                   helperText={
-                    formik.touched.email &&
-                    Boolean(formik.errors.email) &&
-                    formik.errors.email
+                    formik.touched.email_id &&
+                    Boolean(formik.errors.email_id) &&
+                    formik.errors.email_id
                   }
                 />
               </Box>
@@ -180,6 +226,7 @@ const TeamMemberModal = (props) => {
               </Button>
               <Button
                 type="submit"
+                disabled={teamMemberResponse.loadingAddTeamMember}
                 variant="contained"
                 sx={{
                   backgroundColor: "primary.main",
@@ -187,7 +234,13 @@ const TeamMemberModal = (props) => {
                   marginLeft: 2,
                 }}
               >
-                {addModal.show ? "Invite" : "Re-Invite"} 
+                {teamMemberResponse.loadingAddTeamMember && (
+                        <CircularProgress
+                          sx={{ color: "primary.dark", marginRight: "10px" }}
+                          size={20}
+                        />
+                      )}
+                {addModal.show ? "Invite" : "Update"} 
               </Button>
             </Box>
           </form>
