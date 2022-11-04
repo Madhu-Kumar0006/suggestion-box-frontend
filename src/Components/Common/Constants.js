@@ -42,7 +42,8 @@ export const emailErrors = {
  }
 
  export const addTeamMemberModalErrors = {
-  NAME: "Please enter Team Member's Name",
+  FIRST_NAME: "Please enter First Name",
+  LAST_NAME: "Please enter Last Name",
   EMAIL: "Please enter Team Member's Email address",
   INVALID_EMAIL : "Email is invalid",
  }

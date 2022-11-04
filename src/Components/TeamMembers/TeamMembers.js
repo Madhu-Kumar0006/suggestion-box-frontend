@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { makeStyles } from "@material-ui/core";
-import { Grid, Typography, Breadcrumbs, Button, Box, Paper, IconButton} from '@mui/material';
+import { Grid, Typography, Breadcrumbs, Button, Box, Paper, IconButton, Stack} from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,10 +8,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { teamMembersData } from './TMData';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TeamMemberModal from '../TeamMemberModal/TeamMemberModal';
+import AlertModal from "../AlertModal/AlertModal";
+import { useDispatch, useSelector } from 'react-redux';
+import { getTeamMembers } from '../../Redux/Actions/teamMemberAction';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 const useStyles = makeStyles({
@@ -30,18 +33,33 @@ const useStyles = makeStyles({
 
 
 const TeamMembers = () => {
+
     const initialModalValues = {
         name: "",
         email: "",
       }
+
+    let teamMembers = [];
   
   const classes = useStyles();
 
-  const [tableData, setTableData] = useState(teamMembersData);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [showAddTeamMemberModal, setShowAddTeamMemberModal] = useState({show: false, data: {...initialModalValues}});
   const [showEditTeamMemberModal, setShowEditTeamMemberModal] = useState({show: false, data: {...initialModalValues}});
+
+  //redux dispatch
+  const dispatch = useDispatch();
+
+  //redux state
+  const alert = useSelector((state) => state.alert);
+  const teamMemberResponse = useSelector((state) => state.teamMemberReducer)
+
+  if(teamMemberResponse.response.data && Array.isArray(teamMemberResponse.response.data)) {
+    teamMembers = teamMemberResponse.response.data;
+  } else {
+    teamMembers = [];
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -74,15 +92,28 @@ const TeamMembers = () => {
   }
 
   const columns = [
-    {id:'id', label: 'SL No.'},
-    {id:'name', label: 'Name'},
-    {id:'email', label: 'Email'},
-    {id:'status', label: 'Status'},
+    // {id:'id', label: 'SL No.'},
+    {id:'first_name', label: 'First Name'},
+    {id:'last_name', label: "Last Name"},
+    {id:'email_id', label: 'Email'},
+    // {id:'status', label: 'Status'},
  ]
 
  const onDeleteHandler = (data) => {
     console.log(data);
  }
+
+//useEffect (starts)
+    useEffect(() => {
+        dispatch(getTeamMembers())
+    }, [dispatch]);
+ 
+  useEffect(() => {
+    if (alert.type === "success") {
+        dispatch(getTeamMembers())
+    }
+  }, [alert, dispatch]);
+// UseEffects (end):
  
 
   return (
@@ -97,6 +128,7 @@ const TeamMembers = () => {
                         <Button type="button" variant="contained" color="primary" onClick={showAddModal} >Add Team Members</Button>
                     </Grid>
                 </Grid>
+                {alert.message && <AlertModal show={true} />}
                 <TeamMemberModal addModal={showAddTeamMemberModal} editModal={showEditTeamMemberModal} closeHandler={closeModal}/>
                 <Grid>
                     <Box sx={{ width: '100%', typography: 'body1', marginTop:'15px' }}>
@@ -105,6 +137,9 @@ const TeamMembers = () => {
                                 <Table stickyHeader aria-label="sticky table">
                                 <TableHead>
                                     <TableRow>
+                                        <TableCell sx={{backgroundColor:'#E0E0E0', fontWeight:'bold', textAlign:'center', fontSize:'16px'}}>
+                                            SL No:
+                                        </TableCell>
                                     {columns.map((column) => (
                                         <TableCell
                                         key={column.id}
@@ -119,11 +154,14 @@ const TeamMembers = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {tableData
+                                    {!teamMemberResponse.loadingGetTeamMembers && teamMembers
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    .map((row) => {
+                                    .map((row, index) => {
                                         return (
                                         <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                                            <TableCell sx={{textAlign:'center'}}>
+                                                {index + 1}
+                                            </TableCell>
                                             {columns.map((column) => {
                                             const value = row[column.id];
                                             return (
@@ -145,11 +183,16 @@ const TeamMembers = () => {
                                     })}
                                 </TableBody>
                                 </Table>
+                                { teamMemberResponse.loadingGetTeamMembers ? (
+                                    <Stack display="flex" mt={10} alignItems={'center'} justifyContent={'center'}>
+                                        <CircularProgress color="primary" />
+                                    </Stack>
+                                ) : ( teamMembers.length === 0 ? (<Typography variant="body1" textAlign={'center'} my={5}>No Team Members avaialble, Add One!</Typography>) : (null) )}
                             </TableContainer>
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 25, 100]}
                                 component="div"
-                                count={tableData.length}
+                                count={teamMembers.length}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 onPageChange={handleChangePage}

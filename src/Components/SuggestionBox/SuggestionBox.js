@@ -11,7 +11,7 @@ import SuggestionModal from "../SuggestionModal/SuggestionModal";
 import CircularProgress from '@mui/material/CircularProgress';
 import ConfirmationModal from "../../ConfirmationModal/ConfirmationModal";
 import { getAllQuestion } from "../../Redux/Actions/suggestionBoxAction";
-import { updateSuggestionBoxStatus } from "../../Redux/Actions/updateStatusAction";
+import { updateSuggestionBoxStatus } from "../../Redux/Actions/suggestionBoxAction";
 import AlertModal from "../AlertModal/AlertModal";
 import usePagination from "../Common/Pagination";
 import { openSuggestionBoxConfirmMessage, closeSuggestionBoxConfirmMessage } from "../Common/Constants";
@@ -49,7 +49,7 @@ const SuggestionBox = () => {
     const dispatch = useDispatch();
 
      //Redux State:
-     const allQuestions = useSelector((state) => state.suggestionBoxReducer);
+     const suggestionBoxResponse = useSelector((state) => state.suggestionBoxReducer);
      const alert = useSelector((state) => state.alert);
     //  const updateStatus = useSelector((state) => state.updateStatusReducer);
 
@@ -98,8 +98,8 @@ const SuggestionBox = () => {
     }
 
 
-    if(allQuestions.response.data) {
-        let sortedData = [...allQuestions.response.data].reverse();
+    if(suggestionBoxResponse.response.data) {
+        let sortedData = [...suggestionBoxResponse.response.data].reverse();
         openedSuggestionBox = sortedData.filter(item => item.status === 1);
         closedSuggestionBox = sortedData.filter(item => item.status === 2);
         allSuggestionBox = sortedData;
@@ -146,7 +146,6 @@ const SuggestionBox = () => {
                 dispatch(getAllQuestion())
             }
           }, [alert, dispatch]);
-          // UseEffects (end):
      // UseEffects (end):
 
      const [open, setOpen] = useState(false);
@@ -169,7 +168,7 @@ const SuggestionBox = () => {
                     </Grid>
                 </Grid>
                 <Grid>
-                {alert.message && <AlertModal show={true} />}
+
                 {open === true ? <SuggestionModal show={open} close={handleClose} /> : null }
 
                 {alert.message && <AlertModal show={true} />}
@@ -199,7 +198,7 @@ const SuggestionBox = () => {
 
                         {/* open */}
                         <TabPanel value="1">
-                                { allQuestions.loading === true ? (
+                                { suggestionBoxResponse.getAllQuestionLoading === true ? (
                                     <Stack display="flex" mt={10} alignItems={'center'} justifyContent={'center'}>
                                         <CircularProgress color="primary" />
                                     </Stack>
@@ -222,7 +221,7 @@ const SuggestionBox = () => {
                                     )
                                     ) 
                                     } 
-                            { !allQuestions.loading && openedSuggestionBox.length > 0 && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
+                            { !suggestionBoxResponse.getAllQuestionLoading && openedSuggestionBox.length > 0 && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
                                 <Pagination count={openData.maxPage} page={openData.currentPage} color="primary" shape="rounded" variant="outlined" default={openData.currentPage} 
                                 onChange={openPaginationHandler} />
                             </Stack>}
@@ -230,7 +229,7 @@ const SuggestionBox = () => {
 
                         {/* close */}
                         <TabPanel value="2">
-                        { allQuestions.loading === true ? (
+                        { suggestionBoxResponse.getAllQuestionLoading === true ? (
                                     <Stack display="flex" mt={10} alignItems={'center'} justifyContent={'center'}>
                                         <CircularProgress color="primary" />
                                     </Stack>
@@ -251,7 +250,7 @@ const SuggestionBox = () => {
                                     ))
                                     )
                                     ) } 
-                                { !allQuestions.loading && closedSuggestionBox.length > 0 && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
+                                { !suggestionBoxResponse.getAllQuestionLoading && closedSuggestionBox.length > 0 && <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
                                 <Pagination count={closeData.maxPage} page={closeData.currentPage} color="primary" shape="rounded" variant="outlined" default={closeData.currentPage} 
                                     onChange={closePaginationHandler} />
                                 </Stack>}
@@ -259,7 +258,7 @@ const SuggestionBox = () => {
 
                         {/* All */}
                         <TabPanel value="3">
-                            { allQuestions.loading === true ? (
+                            { suggestionBoxResponse.getAllQuestionLoading === true ? (
                                     <Stack display="flex" mt={10} alignItems={'center'} justifyContent={'center'}>
                                         <CircularProgress color="primary" />
                                     </Stack>
@@ -281,7 +280,7 @@ const SuggestionBox = () => {
                                     ))
                                 )
                             )}
-                            { !allQuestions.loading && allSuggestionBox.length > 0 && 
+                            { !suggestionBoxResponse.getAllQuestionLoading && allSuggestionBox.length > 0 && 
                             <Stack sx={{width:'100%', marginTop:'30px', display:'flex', justifyContent:'center', alignItems: 'center'}}>
                                 <Pagination count={allData.maxPage} page={allData.currentPage} color="primary" shape="rounded" variant="outlined" default={allData.currentPage} 
                                 onChange={allPaginationHandler} />

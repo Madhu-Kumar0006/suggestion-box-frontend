@@ -12,7 +12,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import CloseIcon from "@mui/icons-material/Close";
 import { FieldArray, useFormik, FormikProvider } from "formik";
-import { addQuestion } from "../../Redux/Actions/addQuestionAction";
+import { addQuestion } from "../../Redux/Actions/suggestionBoxAction";
 import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -57,7 +57,7 @@ const SuggestionModal = (props) => {
   const { show, close } = props;
   const classes = useStyles();
 
-  const addQuestionReducer = useSelector((state) => state.addQuestionReducer);
+  const suggestionBoxResponse = useSelector((state) => state.suggestionBoxReducer);
   const alert = useSelector((state) => state.alert);
   // console.log(addQuestionReducer)
 
@@ -409,7 +409,7 @@ const SuggestionModal = (props) => {
                 Cancel
               </Button>
               <Button
-                disabled={addQuestionReducer.loading}
+                disabled={suggestionBoxResponse.addQuestionLoading}
                 type="submit"
                 variant="contained"
                 sx={{
@@ -418,7 +418,7 @@ const SuggestionModal = (props) => {
                   marginLeft: 5,
                 }}
               >
-                {addQuestionReducer.loading && (
+                {suggestionBoxResponse.addQuestionLoading && (
                   <CircularProgress
                     sx={{ color: "primary", mr: 2 }}
                     size={20}
