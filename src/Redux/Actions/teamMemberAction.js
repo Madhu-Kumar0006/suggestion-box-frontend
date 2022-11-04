@@ -28,8 +28,7 @@ export const addTeamMember = (body) => async dispatch => {
           type: ADD_TEAM_MEMBER_ERROR,
           payload: err.response && err.response,
         });
-        console.log(err.errors.msg);
-        dispatch(alertActions.error(err.response.data));
+        dispatch(alertActions.error(err.response.data.msg));
         setTimeout(() => {
           dispatch(alertActions.error_clear());
           dispatch(alertActions.clear());
@@ -63,8 +62,7 @@ export const getTeamMembers = () => async dispatch => {
           type: GET_TEAM_MEMBERS_ERROR,
           payload: err.response && err.response,
         });
-        console.log(err.errors.msg);
-        dispatch(alertActions.error(err.response.data));
+        dispatch(alertActions.error(err.response.data.msg));
         setTimeout(() => {
           dispatch(alertActions.error_clear());
           dispatch(alertActions.clear());

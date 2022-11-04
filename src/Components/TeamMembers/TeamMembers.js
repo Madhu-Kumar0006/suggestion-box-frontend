@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { makeStyles } from "@material-ui/core";
-import { Grid, Typography, Breadcrumbs, Button, Box, Paper, IconButton} from '@mui/material';
+import { Grid, Typography, Breadcrumbs, Button, Box, Paper, IconButton, Stack} from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -14,6 +14,7 @@ import TeamMemberModal from '../TeamMemberModal/TeamMemberModal';
 import AlertModal from "../AlertModal/AlertModal";
 import { useDispatch, useSelector } from 'react-redux';
 import { getTeamMembers } from '../../Redux/Actions/teamMemberAction';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 const useStyles = makeStyles({
@@ -32,6 +33,7 @@ const useStyles = makeStyles({
 
 
 const TeamMembers = () => {
+
     const initialModalValues = {
         name: "",
         email: "",
@@ -55,6 +57,8 @@ const TeamMembers = () => {
 
   if(teamMemberResponse.response.data && Array.isArray(teamMemberResponse.response.data)) {
     teamMembers = teamMemberResponse.response.data;
+  } else {
+    teamMembers = [];
   }
 
   const handleChangePage = (event, newPage) => {
@@ -150,7 +154,7 @@ const TeamMembers = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {teamMembers
+                                    {!teamMemberResponse.loadingGetTeamMembers && teamMembers
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
                                         return (
@@ -179,6 +183,11 @@ const TeamMembers = () => {
                                     })}
                                 </TableBody>
                                 </Table>
+                                { teamMemberResponse.loadingGetTeamMembers ? (
+                                    <Stack display="flex" mt={10} alignItems={'center'} justifyContent={'center'}>
+                                        <CircularProgress color="primary" />
+                                    </Stack>
+                                ) : ( teamMembers.length === 0 ? (<Typography variant="body1" textAlign={'center'} my={5}>No Team Members avaialble, Add One!</Typography>) : (null) )}
                             </TableContainer>
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 25, 100]}
