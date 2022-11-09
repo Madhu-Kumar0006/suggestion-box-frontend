@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import userImg from './../../Assets/images/admin.png';
 import wBLogo from './../../Assets/images/logo-w&b.png';
 import jwtDecode from 'jwt-decode';
+import { roleId } from '../Common/Constants';
 
 import { logout } from '../../Redux/Actions/loginAction';
 
@@ -55,6 +56,8 @@ const useStyles = makeStyles(({ palette }) => ({
 
 
 const SidePanel = (props) => {
+
+  let role_id = parseInt(localStorage.getItem("role_id"));
 
     //styles
   const classes = useStyles();
@@ -94,11 +97,17 @@ const SidePanel = (props) => {
         </Box>   
       </Box>
       <List sx={{ my: 4}}>
-        {[{text: 'Dashboard', icon: <DashboardIcon />, link:'/dashboard'},
-          {text: 'Team Members', icon: <GroupsOutlinedIcon />, link:'/team-members'},
-            {text: 'Suggestion Box', icon:  <QuestionAnswerOutlinedIcon />, link:'/suggestion-box'}, 
-            {text: 'Settings', icon: <SettingsOutlinedIcon />, link:'/settings' }].map((item, index) => (
-              <ListItem key={item.text} sx={{my:1}}
+        {[{id:'dashboard', text: 'Dashboard', icon: <DashboardIcon />, link:'/dashboard'},
+          {id:'team_members', text: 'Team Members', icon: <GroupsOutlinedIcon />, link:'/team-members'},
+            {id:'suggestion_box', text: 'Suggestion Box', icon:  <QuestionAnswerOutlinedIcon />, link:'/suggestion-box'}, 
+            {id:'settings', text: 'Settings', icon: <SettingsOutlinedIcon />, link:'/settings' }].filter((item) => {
+              if(role_id === roleId.TEAM_MEMBER) {
+                return item.id !== 'team_members';
+              } else {
+                return item;
+              }
+            }).map((item, index) => (
+              <ListItem key={item.id} sx={{my:1}}
                 disablePadding>
                   <NavLink key={index} to={item.link} 
                     className={({ isActive }) => 
