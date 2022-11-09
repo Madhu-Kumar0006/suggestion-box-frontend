@@ -84,7 +84,7 @@ const Login = () => {
   // UseEffects (start):
   useEffect(() => {
     if(LoginDetails.isAuthenticated) {
-      if (LoginDetails.role_id === roleId.ADMIN_USER) {
+      if (LoginDetails.role_id === roleId.ADMIN_USER || LoginDetails.role_id === roleId.TEAM_MEMBER) {
         return Navigator("/dashboard");
       } else {
         dispatch(logout);
