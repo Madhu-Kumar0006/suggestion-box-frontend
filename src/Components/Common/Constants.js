@@ -57,3 +57,8 @@ export const emailErrors = {
   HEADING: "Close",
   DESCRIPTION: "Are you sure? do you want to close suggestion box"
  }
+
+ export const packageStatus = {
+  ACTIVE: "ACTIVE",
+  INACTIVE: "NOT ACTIVE"
+ }

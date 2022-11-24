@@ -1,9 +1,11 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
+import {  useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core";
-import { Grid, Typography, Breadcrumbs  } from '@mui/material';
+import { Grid, Typography, Breadcrumbs, Stack  } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import SubscriptionCard from '../SubscriptionCard/SubscriptionCard';
-
-import { subscriptionData } from './subscriptionData';
+import { getPackages } from '../../Redux/Actions/mySubscriptionAction';
+import AlertModal from '../AlertModal/AlertModal';
 
 const useStyles = makeStyles({
       page_bg: {
@@ -20,7 +22,31 @@ const useStyles = makeStyles({
 
 const MySubscription = () =>  {
 
+  let packages = [];
   const classes = useStyles();
+
+   //Redux Dispatch:
+   const dispatch = useDispatch();
+
+   //Redux State:
+   const packageResponse = useSelector((state) => state.mySubscriptionReducer);
+   const alert = useSelector((state) => state.alert);
+
+  if(packageResponse.response.data && Array.isArray(packageResponse.response.data)) {
+    packages = packageResponse.response.data;
+} else {
+    packages = []
+}
+
+
+
+// UseEffects (start):
+      //api call to get all packages
+      useEffect(() => {
+        dispatch(getPackages());
+    },[dispatch])
+ // UseEffects (end):
+
 
   return (
       <Fragment>
@@ -29,11 +55,22 @@ const MySubscription = () =>  {
               <Typography variant='h6' color="text.primary">My Subscription</Typography>
           </Breadcrumbs>
           <Grid component="div" className={`${classes.page_bg}`}>
+
+              {alert.message && <AlertModal show={true} />}
+
               <Grid container display="flex" direction="row" justifyContent="space-around">
-                  {subscriptionData.map((item, index) => {
+                  {packages.map((item, index) => {
                     return <SubscriptionCard key={index} {...item} />
                   })}
               </Grid>
+              { packageResponse.getPackagesLoading ? (
+                                    <Stack display="flex" mt={10} alignItems={'center'} justifyContent={'center'}>
+                                        <CircularProgress color="primary" />
+                                    </Stack>
+                                ) : ( packages.length === 0 ? (
+                                    <Typography variant="body1" textAlign={'center'} my={5}>No Packages are available!</Typography>
+                                ) : null)
+              }
           </Grid>
         </Grid>
     </Fragment>
