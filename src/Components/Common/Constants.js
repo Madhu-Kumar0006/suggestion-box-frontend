@@ -1,8 +1,8 @@
 export const roleId = {
-  SUPER_ADMIN_USER: 1,
-  ADMIN_USER: 2,
-  TEAM_MEMBER: 3,
-  USER: 4
+  SUPER_ADMIN_USER: 11,
+  ADMIN_USER: 1,
+  TEAM_MEMBER: 2,
+  USER: 3
 }
 
 export const loginError = {
@@ -56,4 +56,9 @@ export const emailErrors = {
  export const closeSuggestionBoxConfirmMessage = {
   HEADING: "Close",
   DESCRIPTION: "Are you sure? do you want to close suggestion box"
+ }
+
+ export const packageStatus = {
+  ACTIVE: "ACTIVE",
+  INACTIVE: "NOT ACTIVE"
  }

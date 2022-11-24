@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import List from '@mui/material/List';
@@ -99,7 +100,8 @@ const SidePanel = (props) => {
       <List sx={{ my: 4}}>
         {[{id:'dashboard', text: 'Dashboard', icon: <DashboardIcon />, link:'/dashboard'},
           {id:'team_members', text: 'Team Members', icon: <GroupsOutlinedIcon />, link:'/team-members'},
-            {id:'suggestion_box', text: 'Suggestion Box', icon:  <QuestionAnswerOutlinedIcon />, link:'/suggestion-box'}, 
+            {id:'suggestion_box', text: 'Suggestion Box', icon:  <QuestionAnswerOutlinedIcon />, link:'/suggestion-box'},
+            {id:'my_subscription', text: 'My Subscription', icon:  <AccountBalanceWalletIcon />, link:'/my-subscription'},
             {id:'settings', text: 'Settings', icon: <SettingsOutlinedIcon />, link:'/settings' }].filter((item) => {
               if(role_id === roleId.TEAM_MEMBER) {
                 return item.id !== 'team_members';

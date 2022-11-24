@@ -12,6 +12,7 @@ import Suggestions from "../Components/Suggestions/Suggestions";
 import Registration from '../Components/Registration/Registration';
 import ResetPassword from "../Components/ResetPassword/ResetPassword";
 import TeamMembers from "../Components/TeamMembers/TeamMembers";
+import MySubscription from "../Components/MySubscription/MySubscription";
 
 const BaseRoutes = () => {
   return (
@@ -27,6 +28,7 @@ const BaseRoutes = () => {
             <Route path='suggestions/:id' element={<Suggestions />} />
             <Route index element={<SuggestionBox />} />
           </Route>
+          <Route path='/my-subscription' element={<MySubscription />} />
           <Route path='/settings' element={<Settings />} />
         </Route>
         <Route path="/response/:token" element={< User/>} />

@@ -6,6 +6,7 @@ import user from "./userReducer";
 import suggestionsReducer from "./suggestionsReducer";
 import getQuestionDetailsReducer from "./getQuestionDetailsReducer";
 import teamMemberReducer from "./teamMemberReducer"
+import mySubscriptionReducer from "./mySubscriptionReducer";
 
 export default combineReducers({
   auth,
@@ -14,5 +15,6 @@ export default combineReducers({
   suggestionsReducer,
   getQuestionDetailsReducer,
   suggestionBoxReducer,
-  teamMemberReducer
+  teamMemberReducer,
+  mySubscriptionReducer
 })
