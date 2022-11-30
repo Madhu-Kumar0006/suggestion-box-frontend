@@ -7,6 +7,7 @@ import suggestionsReducer from "./suggestionsReducer";
 import getQuestionDetailsReducer from "./getQuestionDetailsReducer";
 import teamMemberReducer from "./teamMemberReducer"
 import mySubscriptionReducer from "./mySubscriptionReducer";
+import setPasswordReducer from "./setPasswordReducer";
 
 export default combineReducers({
   auth,
@@ -16,5 +17,6 @@ export default combineReducers({
   getQuestionDetailsReducer,
   suggestionBoxReducer,
   teamMemberReducer,
-  mySubscriptionReducer
+  mySubscriptionReducer,
+  setPasswordReducer
 })
