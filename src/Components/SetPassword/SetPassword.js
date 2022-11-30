@@ -1,6 +1,6 @@
-import React, { Fragment, useState} from "react";
-// import { useNavigate } from "react-router-dom";
-// import { useSelector, useDispatch } from "react-redux";
+import React, { Fragment, useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Stack, Paper, InputAdornment, TextField, IconButton, Grid, Button, Typography, Box } from "@mui/material";
@@ -13,6 +13,8 @@ import * as yup from 'yup';
 import { passwordErrors } from "../Common/Constants";
 import AlertModal from "../AlertModal/AlertModal";
 import colorLogo from './../../Assets/images/logo-color.png';
+import jwtDecode from "jwt-decode";
+import { setPassword } from "../../Redux/Actions/setPasswordActions";
 
 
 //defining styles
@@ -44,7 +46,7 @@ const validationSchema = yup.object({
     password: yup
       .string()
       .required(passwordErrors.PASSWORD),
-    confirmPassword: yup
+    confirm_password: yup
       .string()
       .required(passwordErrors.CONFIRM_PASSWORD)
       .oneOf([yup.ref('password')], passwordErrors.PASSWORDS_UNMATCHED)
@@ -52,33 +54,63 @@ const validationSchema = yup.object({
 
 
 
-const ResetPassword = () => {
+const SetPassword = () => {
 
     const classes = useStyles();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [urlToken, setUrlToken] = useState(null);
+    const [decodedTokenEmail, setDecodedTokenEmail] = useState(null);
 
-     // Redux State:
-    //  const alert = useSelector((state) => state.alert);
+    //  Redux State:
+     const alert = useSelector((state) => state.alert);
+     const setPasswordResponse = useSelector((state) => state.setPasswordReducer);
+     console.log(setPasswordResponse)
 
-     // Used to change the routes:
-    //  const Navigate = useNavigate();
+    //  Used to change the routes:
+     const Navigate = useNavigate();
 
-     //Redux Dispatch
-    //  const dispatch = useDispatch();
+    //  Redux Dispatch
+     const dispatch = useDispatch();
 
     //managing form state
     const formik = useFormik({
         initialValues: {
           password: '',
-          confirmPassword: '',
+          confirm_password: '',
         },
         validationSchema: validationSchema,
         onSubmit: (values, {resetForm}) => {
-          console.log(values);
+          let apiData = {
+            ...values,
+            email: decodedTokenEmail
+
+          }
+          console.log(apiData);
+          dispatch(setPassword(apiData));
           // resetForm();
         },
       });
+
+
+      //useEffect Starts
+      useEffect(() => {
+        //fetching token from url params
+        const queryParams = new URLSearchParams(window.location.search);
+        setUrlToken(queryParams.get("token"));
+        console.log("token", urlToken);
+      }, [])
+
+      useEffect(() => {
+        //decoding token and extracting email from it
+        if(urlToken !== null) {
+          const decodedToken = jwtDecode(urlToken);
+          setDecodedTokenEmail(decodedToken.email);
+        } else {
+          setDecodedTokenEmail(null);
+        }
+      }, [urlToken])
+      //useEffect Ends
 
 
     //toggle showPassword
@@ -122,7 +154,7 @@ const ResetPassword = () => {
                             error={formik.touched.password && Boolean(formik.errors.password)}
                             helperText={formik.touched.password && Boolean(formik.errors.password) && formik.errors.password}
                           />
-                        <TextField name="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} id="confirmPassword" placeholder="Enter confirm password" label="Confirm Password" variant="standard"
+                        <TextField name="confirm_password" type={showConfirmPassword ? 'text' : 'password'} id="confirm_password" placeholder="Enter confirm password" label="Confirm Password" variant="standard"
                           InputProps={{
                                         endAdornment: <InputAdornment position="end">
                                         <IconButton onClick={toggleConfirmPassword} color="primary">
@@ -130,10 +162,10 @@ const ResetPassword = () => {
                                           </IconButton>
                                           </InputAdornment>
                                           }}
-                            value={formik.values.confirmPassword}
+                            value={formik.values.confirm_password}
                             onChange={formik.handleChange}
-                            error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
-                            helperText={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword) && formik.errors.confirmPassword}
+                            error={formik.touched.confirm_password && Boolean(formik.errors.confirm_password)}
+                            helperText={formik.touched.confirm_password && Boolean(formik.errors.confirm_password) && formik.errors.confirm_password}
                           />
                         <Stack style={{ marginTop: '60px'}} direction='column'>
                           <Button type="submit" variant="contained" color="primary" disabled={false}>Reset Password
@@ -150,4 +182,4 @@ const ResetPassword = () => {
     ) ;
 } 
 
-export default ResetPassword;
+export default SetPassword;
