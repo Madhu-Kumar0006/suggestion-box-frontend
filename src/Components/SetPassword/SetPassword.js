@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core";
 import CircularProgress from '@mui/material/CircularProgress';
@@ -59,13 +59,22 @@ const SetPassword = () => {
     const classes = useStyles();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [urlToken, setUrlToken] = useState(null);
-    const [decodedTokenEmail, setDecodedTokenEmail] = useState(null);
+    let decodedTokenEmail;
+
+    //fetching token from URL params
+    const { urlToken } = useParams();
+
+     //decoding token and extracting email from it
+    if(urlToken !== null) {
+      const decodedToken = jwtDecode(urlToken);
+      decodedTokenEmail = decodedToken.user.email;
+    } else {
+      decodedTokenEmail = null;
+    }
 
     //  Redux State:
      const alert = useSelector((state) => state.alert);
      const setPasswordResponse = useSelector((state) => state.setPasswordReducer);
-     console.log(setPasswordResponse)
 
     //  Used to change the routes:
      const Navigate = useNavigate();
@@ -93,23 +102,12 @@ const SetPassword = () => {
       });
 
 
-      //useEffect Starts
+      // useEffect Starts
       useEffect(() => {
-        //fetching token from url params
-        const queryParams = new URLSearchParams(window.location.search);
-        setUrlToken(queryParams.get("token"));
-        console.log("token", urlToken);
-      }, [])
-
-      useEffect(() => {
-        //decoding token and extracting email from it
-        if(urlToken !== null) {
-          const decodedToken = jwtDecode(urlToken);
-          setDecodedTokenEmail(decodedToken.email);
-        } else {
-          setDecodedTokenEmail(null);
+        if (alert.type === "success") {
+          Navigate("/");
         }
-      }, [urlToken])
+      },[alert, Navigate, setPasswordResponse.response])
       //useEffect Ends
 
 
@@ -168,8 +166,8 @@ const SetPassword = () => {
                             helperText={formik.touched.confirm_password && Boolean(formik.errors.confirm_password) && formik.errors.confirm_password}
                           />
                         <Stack style={{ marginTop: '60px'}} direction='column'>
-                          <Button type="submit" variant="contained" color="primary" disabled={false}>Reset Password
-                            {false && <CircularProgress sx={{color:"primary.dark", marginLeft:"10px"}} size={20}/>}
+                          <Button type="submit" variant="contained" color="primary" disabled={setPasswordResponse.setPasswordLoading}>Reset Password
+                            {setPasswordResponse.setPasswordLoading && <CircularProgress sx={{color:"primary.dark", marginLeft:"10px"}} size={20}/>}
                           </Button>
                         </Stack>
                       </Stack>

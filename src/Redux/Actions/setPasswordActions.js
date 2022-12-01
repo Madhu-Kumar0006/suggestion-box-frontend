@@ -12,8 +12,13 @@ export const setPassword = (data) => async (dispatch) => {
     if (res) {
       dispatch({
         type: SET_PASSWORD_SUCCESS,
-        payload: res.data.token && res.data.token,
+        payload: res.data && res.data,
       });
+      dispatch(alertActions.success(res.data.msg));
+      setTimeout(() => {
+        dispatch(alertActions.success_clear());
+        dispatch(alertActions.clear());
+      }, 3000);
     }
   } catch (err) {
     dispatch({

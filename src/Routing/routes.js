@@ -20,7 +20,7 @@ const BaseRoutes = () => {
       <Routes mode="absolute">
         <Route path='/register' element={<Registration />} />
         <Route path="/" element={<Login />} />
-        <Route path="/setPassword/" element={<SetPassword />} />
+        <Route path="/setPassword/:urlToken" element={<SetPassword />} />
         <Route element={<SidePanel />}>
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/team-members' element={<TeamMembers/>} />
