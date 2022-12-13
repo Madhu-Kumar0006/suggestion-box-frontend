@@ -1,20 +1,17 @@
 import api from "../Api/Api";
-import { UPDATE_STATUS_START,
-        UPDATE_STATUS_SUCCESS,
-        UPDATE_STATUS_ERROR
-      } from "./Types";
+import { SET_PASSWORD_START, SET_PASSWORD_SUCCESS, SET_PASSWORD_ERROR } from "./Types";
 import { alertActions } from "./alertAction";
 
-// change suggestion boxes status
-export const updateSuggestionBoxStatus = (id, data) => async (dispatch) => {
-  dispatch({
-    type: UPDATE_STATUS_START,
-  });
+// set password
+export const setPassword = (data) => async (dispatch) => {
   try {
-    const res = await api.put("/suggestions/updateStatus/"+id, data);
+    dispatch({
+      type: SET_PASSWORD_START,
+    });
+    const res = await api.post("/user/setPassword", data);
     if (res) {
       dispatch({
-        type: UPDATE_STATUS_SUCCESS,
+        type: SET_PASSWORD_SUCCESS,
         payload: res.data && res.data,
       });
       dispatch(alertActions.success(res.data.msg));
@@ -25,7 +22,7 @@ export const updateSuggestionBoxStatus = (id, data) => async (dispatch) => {
     }
   } catch (err) {
     dispatch({
-      type: UPDATE_STATUS_ERROR,
+      type: SET_PASSWORD_ERROR,
       payload: err.response && err.response,
     });
     dispatch(alertActions.error(err.response.data.msg));
@@ -35,4 +32,3 @@ export const updateSuggestionBoxStatus = (id, data) => async (dispatch) => {
     }, 3000);
   }
 };
-

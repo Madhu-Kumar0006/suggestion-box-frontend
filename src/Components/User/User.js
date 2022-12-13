@@ -4,7 +4,6 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import colorLogo from "./../../Assets/images/logo-color.png";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { getQuestionWithToken, submitResponse } from "../../Redux/Actions/userAction";
 import { useDispatch, useSelector } from "react-redux";
 import Checkbox from "@mui/material/Checkbox";
@@ -17,13 +16,15 @@ import { userSuggestionErrors } from "../Common/Constants";
 import CheckCircleSharpIcon from '@mui/icons-material/CheckCircleSharp';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CircularProgress from '@mui/material/CircularProgress';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 
 const User = () => {
   let { token } = useParams();
   //UseState Hooks:
   const [data, setData] = useState({});
-  const [textInput, setTextInput] = useState("");
+  const [textInput, setTextInput] = useState({rawData:"", formattedData:""});
   const [radio, setRadio] = useState("");
   const [checkbox, setCheckbox] = useState([]);
   const [errors, setErrors] = useState({textInput:false, radio:false, checkbox: false});
@@ -64,11 +65,11 @@ const User = () => {
   //UseEffect End:
 
   // Handlers Start:
-  const handleTextInputChange = (event) => {
+  const handleTextInputChange = (inputData, delta, source, editor) => {
     setErrors((pre) => {
       return {...pre, textInput:false}
     })
-    setTextInput(event.target.value);
+    setTextInput({formattedData:inputData, rawData:editor.getText()});
   };
 
   const handleRadioChange = (event) => {
@@ -97,12 +98,12 @@ const User = () => {
   const handleSubmit = () => {
     const id  = data.id;
     if(data.answer_type === 1){
-      if(textInput === '') {
+      if(textInput.rawData.trim() === '') {
         setErrors((pre) => {
           return {...pre, textInput:true}
         })
       } else {
-        dispatch(submitResponse(id,textInput))
+        dispatch(submitResponse(id,textInput.formattedData))
       }
     } else if(data.answer_type === 2){
       if(radio === '') {
@@ -113,7 +114,6 @@ const User = () => {
         dispatch(submitResponse(id,radio))
       } 
     } else if(data.answer_type === 3){
-      console.log(checkbox);
       if(checkbox.length === 0) {
         console.log("check error")
         setErrors((pre) => {
@@ -162,9 +162,9 @@ const User = () => {
               {/* question */}
               <Box
                 sx={{
-                  marginX:"20px",
+                  marginX:{xs:"10px", sm:"20px"},
                   // marginBottom: "40px",
-                  padding: "20px",
+                  padding:{xs:"10px", sm:"20px"},
                   borderRadius:"12px",
                 }}
               >
@@ -175,10 +175,13 @@ const User = () => {
                   <Box sx={{marginBottom:'30px', paddingX:"20px", paddingY:"30px", borderRadius:"10px", backgroundColor:'primary.light'}}>
                     {userQuestionData.getQuestionLoading ?
                     (
-                      <Typography color="#000" variant='body2'>Loading...</Typography>
+                      <Typography color="#000" variant='body1'>Loading...</Typography>
                     ) : (
                       data ? (
-                        <Typography color="#000" variant='body1'>{data.question_title}</Typography>
+                        <>
+                          <Typography color="#000" variant='h6'>{data.question_title}</Typography>
+                          <Typography color="#000" variant='body2'>{data.description}</Typography>
+                        </>
                       ) : (
                         ""
                       )
@@ -195,13 +198,19 @@ const User = () => {
                     data && data.answer_type === 1 ? (
                       <Box>
                         <Box sx={{width: {sm:'90%', xs:'98%'}, display:'flex', justifyContent:'center', alignItems:'center', marginX:'auto'}}>
-                          <TextareaAutosize
+                          {/* <TextareaAutosize
                             aria-label="minimum height"
                             minRows={5}
                             placeholder="Enter your suggestion here"
-                            style={{ width: "90%",borderRadius:'5px', borderColor: `${errors.textInput ? "red" : ""}`, border: '2px solid grey',fontSize:'16px'}}
+                            style={{ width: "90%",borderRadius:'5px', border: `2px solid ${errors.textInput ? "red" : "grey"}`, fontSize:'16px' }}
                             value={textInput}
                             onChange={handleTextInputChange}
+                          /> */}
+                          <ReactQuill 
+                            placeholder="Enter your suggestion here" 
+                            value={textInput.formattedData} 
+                            onChange={handleTextInputChange}
+                            style={{ width:'95%',borderRadius:'5px', border: `2px solid ${errors.textInput ? "red" : "grey"}`, fontSize:'16px'}} 
                           />
                         </Box>
                         { errors.textInput &&

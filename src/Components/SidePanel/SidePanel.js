@@ -8,7 +8,9 @@ import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import List from '@mui/material/List';
@@ -24,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import userImg from './../../Assets/images/admin.png';
 import wBLogo from './../../Assets/images/logo-w&b.png';
 import jwtDecode from 'jwt-decode';
+import { roleId } from '../Common/Constants';
 
 import { logout } from '../../Redux/Actions/loginAction';
 
@@ -54,6 +57,8 @@ const useStyles = makeStyles(({ palette }) => ({
 
 
 const SidePanel = (props) => {
+
+  let role_id = parseInt(localStorage.getItem("role_id"));
 
     //styles
   const classes = useStyles();
@@ -93,10 +98,18 @@ const SidePanel = (props) => {
         </Box>   
       </Box>
       <List sx={{ my: 4}}>
-        {[{text: 'Dashboard', icon: <DashboardIcon />, link:'/dashboard'}, 
-            {text: 'Suggestion Box', icon:  <QuestionAnswerOutlinedIcon />, link:'/suggestion-box'}, 
-            {text: 'Settings', icon: <SettingsOutlinedIcon />, link:'/settings' }].map((item, index) => (
-              <ListItem key={item.text} sx={{my:1}}
+        {[{id:'dashboard', text: 'Dashboard', icon: <DashboardIcon />, link:'/dashboard'},
+          {id:'team_members', text: 'Team Members', icon: <GroupsOutlinedIcon />, link:'/team-members'},
+            {id:'suggestion_box', text: 'Suggestion Box', icon:  <QuestionAnswerOutlinedIcon />, link:'/suggestion-box'},
+            {id:'my_subscription', text: 'My Subscription', icon:  <AccountBalanceWalletIcon />, link:'/my-subscription'},
+            {id:'settings', text: 'Settings', icon: <SettingsOutlinedIcon />, link:'/settings' }].filter((item) => {
+              if(role_id === roleId.TEAM_MEMBER) {
+                return item.id !== 'team_members';
+              } else {
+                return item;
+              }
+            }).map((item, index) => (
+              <ListItem key={item.id} sx={{my:1}}
                 disablePadding>
                   <NavLink key={index} to={item.link} 
                     className={({ isActive }) => 
@@ -107,7 +120,7 @@ const SidePanel = (props) => {
                           {item.icon}
                         </ListItemIcon>
                         <ListItemText primary={
-                          <Typography sx={{letterSpacing: 0.2, fontSize: '18px'}}>{item.text}</Typography>
+                          <Typography sx={{letterSpacing: 0.2, fontSize: '16px'}}>{item.text}</Typography>
                         } 
                         />
                       </ListItemButton>
@@ -126,7 +139,7 @@ const SidePanel = (props) => {
                       <LogoutOutlinedIcon />
                     </ListItemIcon>
                     <ListItemText primary={
-                      <Typography variant='h6' sx={{letterSpacing: 0.2, fontSize: '18px'}}>Logout</Typography>
+                      <Typography variant='h6' sx={{letterSpacing: 0.2, fontSize: '16px'}}>Logout</Typography>
                     } 
                     />
                   </ListItemButton>

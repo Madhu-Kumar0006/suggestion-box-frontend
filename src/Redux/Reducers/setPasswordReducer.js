@@ -1,35 +1,38 @@
+
 /* eslint-disable import/no-anonymous-default-export */
-import { 
-    UPDATE_STATUS_START,
-    UPDATE_STATUS_SUCCESS,
-    UPDATE_STATUS_ERROR
-  } from "./../Actions/Types";
+import { SET_PASSWORD_START,
+        SET_PASSWORD_SUCCESS,
+        SET_PASSWORD_ERROR
+        } from "../Actions/Types";
+        
 
 const initialState = {
 response: '',
 error: '',
-loading: false
+setPasswordLoading: false
 };
 
+
 export default function (state = initialState, action) {
+
 const { type, payload } = action;
 switch (type) {
-    case UPDATE_STATUS_START:
+    case SET_PASSWORD_START:
       return {
         ...state,
-        loading: true
+        setPasswordLoading: true
       };
-    case UPDATE_STATUS_SUCCESS:
+    case SET_PASSWORD_SUCCESS:
     return {
       ...state,
       response: payload,
-      loading: false
+      setPasswordLoading: false
     };
-    case UPDATE_STATUS_ERROR:
+    case SET_PASSWORD_ERROR:
     return {
       ...state,
       error: payload,
-      loading: false
+      setPasswordLoading: false
     };
   default:
     return state;

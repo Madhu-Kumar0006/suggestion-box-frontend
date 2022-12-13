@@ -4,17 +4,19 @@ import { alert } from "./alertReducer";
 import suggestionBoxReducer from './suggestionBoxReducer';
 import user from "./userReducer";
 import suggestionsReducer from "./suggestionsReducer";
-import updateStatusReducer from "./updateStatusReducer";
 import getQuestionDetailsReducer from "./getQuestionDetailsReducer";
-import addQuestionReducer from './addQuestionReducer';
+import teamMemberReducer from "./teamMemberReducer"
+import mySubscriptionReducer from "./mySubscriptionReducer";
+import setPasswordReducer from "./setPasswordReducer";
 
 export default combineReducers({
   auth,
   alert,
   user,
   suggestionsReducer,
-  updateStatusReducer,
   getQuestionDetailsReducer,
   suggestionBoxReducer,
-  addQuestionReducer,
+  teamMemberReducer,
+  mySubscriptionReducer,
+  setPasswordReducer
 })

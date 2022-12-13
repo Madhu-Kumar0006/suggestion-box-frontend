@@ -1,3 +1,14 @@
+export const roleId = {
+  SUPER_ADMIN_USER: 11,
+  ADMIN_USER: 1,
+  TEAM_MEMBER: 2,
+  USER: 3
+}
+
+export const loginError = {
+  INVALID_ROLE: "Invalid user role",
+}
+
 export const emailErrors = {
     EMAIL : "Please enter your Email address",
     INVALID_EMAIL : "Email is invalid",
@@ -16,4 +27,38 @@ export const emailErrors = {
    RADIO_SUGGESTION_REQUIRED: "Please select anyone option",
    CHECKBOX_SUGGESTION_REQUIRED: "Please select the option/s",
    SUGGESTION_BOX_CLOSED: "Suggestion link is expired, Please contact the admin for more information"
+ }
+
+ export const suggestionModalErrors = {
+   QUESTION_TITLE:'Please Provide Question Title',
+   SUGGESTION_TYPE:'Please Select suggestion type',
+   ANSWER_TYPE:'Please select Answer type',
+   OPTION:'Please Provide option'
+ }
+
+ export const nameErrors = {
+  FIRST_NAME:'Please enter your firstname',
+  LAST_NAME:'Please enter your lastname'
+ }
+
+ export const addTeamMemberModalErrors = {
+  FIRST_NAME: "Please enter First Name",
+  LAST_NAME: "Please enter Last Name",
+  EMAIL: "Please enter Team Member's Email address",
+  INVALID_EMAIL : "Email is invalid",
+ }
+
+ export const openSuggestionBoxConfirmMessage = {
+  HEADING: "Open",
+  DESCRIPTION: "Are you sure? do you want to open suggestion box"
+ }
+
+ export const closeSuggestionBoxConfirmMessage = {
+  HEADING: "Close",
+  DESCRIPTION: "Are you sure? do you want to close suggestion box"
+ }
+
+ export const packageStatus = {
+  ACTIVE: "ACTIVE",
+  INACTIVE: "NOT ACTIVE"
  }

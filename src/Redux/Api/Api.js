@@ -1,11 +1,11 @@
 import Axios from "axios";
 import store from "../Store/Store";
 import { LOGOUT } from "../Actions/Types";
-import { baseAppURL } from "./RequestPath.js";
+import { API_baseAppURL } from "./RequestPath.js";
 
 //to set up base url
 const api = Axios.create({
- baseURL: baseAppURL,
+ baseURL: API_baseAppURL,
   headers: {
     "Content-Type": "application/json",
   },
