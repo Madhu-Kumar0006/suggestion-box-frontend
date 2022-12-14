@@ -6,8 +6,10 @@
 
 
 //dev
-export const API_baseAppURL = 'https://dev-teknotrait.herokuapp.com/api/';
-export const user_baseLink = 'https://dev-suggestion-box.herokuapp.com/response/';
+// export const API_baseAppURL = 'https://dev-teknotrait.herokuapp.com/api/';
+// export const user_baseLink = 'https://dev-suggestion-box.herokuapp.com/response/';
+export const API_baseAppURL = 'https://dev-suggestion-box-backend.onrender.com/api/';
+export const user_baseLink = ' https://dev-suggestion-box.onrender.com/response/';
 
 
 //local

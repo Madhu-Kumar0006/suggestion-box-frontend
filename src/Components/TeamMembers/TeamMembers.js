@@ -187,7 +187,7 @@ const TeamMembers = () => {
                                     <Stack display="flex" mt={10} alignItems={'center'} justifyContent={'center'}>
                                         <CircularProgress color="primary" />
                                     </Stack>
-                                ) : ( teamMembers.length === 0 ? (<Typography variant="body1" textAlign={'center'} my={5}>No Team Members avaialble, Add One!</Typography>) : (null) )}
+                                ) : ( teamMembers.length === 0 ? (<Typography variant="body1" textAlign={'center'} my={5}>No Team Members available, Add One!</Typography>) : (null) )}
                             </TableContainer>
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 25, 100]}

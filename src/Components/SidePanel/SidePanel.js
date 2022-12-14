@@ -27,6 +27,7 @@ import userImg from './../../Assets/images/admin.png';
 import wBLogo from './../../Assets/images/logo-w&b.png';
 import jwtDecode from 'jwt-decode';
 import { roleId } from '../Common/Constants';
+import packageExpiryDate from '../Common/ExpiryDate';
 
 import { logout } from '../../Redux/Actions/loginAction';
 
@@ -60,7 +61,7 @@ const SidePanel = (props) => {
 
   let role_id = parseInt(localStorage.getItem("role_id"));
 
-    //styles
+  //styles
   const classes = useStyles();
 
   const { window } = props;
@@ -83,7 +84,6 @@ const SidePanel = (props) => {
   const logoutHandler = () => {
     dispatch(logout);
   }
-
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -109,11 +109,17 @@ const SidePanel = (props) => {
                 return item;
               }
             }).map((item, index) => (
-              <ListItem key={item.id} sx={{my:1}}
-                disablePadding>
+              <ListItem 
+              disabled = {item.id === "team_members" || item.id === "suggestion_box" ? (packageExpiryDate() < 0 ? true : false) : false}
+              key={item.id} 
+              sx={{my:1, 
+                pointerEvents: item.id === "team_members" || item.id === "suggestion_box" ? (packageExpiryDate() < 0 ? "none" : "auto") : "auto",
+                }}
+                disablePadding >
                   <NavLink key={index} to={item.link} 
                     className={({ isActive }) => 
                       (isActive ? `${classes.activeLink}` : `${classes.menuItems}`)}
+                      disabled = {true}
                       >
                       <ListItemButton sx={{ width:'232px'}}>
                         <ListItemIcon sx={{color:'white'}}>
