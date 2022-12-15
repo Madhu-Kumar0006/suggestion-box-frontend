@@ -12,6 +12,7 @@ const initialState = {
   isAuthenticated: localStorage.getItem("token") ? true : false,
   role_id: localStorage.getItem("role_id"),
   business_id: localStorage.getItem("business_id"),
+  end_date: localStorage.getItem("end_date"),
   loading: false,
   loginFailMessage: "",
 };
@@ -29,11 +30,13 @@ export default function (state = initialState, action) {
       const role_id = decodedToken.user.role_id;
       const id = decodedToken.user.id;
       const business_id = decodedToken.user.business_id;
+      const end_date = decodedToken.user.end_date;
       localStorage.setItem("role_id", role_id);
       localStorage.setItem("isActivated", true);
       localStorage.setItem("token", payload);
       localStorage.setItem("user_id", id);
       localStorage.setItem("business_id", business_id);
+      localStorage.setItem("end_date", end_date);
       return {
         ...state,
         ...payload,
@@ -42,6 +45,7 @@ export default function (state = initialState, action) {
         business_id: business_id,
         loading: false,
         token: payload,
+        end_date: end_date,
       };
     case LOGIN_FAIL:
       return {
@@ -56,6 +60,7 @@ export default function (state = initialState, action) {
       localStorage.removeItem("isActivated");
       localStorage.removeItem("user_id");
       localStorage.removeItem("business_id");
+      localStorage.removeItem("end_date");
       return {
         ...state,
         ...payload,
@@ -64,6 +69,7 @@ export default function (state = initialState, action) {
         business_id: null,
         role_id: null,
         loading: false,
+        end_date: null,
       };
     default:
       return state;

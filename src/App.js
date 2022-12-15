@@ -1,4 +1,5 @@
-import { BrowserRouter } from "react-router-dom";
+// import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from 'react-router-dom';
 import BaseRoutes from "./Routing/routes";
 import { Provider } from "react-redux";
 import store from "./Redux/Store/Store";
@@ -18,9 +19,11 @@ function App() {
   return (
     <Provider store={store}>
       <div>
-          <BrowserRouter>
+        <HashRouter>
+          {/* <BrowserRouter> */}
             <BaseRoutes />
-          </BrowserRouter>
+          {/* </BrowserRouter> */}
+        </HashRouter>
       </div>
     </Provider>
     
